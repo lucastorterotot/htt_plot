@@ -39,7 +39,7 @@ class Efficiencies(object):
         the_file.close()
         
     def marginal(self):
-        all_cuts =  ' && '.join(self.cuts.values())
+        all_cuts = str(self.cuts)
         print 'all cuts', all_cuts
         len_cutname = max(len(cutname) for cutname in self.cuts) + 5
         form = '{{cutname:<{len_cutname}}}\t{{eff:5.2f}}'.format(len_cutname=len_cutname)

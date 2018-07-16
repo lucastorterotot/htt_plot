@@ -1,21 +1,19 @@
 import unittest
 
-from fcc_ee_higgs.plot.efficiencies import Efficiencies
+from efficiencies import Efficiencies
 
 # getting a test tree
 import os
 from ROOT import TFile
-test_fname = os.path.dirname(__file__) + '/test_data/tree_genf_e0.root'
+test_fname = os.path.dirname(__file__) + '../test/data/WJetsToLNu_LO_ext.root'
 test_file = TFile(test_fname)
-tree = test_file.Get('events')
+tree = test_file.Get('tree')
 
 # getting cuts
-from fcc_ee_higgs.plot.plotconfig_ZH_lltautau import cut_lepiso, cut_z_mass, cut_z_kine
-cuts = dict(
-    cut_lepiso=cut_lepiso,
-    cut_z_mass=cut_z_mass, 
-    cut_z_kine=cut_z_kine
-)
+from htt_plot.cuts.generic import cuts_generic
+from htt_plot.cuts.mt import cuts_mt
+cuts = cuts_generic + cuts_mt
+print cuts
 
 class TestEfficiencies(unittest.TestCase):
         
