@@ -2,11 +2,20 @@ from collections import OrderedDict
 import copy
 import pprint 
 
+class Meta(type):
+    def __getitem__(self, name):
+        return self.instances[name]
+
 class Cut(object):
+    
+    __metaclass__ = Meta
+    
+    instances = dict()
     
     def __init__(self, name, cutstr):
         self.name = name
         self.cutstr = cutstr
+        self.__class__.instances[name] = self
 
     def __and__(self, other):
         newone = copy.deepcopy(self)
@@ -23,10 +32,17 @@ class Cut(object):
     def __str__(self):
         return self.cutstr
     
+    def __repr__(self):
+        return '{}: {}'.format(self.name, self.cutstr)
+    
     def __invert__(self):
         newone = copy.deepcopy(self)
         newone.cutstr = '!({cut})'.format(cut=str(self))
         return newone
+    
+    @classmethod
+    def available_cuts(cls):
+        return cls.instances
     
 
 class CutFlow(OrderedDict):
@@ -54,6 +70,11 @@ class CutFlow(OrderedDict):
         marg_cuts = copy.copy(self)
         del marg_cuts[cutname]
         return marg_cuts
+
+    def __add__(self, other):
+        result = copy.copy(self)
+        result.update(other)
+        return result
 
     def __str__(self):
         '''not sure root will accept a multiline string..'''
