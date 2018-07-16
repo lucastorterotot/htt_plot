@@ -1,14 +1,26 @@
 
 import htt_plot.tools.config as config
+<<<<<<< HEAD
 config.parallel = False # True
+=======
+config.parallel = False
+>>>>>>> colin/master
 
 from htt_plot.components.lucas_small import *
 from htt_plot.tools.cut import Cut
 from htt_plot.components.cuts_mutau import *
 from htt_plot.tools.plot import hist, add
 
+from htt_plot.cuts.generic import cuts_generic
+from htt_plot.cuts.mt import cuts_mt
+
+cuts = cuts_generic + cuts_mt
 var = 'mt_total'
+<<<<<<< HEAD
 cut = cut_plot_mutau
+=======
+cut = str(cuts)
+>>>>>>> colin/master
 bins = 50, 0., 500.
 
 lumi = 35900.
