@@ -21,6 +21,8 @@ ipython -i macros/plot_inclusive.py
 
 ## TODO
 
+**You should disable parallel mode in the main macro for development and debugging**
+
 * add the proper cross-section and generated number of events for the MC datasets 
 * implement the final signal selection cut
 * start implementing the various background estimation methods
