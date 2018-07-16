@@ -1,4 +1,7 @@
 from ROOT import TH1F 
+from dask import delayed
+
+import config
 
 class Histogram(object):
 
@@ -29,3 +32,7 @@ def add(name, hists):
     for other_hist in hists:
         histo.Add(other_hist)
     return histo
+
+if config.parallel:
+    hist = delayed(hist)
+    add = delayed(add)
