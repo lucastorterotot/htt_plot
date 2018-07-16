@@ -1,5 +1,6 @@
 from ROOT import TH1F 
 from dask import delayed
+from htt_plot.tools.cut import Cut
 
 import config
 
@@ -20,6 +21,8 @@ class Histogram(object):
 
 
 def hist(name, component, var, cut, *bins):
+    if isinstance(cut,Cut):
+        cut = cut.cutstr
     histo = Histogram(name, name, *bins)
     component.tree.Project(histo.GetName(), var, cut)
     print 'histogramming', name, histo.GetEntries()

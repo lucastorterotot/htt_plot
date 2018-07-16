@@ -9,4 +9,8 @@ class Component(object):
         self.xsection = xsection
         self.tfile = TFile(rootfname)
         self.tree = self.tfile.Get('tree')
+        if nevts is not None and xsection is not None:
+            self.lumi_eq = nevts/xsection
         
+    def compute_weight(self, lumi_data):
+        self.weight = self.xsection*lumi_data

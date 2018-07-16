@@ -1,13 +1,27 @@
 
 import htt_plot.tools.config as config
-config.parallel = True
+config.parallel = False # True
 
 from htt_plot.components.lucas_small import *
+from htt_plot.tools.cut import Cut
+from htt_plot.components.cuts_mutau import *
 from htt_plot.tools.plot import hist, add
 
 var = 'mt_total'
-cut = '1'
+cut = cut_plot_mutau
 bins = 50, 0., 500.
+
+lumi = 35900.
+
+##############
+# 
+##############
+
+mc_components = [DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO_ext, DYJetsToLL_M50_LO_ext2, TT_pow, WJetsToLNu_LO, WJetsToLNu_LO_ext]
+
+##############
+# Data histo
+##############
 
 h_data1 = hist('data1', data1, var, cut, *bins)
 h_data2 = hist('data2', data2, var, cut, *bins)
@@ -23,6 +37,59 @@ if config.parallel:
     # h_data = h_data.compute(scheduler='single-threaded')
     h_data = h_data.compute()
 print h_data.GetEntries()
-h_data.Draw()
+print h_data.Integral()
+#h_data.Draw()
 
+##############
+# MC histos
+##############
 
+## DY
+
+h_DY_mlt50   = hist('DY_mlt50', DYJetsToLL_M10to50_LO, var, cut, *bins)
+h_DY_mht50_1 = hist('DY_mht50_1', DYJetsToLL_M50_LO_ext, var, cut, *bins)
+h_DY_mht50_2 = hist('DY_mht50_2', DYJetsToLL_M50_LO_ext2, var, cut, *bins)
+h_DY_mht50 = add('DY_mht50', [h_DY_mht50_1,h_DY_mht50_2])
+
+all_DY = [h_DY_mlt50, h_DY_mht50]
+h_DY_mlt50.Scale(lumi/DYJetsToLL_M10to50_LO.lumi_eq)
+h_DY_mht50.Scale(lumi/(DYJetsToLL_M50_LO_ext.lumi_eq+DYJetsToLL_M50_LO_ext2.lumi_eq))
+
+h_DY = add('DY', all_DY)
+print h_DY.GetEntries()
+print h_DY.Integral()
+#h_DY.Draw()
+
+## TT
+
+h_TT = hist('TT', TT_pow, var, cut, *bins)
+
+all_TT = [h_TT]
+h_TT.Scale(lumi/TT_pow.lumi_eq)
+
+h_TT = add('TT', all_TT)
+print h_TT.GetEntries()
+print h_TT.Integral()
+#TT_pow.Draw()
+
+## WJ
+
+h_WJ1 = hist('WJ1', WJetsToLNu_LO, var, cut, *bins)
+h_WJ2 = hist('WJ2', WJetsToLNu_LO_ext, var, cut, *bins)
+h_WJ = add('WJ', [h_WJ1, h_WJ2])
+
+all_WJ = [h_WJ]
+h_WJ.Scale(lumi/(WJetsToLNu_LO.lumi_eq+WJetsToLNu_LO_ext.lumi_eq))
+
+h_WJ = add('WJ', all_WJ)
+print h_WJ.GetEntries()
+print h_WJ.Integral()
+#h_WJ.Draw()
+
+h_bg = add('bg',all_DY+all_TT+all_WJ)
+
+##############
+# WJ renormalization
+##############
+
+cut_total_high_mt = cut_high_mt & cut
