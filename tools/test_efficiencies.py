@@ -20,6 +20,11 @@ class TestEfficiencies(unittest.TestCase):
     def test_1(self):
         eff = Efficiencies(tree, cuts)
         eff.marginal()
+        
+    def test_2(self):
+        eff = Efficiencies(tree, cuts)
+        eff.fill_cut_flow()
+        print eff.str_cut_flow()
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,6 +1,7 @@
 import copy
 import sys
-from heppy.statistics.counter import Counter
+from htt_plot.heppy.statistics.counter import Counter
+from htt_plot.tools.cut import Cut
 
 class Efficiencies(object):
     
@@ -15,12 +16,12 @@ class Efficiencies(object):
         self.cut_flow = Counter(cutflowname)
         ntot = min(self.tree.GetEntries(), nevts)
         nlast = ntot
-        cut = '1'
+        cut = Cut('start', '1')
         self.cut_flow.register('Preselection')
         self.cut_flow.inc('Preselection', ntot)
-        for cutname, cutstr in self.cuts.iteritems():
-            cut = ' && '.join([cut, cutstr])
-            self.tree.Draw('1', cut, 'goff', nevts)
+        for cutname, newcut in self.cuts.iteritems():
+            cut = cut & newcut
+            self.tree.Draw('1', str(cut), 'goff', nevts)
             nsel = self.tree.GetSelectedRows()
             self.cut_flow.register(cutname)
             self.cut_flow.inc(cutname, nsel)
