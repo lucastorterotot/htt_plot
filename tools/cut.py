@@ -83,5 +83,5 @@ class CutFlow(OrderedDict):
     def __str__(self):
         '''not sure root will accept a multiline string..'''
         tmp = ['({})'.format(cut) for cut in self.values()]
-        return ' && \ \n'.join(tmp)
+        return ' && '.join(tmp)
    

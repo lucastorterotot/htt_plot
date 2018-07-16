@@ -1,12 +1,16 @@
 
 import htt_plot.tools.config as config
-config.parallel = True
+config.parallel = False
 
 from htt_plot.components.lucas_small import *
 from htt_plot.tools.plot import hist, add
 
+from htt_plot.cuts.generic import cuts_generic
+from htt_plot.cuts.mt import cuts_mt
+
+cuts = cuts_generic + cuts_mt
 var = 'mt_total'
-cut = '1'
+cut = str(cuts)
 bins = 50, 0., 500.
 
 h_data1 = hist('data1', data1, var, cut, *bins)
