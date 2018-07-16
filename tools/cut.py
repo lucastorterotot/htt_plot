@@ -42,6 +42,10 @@ class Cut(object):
     
     @classmethod
     def available_cuts(cls):
+        '''list all defined cuts.
+        to access one of them, do Cut[cut_name]
+        (note the use of the Cut class, not a cut instance)
+        '''
         return cls.instances
     
 
