@@ -1,6 +1,8 @@
 from htt_plot.components.component import Component
 
-basedir = '/Users/cbernet/Code/CMS/HTauTau/htt_plot/lucas_small/'
+import os 
+
+basedir = os.getcwd()+'/lucas_small/'
 
 DY = Component(
     'DY',
