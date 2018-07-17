@@ -131,11 +131,6 @@ print h_WJ.GetEntries()
 print h_WJ.Integral()
 #h_WJ.Draw()
 
-##
-
-h_bg = add('bg',[h_DY,h_TT,h_WJ])
-h_DYTT = add('dytt',[h_DY,h_TT])
-
 ##############
 # WJ renormalization
 ##############
@@ -244,7 +239,7 @@ h_DY_QCD_B.Scale(-1)
 h_TT_QCD_B.Scale(-1)
 h_WJ_QCD_B.Scale(-1)
 
-h_ref_QCD_B = add('ref_QCD_B', [h_data_QCD_B,h_DY_QCD_B,h_TT_QCD_B])
+h_QCD = add('QCD', [h_data_QCD_B,h_DY_QCD_B,h_TT_QCD_B])
 
 if auto_QCD:
     h_data1_QCD_C = hist('data1_C', data1, var_QCD, cut_QCD_C, *bins)
@@ -315,8 +310,13 @@ else:
     
 print 'ratio_QCD C/D = ', ratio_QCD
 
-h_ref_QCD_B.Scale(ratio_QCD)
-h_QCD = h_ref_QCD_B
+h_QCD.Scale(ratio_QCD)
+if config.parallel:
+    h_QCD = h_QCD.compute()
+
+    
+h_bg = add('bg',[h_DY,h_TT,h_WJ,h_QCD])
+h_DYTT = add('dytt',[h_DY,h_TT])
 
 ##############
 # Fast plot
