@@ -2,7 +2,7 @@ from htt_plot.tools.dataset import Dataset
 
 import os 
 
-basedir = os.getcwd()+'/lucas_all/'
+basedir = os.path.expandvars('${HTTPLOT}/lucas_all/')
 
 Nevts_factor = 1.
 
@@ -18,7 +18,7 @@ DYJetsToLL_M50_LO_ext = Dataset(
     94531994*Nevts_factor, # 49144274 # 65473457
     4963.0 # 5765.4 # 
 )
-DYJetsToLL_M50_LO_ext2 = Component( ## watch out, no matching between twiki and DAS
+DYJetsToLL_M50_LO_ext2 = Dataset( ## watch out, no matching between twiki and DAS
     'DYJetsToLL_M50_LO_ext2',
     basedir+'DYJetsToLL_M50_LO_ext2.root', 
     104113466*Nevts_factor, # 94531994
