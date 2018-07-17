@@ -1,6 +1,16 @@
 from ROOT import TFile
 
 class Dataset(object):
+    '''represents a dataset on disk
+    
+    attributes:
+    tree
+    norm_factor : additional normalization factor
+    
+    for MC components
+    nevts : number of events generated
+    xsection : xsection   
+    '''
     
     def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1.):
         self.name = name

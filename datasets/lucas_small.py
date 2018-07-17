@@ -2,7 +2,7 @@ from htt_plot.tools.dataset import Dataset
 
 import os 
 
-basedir = os.getcwd()+'/lucas_small/'
+basedir = os.path.expandvars('${HTTPLOT}/lucas_small/')
 
 Nevts_factor = 1./100
 
