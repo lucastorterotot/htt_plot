@@ -7,6 +7,7 @@ class Component(object):
           self.name = name
           self.histogram = TH1F(name, name, *args)
           self.args = args
+          self.stack = True
           
      def Clone(self, name):
           return Component(name, *self.args)

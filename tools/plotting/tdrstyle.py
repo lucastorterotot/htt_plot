@@ -228,7 +228,7 @@ def setTDRStyle(square=True):
   # tdrStyle.SetNdivisions(510, "XYZ")
   tdrStyle.SetPadTickX(1)  # To get tick marks on the opposite side of the frame
   tdrStyle.SetPadTickY(1)
-  # tdrStyle.SetMaxDigits(3)
+  rt.TGaxis.SetMaxDigits(3)
   
 # Change for log plots:
   tdrStyle.SetOptLogx(0)

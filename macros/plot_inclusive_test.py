@@ -3,6 +3,7 @@ import htt_plot.tools.config as config
 config.parallel = False
 
 from htt_plot.datasets.lucas_small import *
+
 from htt_plot.tools.cut import Cut
 from htt_plot.cuts.mt import *
 from htt_plot.tools.plot import hist, add
@@ -11,10 +12,10 @@ from htt_plot.cuts.generic import cuts_generic, cut_os, cut_ss
 from htt_plot.cuts.mt import cuts_mt
 from htt_plot.cuts.mt_triggers import triggers
 
+from htt_plot.tools.plotting.plotter import Plotter
 from htt_plot.tools.plotting.tdrstyle import setTDRStyle
 setTDRStyle(square=True)
 
-from htt_plot.tools.plotting.plotter import Plotter
 
 import copy
 
@@ -64,6 +65,7 @@ if config.parallel:
     data = data.compute()
 print data.GetEntries()
 print data.Integral()
+data.Scale(1/nevents_fraction)
 #h_data.Draw()
 
 ##############
@@ -114,5 +116,6 @@ print WJ.Integral()
 
 background = add('background',[DY,TT,WJ])
 
-plotter = Plotter([DY, WJ, TT], lumi)
+data.stack = False
+plotter = Plotter([data, DY, WJ, TT], lumi)
 plotter.draw(var, 'a.u.')

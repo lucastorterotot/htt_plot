@@ -32,9 +32,6 @@ class Plotter(object):
         for comp in self.comps:
             hist = comp.histogram    
             plot.AddHistogram(comp.name, hist)
-            # plot.histosDict[comp.name].SetWeight(comp.getWeight(self.lumi).GetWeight())
-            # plot.histosDict[comp.name].uncertainty = comp.uncertainty
-        plot.legendBorders = (0.22, 0.65, 0.44, 0.92)
         return plot
     
     def draw(self, xtitle, ytitle):
