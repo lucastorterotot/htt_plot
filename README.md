@@ -12,6 +12,7 @@ source ./init.sh
 
 * Copy your small root files in this package, in a directory called `lucas_small` (see [components/lucas_small.py](components/lucas_small.py))
 
+Also install [cpyroot](https://github.com/cbernet/cpyroot)
 
 ## Test
 
