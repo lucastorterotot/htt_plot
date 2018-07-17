@@ -2,9 +2,9 @@ from htt_plot.components.component import Component
 
 import os 
 
-basedir = os.getcwd()+'/lucas_small/'
+basedir = os.getcwd()+'/lucas_all/'
 
-Nevts_factor = 1./100
+Nevts_factor = 1.
 
 DYJetsToLL_M10to50_LO = Component(
     'DYJetsToLL_M10to50_LO',
@@ -14,12 +14,12 @@ DYJetsToLL_M10to50_LO = Component(
 DYJetsToLL_M50_LO_ext = Component(
     'DYJetsToLL_M50_LO_ext',
     basedir+'DYJetsToLL_M50_LO_ext.root',
-    94531994*Nevts_factor, 5765.4
+    104113466*Nevts_factor, 5765.4
 )
 DYJetsToLL_M50_LO_ext2 = Component(
     'DYJetsToLL_M50_LO_ext2',
     basedir+'DYJetsToLL_M50_LO_ext2.root', 
-    65473457*Nevts_factor, 5765.4
+    49144274*Nevts_factor, 5765.4
 )
 # Colin put 49144274 evts ?
 
@@ -29,12 +29,12 @@ DY.name = 'DY'
 TT_pow = Component(
     'TT_pow',
     basedir+'TT_pow.root',
-    74644514*Nevts_factor, 831.76
+    92925926*Nevts_factor, 831.76
 )
 WJetsToLNu_LO = Component(
     'WJetsToLNu_LO',
     basedir+'WJetsToLNu_LO.root',
-    28427574*Nevts_factor, 61526.7
+    29705748*Nevts_factor, 61526.7
 )
 WJetsToLNu_LO_ext = Component(
     'WJetsToLNu_LO_ext',
