@@ -34,7 +34,7 @@ class Cut(object):
     
     def __repr__(self):
         return '{}: {}'.format(self.name, self.cutstr)
-    
+
     def __invert__(self):
         newone = copy.deepcopy(self)
         newone.cutstr = '!({cut})'.format(cut=str(self))
@@ -67,8 +67,12 @@ class CutFlow(OrderedDict):
             ('ecut', 'e<0')
         ])
         '''
-        tmp = [ (name, Cut(name, cutstr)) for name, cutstr in items]
-        super(CutFlow, self).__init__(items)
+        tmp = []
+        for name, cut in items:
+            if not isinstance(cut, Cut):
+                cut = Cut(name, cut)
+            tmp.append( (name, cut) ) 
+        super(CutFlow, self).__init__(tmp)
         
     def marginal(self, cutname):
         marg_cuts = copy.copy(self)
@@ -77,11 +81,23 @@ class CutFlow(OrderedDict):
 
     def __add__(self, other):
         result = copy.copy(self)
-        result.update(other)
+        if isinstance(other, CutFlow):
+            result.update(other)
+        else:
+            # adding a cut
+            result[other.name] = other
         return result
+    
+    def __iadd__(self, other):
+        if isinstance(other, CutFlow):
+            self.update(other)
+        else:
+            # adding a cut
+            self[other.name] = other
+        return self        
 
     def __str__(self):
         '''not sure root will accept a multiline string..'''
-        tmp = ['({})'.format(cut) for cut in self.values()]
+        tmp = ['({})'.format(str(cut)) for cut in self.values()]
         return ' && '.join(tmp)
    

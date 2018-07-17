@@ -21,6 +21,15 @@ class TestCut(unittest.TestCase):
             ('ecut', 'e<0')
         ])
         
+    def test_3_cutflow_and_cut(self):
+        cuts = CutFlow([
+            ('pcut', 'p>1'),
+            ('ecut', 'e<0')
+        ])
+        cut =  Cut('a', 'p==3')
+        cuts2 = cuts + cut
+        cuts += cut
+        
     
 if __name__ == '__main__':
     unittest.main()
