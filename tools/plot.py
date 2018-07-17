@@ -8,18 +8,18 @@ import config
 def hist(name, dataset, var, cut, *bins):
     if isinstance(cut,Cut):
         cut = cut.cutstr
-    histo = Component(name, *bins)
-    dataset.tree.Project(histo.GetName(), var, cut)
-    print 'histogramming', name, histo.GetEntries()
-    return histo
+    comp = Component(name, *bins)
+    dataset.tree.Project(comp.GetName(), var, cut)
+    print 'histogramming', name, comp.GetEntries()
+    return comp
 
 def add(name, components):
     print 'adding'
-    histo = components[0].Clone(name)
-    histo.Reset()
+    comp = components[0].Clone(name)
+    comp.Reset()
     for other_hist in components:
-        histo.Add(other_hist)
-    return histo
+        comp.Add(other_hist)
+    return comp
 
 if config.parallel:
     hist = delayed(hist)
