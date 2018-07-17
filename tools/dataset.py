@@ -1,6 +1,6 @@
 from ROOT import TFile
 
-class Component(object):
+class Dataset(object):
     
     def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1.):
         self.name = name
@@ -25,3 +25,4 @@ class Component(object):
                 raise ValueError('provide lumi to weight MC component')
             self.weight = self.xsection*lumi_data/self.nevts*self.norm_factor
         return self.weight
+
