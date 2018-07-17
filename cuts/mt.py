@@ -30,7 +30,7 @@ cuts_tau_id = CutFlow([
 ])
 
 cuts_tau_iso = CutFlow([
-    ('tau_iso', 'l2_byIsolationMVArun2v1DBoldDMwLT>3.5'),     
+    ('tau_iso', 'l2_byTightIsolationMVArun2v1DBoldDMwLT > 0.5'),     
 ])
 
 cuts_tau = cuts_tau_kine + cuts_tau_id + cuts_tau_iso
