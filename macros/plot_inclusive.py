@@ -4,7 +4,6 @@ config.parallel = False
 
 from htt_plot.components.lucas_all import *
 from htt_plot.tools.cut import Cut
-from htt_plot.cuts.mt import *
 from htt_plot.tools.plot import hist, add
 
 from htt_plot.cuts.generic import cuts_generic, cut_os, cut_ss
@@ -22,7 +21,7 @@ cut = str(cuts_os)
 weight='weight'
 
 # adding weight
-cut = '({cut})*({weight})'.format(cut=cut,weight=weight)
+cut = '({cut})*({weight}*weight_dy)'.format(cut=cut,weight=weight)
 
 bins = 50, 0., 500.
 
@@ -32,7 +31,14 @@ lumi = 35900.
 # 
 ##############
 
-mc_components = [DYJetsToLL_M10to50_LO, DYJetsToLL_M50_LO_ext, DYJetsToLL_M50_LO_ext2, TT_pow, WJetsToLNu_LO, WJetsToLNu_LO_ext]
+mc_components = [
+    DYJetsToLL_M10to50_LO,
+    DYJetsToLL_M50_LO_ext,
+    DYJetsToLL_M50_LO_ext2,
+    TT_pow,
+    WJetsToLNu_LO,
+    WJetsToLNu_LO_ext,
+]
 
 for component in mc_components:
     component.compute_weight(lumi)
@@ -79,11 +85,14 @@ def sumMCweights(components, lumi_data = lumi):
 h_DY_mlt50   = hist('DY_mlt50', DYJetsToLL_M10to50_LO, var, cut, *bins)
 h_DY_mlt50.Scale(DYJetsToLL_M10to50_LO.weight)
 
-h_DY_mht50_1 = hist('DY_mht50_1', DYJetsToLL_M50_LO_ext, var, cut, *bins)
-h_DY_mht50_2 = hist('DY_mht50_2', DYJetsToLL_M50_LO_ext2, var, cut, *bins)
+#h_DY_mht50_1 = hist('DY_mht50_1', DYJetsToLL_M50_LO_ext, var, cut, *bins)
+#h_DY_mht50_2 = hist('DY_mht50_2', DYJetsToLL_M50_LO_ext2, var, cut, *bins)
 
-h_DY_mht50 = add('DY_mht50', [h_DY_mht50_1,h_DY_mht50_2])
-h_DY_mht50.Scale(sumMCweights([DYJetsToLL_M50_LO_ext,DYJetsToLL_M50_LO_ext2]))
+#h_DY_mht50 = add('DY_mht50', [h_DY_mht50_1,h_DY_mht50_2])
+#h_DY_mht50.Scale(sumMCweights([DYJetsToLL_M50_LO_ext,DYJetsToLL_M50_LO_ext2]))
+
+h_DY_mht50 = hist('DY_mht50', DYJetsToLL_M50_LO_ext, var, cut, *bins)
+h_DY_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
 
 h_DY = add('DY', [h_DY_mlt50, h_DY_mht50])
 print h_DY.GetEntries()
@@ -112,8 +121,17 @@ print h_WJ.Integral()
 #h_WJ.Draw()
 
 h_bg = add('bg',[h_DY,h_TT,h_WJ])
+h_DYTT = add('dytt',[h_DY,h_TT])
 
 ##############
 # WJ renormalization
 ##############
+
+
+
+##############
+# Fast plot
+##############
+
+h_data.Draw()
 
