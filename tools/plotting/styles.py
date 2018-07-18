@@ -17,7 +17,7 @@ sJtf = Style(markerColor=kSpring+7,
              fillColor=kSpring+5,
              fillStyle=1001)
 
-sZmm = Style(markerColor=kAzure+9,
+sZll = Style(markerColor=kAzure+9,
              markerSize=1,
              lineColor=1,
              lineWidth=1,
@@ -52,7 +52,7 @@ histPref = {
     'data': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
     'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z to tautau', 'stack': True},
     'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet to tauh', 'stack': True},
-    'Zmm': {'style':sZmm, 'layer':34, 'legend':'Z to mumu', 'stack': True},
+    'Zll': {'style':sZll, 'layer':34, 'legend':'Z to ll', 'stack': True},
     'ew': {'style':sew, 'layer':25, 'legend':'electroweak', 'stack': True},
 }
 
