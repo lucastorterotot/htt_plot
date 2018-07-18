@@ -320,11 +320,77 @@ h_bg = add('bg',[h_DY,h_TT,h_WJ,h_QCD])
 h_DYTT = add('dytt',[h_DY,h_TT])
 
 ##############
+# Categories
+##############
+
+from htt_plot.cuts.generic import cut_dy_ztt, cut_dy_zl, cut_dy_zj
+
+# Z tt
+
+cuts_ztt = copy.copy(cuts)
+cuts_ztt['DY_cat'] = cut_dy_ztt.cutstr
+cuts_ztt['os'] = cut_os
+
+cut_ztt = str(cuts_ztt)
+cut_ztt = '({cut})*({weight})'.format(cut=cut_ztt,weight=weight)
+
+h_Ztt_mlt50   = hist('Ztt_mlt50', DYJetsToLL_M10to50_LO, var, cut_ztt, *bins)
+h_Ztt_mlt50.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_Ztt_mht50 = hist('Ztt_mht50', DYJetsToLL_M50_LO_ext, var, cut_ztt, *bins)
+h_Ztt_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_Ztt = add('Ztt', [h_Ztt_mlt50, h_Ztt_mht50])
+if config.parallel:
+    h_Ztt = h_Ztt.compute()
+print h_Ztt.GetEntries()
+print h_Ztt.Integral()
+
+# Z ll
+
+cut_zll = '('+cut+') && ('+cut_dy_zl.cutstr+')'
+
+h_Zll_mlt50   = hist('Zll_mlt50', DYJetsToLL_M10to50_LO, var, cut_zll, *bins)
+h_Zll_mlt50.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_Zll_mht50 = hist('Zll_mht50', DYJetsToLL_M50_LO_ext, var, cut_zll, *bins)
+h_Zll_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_Zll = add('Zll', [h_Zll_mlt50, h_Zll_mht50])
+if config.parallel:
+    h_Zll = h_Zll.compute()
+print h_Zll.GetEntries()
+print h_Zll.Integral()
+
+# Z j
+
+cut_zj = '('+cut+') && ('+cut_dy_zj.cutstr+')'
+
+h_Zj_mlt50   = hist('Zj_mlt50', DYJetsToLL_M10to50_LO, var, cut_zj, *bins)
+h_Zj_mlt50.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_Zj_mht50 = hist('Zj_mht50', DYJetsToLL_M50_LO_ext, var, cut_zj, *bins)
+h_Zj_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_Zj = add('Zj', [h_Zj_mlt50, h_Zj_mht50])
+if config.parallel:
+    h_Zj = h_Zj.compute()
+print h_Zj.GetEntries()
+print h_Zj.Integral()
+
+h_Jtf = add('Jtf',[h_QCD,h_Zj])
+
+# electroweak
+
+h_ew = add('ew',[h_WJ])
+
+##############
 # Fast plot
 ##############
 
 h_data.stack = False
-plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi)
+#plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi)
+plotter = Plotter([h_data, h_Ztt, h_Zll, h_ew, h_TT, h_Jtf], lumi)
 plotter.draw(var, 'a.u.')
 
 
