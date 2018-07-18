@@ -48,12 +48,12 @@ histPref = {
     'DY': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
     'QCD': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
     'WJ': {'style':swj, 'layer':20, 'legend':'WJ', 'stack': True},
-    'TT': {'style':stt, 'layer':10, 'legend':'TT', 'stack': True},
-    'data': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
-    'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z to tautau', 'stack': True},
-    'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet to tauh', 'stack': True},
-    'Zll': {'style':sZll, 'layer':34, 'legend':'Z to ll', 'stack': True},
-    'ew': {'style':sew, 'layer':25, 'legend':'electroweak', 'stack': True},
+    'TT': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
+    'data': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
+    'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z#rightarrow #tau#tau', 'stack': True},
+    'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet#rightarrow #tau_{h} fakes', 'stack': True},
+    'Zll': {'style':sZll, 'layer':34, 'legend':'Z#rightarrow ll', 'stack': True},
+    'ew': {'style':sew, 'layer':25, 'legend':'Electroweak', 'stack': True},
 }
 
 def set_style(comp):
