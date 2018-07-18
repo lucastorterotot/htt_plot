@@ -391,7 +391,7 @@ from ROOT import gPad
 h_data.stack = False
 plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi_in_barn)
 #plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
-plotter.draw('m_{T}^{total}', 'Nevts')
-plotter.print_info('CMS',xmin=.175, ymin=.8)
+plotter.draw('M_{T}^{total} (GeV)', 'Nevts')
+plotter.print_info('CMS, #mu#tau_{h}',xmin=.175, ymin=.8)
 
 gPad.SaveAs("plot_inclusive.png")

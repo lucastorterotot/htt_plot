@@ -30,7 +30,7 @@ class Plotter(object):
     def _prepare_plot(self):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
-            hist = comp.histogram    
+            hist = comp.histogram
             plot.AddHistogram(comp.name, hist)
         return plot
     
@@ -42,6 +42,32 @@ class Plotter(object):
         # self.plot.supportHist.GetXaxis().SetNdivisions(5)
         self.plot.supportHist.GetXaxis().SetTitle(xtitle)
         self.plot.supportHist.GetYaxis().SetTitle(ytitle)
+        
+        minX = self.plot.supportHist.GetXaxis().GetXmin()
+        maxX = self.plot.supportHist.GetXaxis().GetXmax()
+        NbinsX = self.plot.supportHist.GetXaxis().GetNbins()
+        NticksX = 5
+        for tick_num in range(1,NticksX):
+            bin_to_label = int(tick_num * 1. * NbinsX/NticksX)
+            bin_label = int(minX + tick_num * 1. * (maxX-minX)/NticksX)
+            self.plot.supportHist.GetXaxis().SetBinLabel(bin_to_label,"{}".format(bin_to_label))
+        self.plot.supportHist.GetXaxis().SetBinLabel(1,"{}".format(int(minX)))
+        self.plot.supportHist.GetXaxis().SetBinLabel(NbinsX-1,"{}".format(int(maxX)))
+        self.plot.supportHist.GetXaxis().LabelsOption("h")
+        
+        minY = self.plot.supportHist.GetYaxis().GetXmin()
+        maxY = self.plot.supportHist.GetYaxis().GetXmax()
+        NbinsY = self.plot.supportHist.GetYaxis().GetNbins()
+        NticksY = 5
+        for tick_num in range(1,NticksY):
+            bin_to_label = int(tick_num * 1. * NbinsY/NticksY)
+            bin_label = int(minX + tick_num * 1. * (maxX-minX)/NticksX)
+            self.plot.supportHist.GetYaxis().SetBinLabel(bin_to_label,"{}".format(bin_to_label))
+        self.plot.supportHist.GetYaxis().SetBinLabel(1,"{}".format(int(minY)))
+        self.plot.supportHist.GetYaxis().SetBinLabel(NbinsY-1,"{}".format(int(maxY)))
+        self.plot.supportHist.GetYaxis().LabelsOption("h")
+        
+        #import pdb; pdb.set_trace()
         gPad.Update()
    
     def write(self, fname):
