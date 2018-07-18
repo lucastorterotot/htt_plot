@@ -39,8 +39,8 @@ print cuts_generic
 cut_os = Cut('opposite_sign', 'l1_charge != l2_charge')
 cut_ss = Cut('same_sign',  'l1_charge == l2_charge')
 
-cut_dy_ztt = Cut('dy_ztt', 'gen_match_2==5')
-cut_dy_zl = Cut('dy_zl', 'gen_match_2<5')
-cut_dy_zj = Cut('dy_zj', 'gen_match_2==6')
+cut_dy_ztt = Cut('dy_ztt', 'l2_gen_match == 5')
+cut_dy_zl = Cut('dy_zl', 'l2_gen_match < 5')
+cut_dy_zj = Cut('dy_zj', 'l2_gen_match == 6')
 
 pprint.pprint(Cut.available_cuts())
