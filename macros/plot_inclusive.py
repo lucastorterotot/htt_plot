@@ -17,7 +17,7 @@ setTDRStyle(square=True)
 
 import copy
 
-cuts = cuts_generic + cuts_mt #+ triggers
+cuts = cuts_generic + cuts_mt + triggers
 var = 'mt_total'
 cuts_os = copy.copy(cuts)
 cuts_os['os'] = cut_os
@@ -135,7 +135,7 @@ print h_WJ.Integral()
 # WJ renormalization
 ##############
 
-auto_WJ_SF = True
+auto_WJ_SF = False
 
 var_WJ_SF = 'mt'
 
@@ -177,7 +177,7 @@ if auto_WJ_SF:
 
     ratio_WJ_SF = h_ref_WJ_SF.histogram.Integral()/h_WJ_SF.histogram.Integral()
 else:
-    ratio_WJ_SF = .5
+    ratio_WJ_SF = 0.347231800378 # 0.469080403348 # .5
 
 print 'ratio_WJ_SF = ', ratio_WJ_SF
 h_WJ.Scale(ratio_WJ_SF)
@@ -199,8 +199,8 @@ cuts_QCD_C['sign'] = cut_os
 cuts_QCD_D['sign'] = cut_ss
 
 cuts_QCD_B['tau_iso'] = 'l2_byTightIsolationMVArun2v1DBoldDMwLT > 0.5'
-cuts_QCD_C['tau_iso'] = '(l2_byTightIsolationMVArun2v1DBoldDMwLT < 0.5 && l2_byIsolationMVArun2v1DBoldDMwLT > 0.5)'
-cuts_QCD_D['tau_iso'] = '(l2_byTightIsolationMVArun2v1DBoldDMwLT < 0.5 && l2_byIsolationMVArun2v1DBoldDMwLT > 0.5)'
+cuts_QCD_C['tau_iso'] = '!('+cuts_QCD_B['tau_iso']+')'
+cuts_QCD_D['tau_iso'] = cuts_QCD_C['tau_iso']
 
 cut_QCD_B = str(cuts_QCD_B)
 cut_QCD_B = '({cut})*({weight})'.format(cut=cut_QCD_B,weight=weight)
@@ -271,7 +271,7 @@ if auto_QCD:
     
     h_DY_QCD_C = add('DY_QCD_C', [h_DY_mlt50_QCD_C, h_DY_mht50_QCD_C])
     
-    h_TT_QCD_C = hist('TT_QCD_C', TT_pow, var_QCD, cut_QCD, *bins)
+    h_TT_QCD_C = hist('TT_QCD_C', TT_pow, var_QCD, cut_QCD_C, *bins)
     h_TT_QCD_C.Scale(TT_pow.weight)
     
     h_WJ_QCD_C = hist('WJ_QCD_C', WJetsToLNu_LO_ext, var_QCD, cut_QCD_C, *bins)
@@ -307,6 +307,7 @@ if auto_QCD:
     ratio_QCD = h_ref_QCD_C.histogram.Integral()/h_ref_QCD_D.histogram.Integral()
 else:
     ratio_QCD = 1.06 # Twiki
+    # ratio_QCD = 1.36950307892 # computed
     
 print 'ratio_QCD C/D = ', ratio_QCD
 
