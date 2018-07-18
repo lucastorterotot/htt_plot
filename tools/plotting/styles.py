@@ -47,7 +47,7 @@ sdata = sData
 histPref = {
     'DY': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
     'QCD': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
-    'WJ': {'style':swj, 'layer':20, 'legend':'WJ', 'stack': True},
+    'WJ': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
     'TT': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
     'data': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
     'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z#rightarrow #tau#tau', 'stack': True},

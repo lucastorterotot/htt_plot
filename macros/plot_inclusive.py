@@ -146,35 +146,35 @@ cuts_WJ_SF['os'] = cut_os
 cut_WJ_SF = str(cuts_WJ_SF)
 cut_WJ_SF = '({cut})*({weight})'.format(cut=cut_WJ_SF,weight=weight)
 
+h_data1_WJ_SF = hist('data1_WJ_SF', data1, var_WJ_SF, cut_WJ_SF, *bins)
+h_data2_WJ_SF = hist('data2_WJ_SF', data2, var_WJ_SF, cut_WJ_SF, *bins)
+h_data3_WJ_SF = hist('data3_WJ_SF', data3, var_WJ_SF, cut_WJ_SF, *bins)
+h_data4_WJ_SF = hist('data4_WJ_SF', data4, var_WJ_SF, cut_WJ_SF, *bins)
+
+all_data_WJ_SF = [h_data1_WJ_SF, h_data2_WJ_SF, h_data3_WJ_SF, h_data4_WJ_SF]
+
+h_data_WJ_SF = add('data_WJ_SF', all_data_WJ_SF)
+h_data_WJ_SF.Scale(1)
+
+h_DY_mlt50_WJ_SF   = hist('DY_mlt50_WJ_SF', DYJetsToLL_M10to50_LO, var_WJ_SF, cut_WJ_SF, *bins)
+h_DY_mlt50_WJ_SF.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_DY_mht50_WJ_SF = hist('DY_mht50_WJ_SF', DYJetsToLL_M50_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
+h_DY_mht50_WJ_SF.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_DY_WJ_SF = add('DY_WJ_SF', [h_DY_mlt50_WJ_SF, h_DY_mht50_WJ_SF])
+
+h_TT_WJ_SF = hist('TT_WJ_SF', TT_pow, var_WJ_SF, cut_WJ_SF, *bins)
+h_TT_WJ_SF.Scale(TT_pow.weight)
+
+h_WJ_SF = hist('WJ_SF', WJetsToLNu_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
+h_WJ_SF.Scale(WJetsToLNu_LO_ext.weight)
+
+h_DY_WJ_SF.Scale(-1)
+h_TT_WJ_SF.Scale(-1)
+h_ref_WJ_SF = add('ref_WJ_SF', [h_data_WJ_SF,h_DY_WJ_SF,h_TT_WJ_SF])
+    
 if auto_WJ_SF:
-    h_data1_WJ_SF = hist('data1_WJ_SF', data1, var_WJ_SF, cut_WJ_SF, *bins)
-    h_data2_WJ_SF = hist('data2_WJ_SF', data2, var_WJ_SF, cut_WJ_SF, *bins)
-    h_data3_WJ_SF = hist('data3_WJ_SF', data3, var_WJ_SF, cut_WJ_SF, *bins)
-    h_data4_WJ_SF = hist('data4_WJ_SF', data4, var_WJ_SF, cut_WJ_SF, *bins)
-
-    all_data_WJ_SF = [h_data1_WJ_SF, h_data2_WJ_SF, h_data3_WJ_SF, h_data4_WJ_SF]
-
-    h_data_WJ_SF = add('data_WJ_SF', all_data_WJ_SF)
-    h_data_WJ_SF.Scale(1)
-    
-    h_DY_mlt50_WJ_SF   = hist('DY_mlt50_WJ_SF', DYJetsToLL_M10to50_LO, var_WJ_SF, cut_WJ_SF, *bins)
-    h_DY_mlt50_WJ_SF.Scale(DYJetsToLL_M10to50_LO.weight)
-
-    h_DY_mht50_WJ_SF = hist('DY_mht50_WJ_SF', DYJetsToLL_M50_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
-    h_DY_mht50_WJ_SF.Scale(DYJetsToLL_M50_LO_ext.weight)
-
-    h_DY_WJ_SF = add('DY_WJ_SF', [h_DY_mlt50_WJ_SF, h_DY_mht50_WJ_SF])
-
-    h_TT_WJ_SF = hist('TT_WJ_SF', TT_pow, var_WJ_SF, cut_WJ_SF, *bins)
-    h_TT_WJ_SF.Scale(TT_pow.weight)
-    
-    h_WJ_SF = hist('WJ_SF', WJetsToLNu_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
-    h_WJ_SF.Scale(WJetsToLNu_LO_ext.weight)
-
-    h_DY_WJ_SF.Scale(-1)
-    h_TT_WJ_SF.Scale(-1)
-    h_ref_WJ_SF = add('ref_WJ_SF', [h_data_WJ_SF,h_DY_WJ_SF,h_TT_WJ_SF])
-
     ratio_WJ_SF = h_ref_WJ_SF.histogram.Integral()/h_WJ_SF.histogram.Integral()
 else:
     ratio_WJ_SF = 0.347231800378 # 0.469080403348 # .5
@@ -380,17 +380,18 @@ print h_Zj.Integral()
 
 h_Jtf = add('Jtf',[h_QCD,h_Zj])
 
-# electroweak
-
-h_ew = add('ew',[h_WJ])
-
 ##############
-# Fast plot
+# Print plots
 ##############
+
+lumi_in_barn = lumi*1e12
+
+from ROOT import gPad
 
 h_data.stack = False
-#plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi)
-plotter = Plotter([h_data, h_Ztt, h_Zll, h_ew, h_TT, h_Jtf], lumi)
-plotter.draw(var, 'a.u.')
+plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi_in_barn)
+#plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
+plotter.draw('m_{T}^{total}', 'Nevts')
+plotter.print_info('CMS',xmin=.175, ymin=.8)
 
-
+gPad.SaveAs("plot_inclusive.png")
