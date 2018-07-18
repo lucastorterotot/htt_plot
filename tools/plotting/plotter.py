@@ -47,17 +47,20 @@ class Plotter(object):
     def write(self, fname):
         the_file = open(fname, 'w')
         the_file.write(str(self.plot))
-        the_file.close()
+        the_file.close()    
     
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
         lumi = self.lumi
-        if lumi > 1e15:
-            lumi = int(self.lumi / 1e15)
+        if lumi > 1e18:
+            lumi = int(self.lumi / 1e18 *10.)/10.
             lumitext = '{lumi} ab^{{-1}}'.format(lumi=lumi)
+        elif lumi > 1e15:
+            lumi = int(self.lumi / 1e15 *10.)/10.
+            lumitext = '{lumi} fb^{{-1}}'.format(lumi=lumi)  
         elif lumi > 1e12:
-            lumi = int(self.lumi / 1e12)
-            lumitext = '{lumi} fb^{{-1}}'.format(lumi=lumi)            
+            lumi = int(self.lumi / 1e12 *10.)/10.
+            lumitext = '{lumi} pb^{{-1}}'.format(lumi=lumi)            
         if not xmin:
             xmin = 0.62
         if not ymin:
