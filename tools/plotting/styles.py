@@ -54,11 +54,11 @@ histPref = {
     'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet#rightarrow #tau_{h} fakes', 'stack': True},
     'Zll': {'style':sZll, 'layer':34, 'legend':'Z#rightarrow ll', 'stack': True},
     'ew': {'style':sew, 'layer':25, 'legend':'Electroweak', 'stack': True},
-    'DY_WJ_SF': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
-    'QCD_WJ_SF': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
-    'WJ_SF': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
-    'TT_WJ_SF': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
-    'data_WJ_SF': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
+    'DY_WJ_plot': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
+    'QCD_WJ_plot': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
+    'WJ_plot': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
+    'TT_WJ_plot': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
+    'data_WJ_plot': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
 }
 
 def set_style(comp):

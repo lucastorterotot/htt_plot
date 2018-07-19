@@ -39,7 +39,7 @@ class Plotter(object):
         self.plot.DrawStack()
         # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
         # self.plot.supportHist.GetYaxis().SetNdivisions(5)
-        self.plot.supportHist.GetXaxis().SetNdivisions(5)
+        # self.plot.supportHist.GetXaxis().SetNdivisions(5)
         self.plot.supportHist.GetXaxis().SetTitle(xtitle)
         self.plot.supportHist.GetYaxis().SetTitle(ytitle)
         
