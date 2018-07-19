@@ -132,7 +132,7 @@ print h_WJ.Integral()
 #h_WJ.Draw()
 
 ##############
-# WJ renormalization
+# WJ renormalization + plots
 ##############
 
 auto_WJ_SF = False
@@ -173,7 +173,7 @@ h_WJ_SF.Scale(WJetsToLNu_LO_ext.weight)
 h_DY_WJ_SF.Scale(-1)
 h_TT_WJ_SF.Scale(-1)
 h_ref_WJ_SF = add('ref_WJ_SF', [h_data_WJ_SF,h_DY_WJ_SF,h_TT_WJ_SF])
-    
+
 if auto_WJ_SF:
     ratio_WJ_SF = h_ref_WJ_SF.histogram.Integral()/h_WJ_SF.histogram.Integral()
 else:
@@ -181,6 +181,38 @@ else:
 
 print 'ratio_WJ_SF = ', ratio_WJ_SF
 h_WJ.Scale(ratio_WJ_SF)
+
+cuts_WJ_SF = copy.copy(cuts)
+cuts_WJ_SF['low_mt'] = 'mt>0'
+cuts_WJ_SF['os'] = cut_os
+
+cut_WJ_SF = str(cuts_WJ_SF)
+cut_WJ_SF = '({cut})*({weight})'.format(cut=cut_WJ_SF,weight=weight)
+
+h_data1_WJ_SF = hist('data1_WJ_SF', data1, var_WJ_SF, cut_WJ_SF, *bins)
+h_data2_WJ_SF = hist('data2_WJ_SF', data2, var_WJ_SF, cut_WJ_SF, *bins)
+h_data3_WJ_SF = hist('data3_WJ_SF', data3, var_WJ_SF, cut_WJ_SF, *bins)
+h_data4_WJ_SF = hist('data4_WJ_SF', data4, var_WJ_SF, cut_WJ_SF, *bins)
+
+all_data_WJ_SF = [h_data1_WJ_SF, h_data2_WJ_SF, h_data3_WJ_SF, h_data4_WJ_SF]
+
+h_data_WJ_SF = add('data_WJ_SF', all_data_WJ_SF)
+h_data_WJ_SF.Scale(1)
+
+h_DY_mlt50_WJ_SF   = hist('DY_mlt50_WJ_SF', DYJetsToLL_M10to50_LO, var_WJ_SF, cut_WJ_SF, *bins)
+h_DY_mlt50_WJ_SF.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_DY_mht50_WJ_SF = hist('DY_mht50_WJ_SF', DYJetsToLL_M50_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
+h_DY_mht50_WJ_SF.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_DY_WJ_SF = add('DY_WJ_SF', [h_DY_mlt50_WJ_SF, h_DY_mht50_WJ_SF])
+
+h_TT_WJ_SF = hist('TT_WJ_SF', TT_pow, var_WJ_SF, cut_WJ_SF, *bins)
+h_TT_WJ_SF.Scale(TT_pow.weight)
+
+h_WJ_SF = hist('WJ_SF', WJetsToLNu_LO_ext, var_WJ_SF, cut_WJ_SF, *bins)
+h_WJ_SF.Scale(WJetsToLNu_LO_ext.weight)
+h_WJ_SF.Scale(ratio_WJ_SF)
 
 ##############
 # QCD estimation
@@ -390,12 +422,24 @@ from ROOT import gPad
 from htt_plot.tools.plotting.tdrstyle import cmsPrel
 
 h_data.stack = False
+plotter = Plotter([h_data_WJ_SF, h_DY_WJ_SF, h_WJ_SF, h_TT_WJ_SF], lumi_in_barn)
+#plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
+plotter.draw('M_{T}^{#mu} (GeV)', 'Events')
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+#plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
+
+
+gPad.Update()
+gPad.SaveAs("plot_WJ_SF.png")
+
+h_data.stack = False
 plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi_in_barn)
 #plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
-plotter.draw('M_{T}^{total} (GeV)', 'Nevts')
+plotter.draw('M_{T}^{total} (GeV)', 'Events')
 cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
 #plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
 
 
 gPad.Update()
 gPad.SaveAs("plot_inclusive.png")
+
