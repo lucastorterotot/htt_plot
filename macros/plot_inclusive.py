@@ -2,8 +2,8 @@
 import htt_plot.tools.config as config
 config.parallel = False
 
-from htt_plot.datasets.lucas_all import *
-
+from htt_plot.datasets.lucas_small import *
+#TODO for debug
 from htt_plot.tools.cut import Cut
 from htt_plot.tools.plot import hist, add
 
@@ -387,11 +387,15 @@ h_Jtf = add('Jtf',[h_QCD,h_Zj])
 lumi_in_barn = lumi*1e12
 
 from ROOT import gPad
+from htt_plot.tools.plotting.tdrstyle import cmsPrel
 
 h_data.stack = False
 plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi_in_barn)
 #plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
 plotter.draw('M_{T}^{total} (GeV)', 'Nevts')
-plotter.print_info('CMS, #mu#tau_{h}',xmin=.175, ymin=.8)
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+#plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
 
+
+gPad.Update()
 gPad.SaveAs("plot_inclusive.png")
