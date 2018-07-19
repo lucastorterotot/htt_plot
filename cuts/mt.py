@@ -39,6 +39,14 @@ cuts_signal = CutFlow([
     ('low_mt', 'mt<40'),     
 ])
 
+cuts_btag_1 = CutFlow([
+    ('Btag_1', '(bjet1_csv > 0)'),     
+])
+
+cuts_btag_2 = CutFlow([
+    ('Btag_2', '(bjet2_csv > 0)'),     
+])
+
 cuts_mt = cuts_mu + cuts_tau + cuts_signal
 
 
