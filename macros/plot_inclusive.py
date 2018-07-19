@@ -28,8 +28,8 @@ weight='weight*weight_dy'
 # adding weight
 cut = '({cut})*({weight})'.format(cut=cut,weight=weight)
 
-bins = 50, 0., 500.
-bins_WJ_plot = 25, 0., 150.
+bins = 50, 0., 250.
+bins_WJ_plot = 30, 0., 150.
 
 lumi = 35900.
 
@@ -147,20 +147,20 @@ cuts_TT_SF['os'] = cut_os
 cut_TT_SF = str(cuts_TT_SF)
 cut_TT_SF = '({cut})*({weight})'.format(cut=cut_TT_SF,weight=weight)
 
-h_data1_TT_SF = hist('data1_TT_SF', data1, var_TT_SF, cut_TT_SF, *bins)
-h_data2_TT_SF = hist('data2_TT_SF', data2, var_TT_SF, cut_TT_SF, *bins)
-h_data3_TT_SF = hist('data3_TT_SF', data3, var_TT_SF, cut_TT_SF, *bins)
-h_data4_TT_SF = hist('data4_TT_SF', data4, var_TT_SF, cut_TT_SF, *bins)
-
-all_data_TT_SF = [h_data1_TT_SF, h_data2_TT_SF, h_data3_TT_SF, h_data4_TT_SF]
-
-h_ref_TT_SF = add('data_TT_SF', all_data_TT_SF)
-h_ref_TT_SF.Scale(1)
-
-h_TT_SF = hist('TT_TT_SF', TT_pow, var_TT_SF, cut_TT_SF, *bins)
-h_TT_SF.Scale(TT_pow.weight)
-
 if auto_TT_SF:
+    h_data1_TT_SF = hist('data1_TT_SF', data1, var_TT_SF, cut_TT_SF, *bins)
+    h_data2_TT_SF = hist('data2_TT_SF', data2, var_TT_SF, cut_TT_SF, *bins)
+    h_data3_TT_SF = hist('data3_TT_SF', data3, var_TT_SF, cut_TT_SF, *bins)
+    h_data4_TT_SF = hist('data4_TT_SF', data4, var_TT_SF, cut_TT_SF, *bins)
+    
+    all_data_TT_SF = [h_data1_TT_SF, h_data2_TT_SF, h_data3_TT_SF, h_data4_TT_SF]
+    
+    h_ref_TT_SF = add('data_TT_SF', all_data_TT_SF)
+    h_ref_TT_SF.Scale(1)
+    
+    h_TT_SF = hist('TT_TT_SF', TT_pow, var_TT_SF, cut_TT_SF, *bins)
+    h_TT_SF.Scale(TT_pow.weight)
+    
     ratio_TT_SF = h_ref_TT_SF.histogram.Integral()/h_TT_SF.histogram.Integral()
 else:
     ratio_TT_SF = 0.67665655842
@@ -276,7 +276,7 @@ h_DY_QCD_B.Scale(-1)
 h_TT_QCD_B.Scale(-1)
 h_WJ_QCD_B.Scale(-1)
 
-h_QCD = add('QCD', [h_data_QCD_B,h_DY_QCD_B,h_TT_QCD_B])
+h_QCD = add('QCD', [h_data_QCD_B,h_DY_QCD_B,h_TT_QCD_B,h_WJ_QCD_B])
 
 if auto_QCD:
     h_data1_QCD_C = hist('data1_C', data1, var_QCD, cut_QCD_C, *bins)
@@ -318,7 +318,7 @@ if auto_QCD:
     h_TT_QCD_C.Scale(-1)
     h_WJ_QCD_C.Scale(-1)
     
-    h_ref_QCD_C = add('ref_QCD_C', [h_data_QCD_C,h_DY_QCD_C,h_TT_QCD_C])
+    h_ref_QCD_C = add('ref_QCD_C', [h_data_QCD_C,h_DY_QCD_C,h_TT_QCD_C,h_WJ_QCD_C])
     
     
     h_DY_mlt50_QCD_D   = hist('DY_mlt50_QCD_D', DYJetsToLL_M10to50_LO, var_QCD, cut_QCD_D, *bins)
@@ -339,7 +339,7 @@ if auto_QCD:
     h_TT_QCD_D.Scale(-1)
     h_WJ_QCD_D.Scale(-1)
     
-    h_ref_QCD_D = add('ref_QCD_D', [h_data_QCD_D,h_DY_QCD_D,h_TT_QCD_D])
+    h_ref_QCD_D = add('ref_QCD_D', [h_data_QCD_D,h_DY_QCD_D,h_TT_QCD_D,h_WJ_QCD_D])
     
     ratio_QCD = h_ref_QCD_C.histogram.Integral()/h_ref_QCD_D.histogram.Integral()
 else:
@@ -362,8 +362,14 @@ cuts_WJ_plot = copy.copy(cuts)
 cuts_WJ_plot['low_mt'] = 'mt>0'
 cuts_WJ_plot['os'] = cut_os
 
+cuts_QCD_B_WJ_plot = copy.copy(cuts_QCD_B)
+cuts_QCD_B_WJ_plot['low_mt'] = cuts_WJ_plot['low_mt']
+
 cut_WJ_plot = str(cuts_WJ_plot)
 cut_WJ_plot = '({cut})*({weight})'.format(cut=cut_WJ_plot,weight=weight)
+
+cut_QCD_B_WJ_plot = str(cuts_QCD_B_WJ_plot)
+cut_QCD_B_WJ_plot = '({cut})*({weight})'.format(cut=cut_QCD_B_WJ_plot,weight=weight)
 
 h_data1_WJ_plot = hist('data1_WJ_plot', data1, var_WJ_plot, cut_WJ_plot, *bins_WJ_plot)
 h_data2_WJ_plot = hist('data2_WJ_plot', data2, var_WJ_plot, cut_WJ_plot, *bins_WJ_plot)
@@ -390,34 +396,34 @@ h_WJ_plot = hist('WJ_plot', WJetsToLNu_LO_ext, var_WJ_plot, cut_WJ_plot, *bins_W
 h_WJ_plot.Scale(WJetsToLNu_LO_ext.weight)
 h_WJ_plot.Scale(ratio_WJ_SF)
 
-h_data1_QCD_B_WJ_plot = hist('data1_B_WJ_plot', data1, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
-h_data2_QCD_B_WJ_plot = hist('data2_B_WJ_plot', data2, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
-h_data3_QCD_B_WJ_plot = hist('data3_B_WJ_plot', data3, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
-h_data4_QCD_B_WJ_plot = hist('data4_B_WJ_plot', data4, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
+h_data1_QCD_B_WJ_plot = hist('data1_B_WJ_plot', data1, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
+h_data2_QCD_B_WJ_plot = hist('data2_B_WJ_plot', data2, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
+h_data3_QCD_B_WJ_plot = hist('data3_B_WJ_plot', data3, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
+h_data4_QCD_B_WJ_plot = hist('data4_B_WJ_plot', data4, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 
 all_data_QCD_B_WJ_plot = [h_data1_QCD_B_WJ_plot, h_data2_QCD_B_WJ_plot, h_data3_QCD_B_WJ_plot, h_data4_QCD_B_WJ_plot]
 
 h_data_QCD_B_WJ_plot = add('data_QCD_B_WJ_plot', all_data_QCD_B_WJ_plot)
 
-h_DY_mlt50_QCD_B_WJ_plot   = hist('DY_mlt50_QCD_B_WJ_plot', DYJetsToLL_M10to50_LO, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
+h_DY_mlt50_QCD_B_WJ_plot   = hist('DY_mlt50_QCD_B_WJ_plot', DYJetsToLL_M10to50_LO, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 h_DY_mlt50_QCD_B_WJ_plot.Scale(DYJetsToLL_M10to50_LO.weight)
     
-h_DY_mht50_QCD_B_WJ_plot = hist('DY_mht50_QCD_B_WJ_plot', DYJetsToLL_M50_LO_ext, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
+h_DY_mht50_QCD_B_WJ_plot = hist('DY_mht50_QCD_B_WJ_plot', DYJetsToLL_M50_LO_ext, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 h_DY_mht50_QCD_B_WJ_plot.Scale(DYJetsToLL_M50_LO_ext.weight)
     
 h_DY_QCD_B_WJ_plot = add('DY_QCD_B_WJ_plot', [h_DY_mlt50_QCD_B_WJ_plot, h_DY_mht50_QCD_B_WJ_plot])
 
-h_TT_QCD_B_WJ_plot = hist('TT_QCD_B_WJ_plot', TT_pow, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
+h_TT_QCD_B_WJ_plot = hist('TT_QCD_B_WJ_plot', TT_pow, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 h_TT_QCD_B_WJ_plot.Scale(TT_pow.weight*ratio_TT_SF)
 
-h_WJ_QCD_B_WJ_plot = hist('WJ_QCD_B_WJ_plot', WJetsToLNu_LO_ext, var_WJ_plot, cut_QCD_B, *bins_WJ_plot)
+h_WJ_QCD_B_WJ_plot = hist('WJ_QCD_B_WJ_plot', WJetsToLNu_LO_ext, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 h_WJ_QCD_B_WJ_plot.Scale(WJetsToLNu_LO_ext.weight*ratio_WJ_SF)
 
 h_DY_QCD_B_WJ_plot.Scale(-1)
 h_TT_QCD_B_WJ_plot.Scale(-1)
 h_WJ_QCD_B_WJ_plot.Scale(-1)
 
-h_QCD_WJ_plot = add('QCD_WJ_plot', [h_data_QCD_B_WJ_plot,h_DY_QCD_B_WJ_plot,h_TT_QCD_B_WJ_plot])
+h_QCD_WJ_plot = add('QCD_WJ_plot', [h_data_QCD_B_WJ_plot,h_DY_QCD_B_WJ_plot,h_TT_QCD_B_WJ_plot,h_WJ_QCD_B_WJ_plot])
 
 ##############
 # Categories
