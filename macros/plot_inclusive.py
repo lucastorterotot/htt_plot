@@ -30,6 +30,7 @@ cut = '({cut})*({weight})'.format(cut=cut,weight=weight)
 
 bins = 50, 0., 250.
 bins_WJ_plot = 30, 0., 150.
+bins_TT_plot = bins
 
 lumi = 35900.
 
@@ -138,35 +139,37 @@ print h_WJ.Integral()
 
 auto_TT_SF = True
 
-var_TT_SF = 'mt'
+var_TT_SF = 'mt_total'
 
 cuts_TT_SF = copy.copy(cuts)
 cuts_TT_SF['btag'] = '(bjet1_csv > 0) && (bjet2_csv > 0)'
+cuts_TT_SF['low_mt'] = 'mt>70'
 cuts_TT_SF['os'] = cut_os
 
 cut_TT_SF = str(cuts_TT_SF)
 cut_TT_SF = '({cut})*({weight})'.format(cut=cut_TT_SF,weight=weight)
 
-if auto_TT_SF:
-    h_data1_TT_SF = hist('data1_TT_SF', data1, var_TT_SF, cut_TT_SF, *bins)
-    h_data2_TT_SF = hist('data2_TT_SF', data2, var_TT_SF, cut_TT_SF, *bins)
-    h_data3_TT_SF = hist('data3_TT_SF', data3, var_TT_SF, cut_TT_SF, *bins)
-    h_data4_TT_SF = hist('data4_TT_SF', data4, var_TT_SF, cut_TT_SF, *bins)
+h_data1_TT_SF = hist('data1_TT_SF', data1, var_TT_SF, cut_TT_SF, *bins)
+h_data2_TT_SF = hist('data2_TT_SF', data2, var_TT_SF, cut_TT_SF, *bins)
+h_data3_TT_SF = hist('data3_TT_SF', data3, var_TT_SF, cut_TT_SF, *bins)
+h_data4_TT_SF = hist('data4_TT_SF', data4, var_TT_SF, cut_TT_SF, *bins)
     
-    all_data_TT_SF = [h_data1_TT_SF, h_data2_TT_SF, h_data3_TT_SF, h_data4_TT_SF]
+all_data_TT_SF = [h_data1_TT_SF, h_data2_TT_SF, h_data3_TT_SF, h_data4_TT_SF]
     
-    h_ref_TT_SF = add('data_TT_SF', all_data_TT_SF)
-    h_ref_TT_SF.Scale(1)
+h_ref_TT_SF = add('data_TT_SF', all_data_TT_SF)
+h_ref_TT_SF.Scale(1)
     
-    h_TT_SF = hist('TT_TT_SF', TT_pow, var_TT_SF, cut_TT_SF, *bins)
-    h_TT_SF.Scale(TT_pow.weight)
-    
+h_TT_SF = hist('TT_TT_SF', TT_pow, var_TT_SF, cut_TT_SF, *bins)
+h_TT_SF.Scale(TT_pow.weight)
+
+if auto_TT_SF:    
     ratio_TT_SF = h_ref_TT_SF.histogram.Integral()/h_TT_SF.histogram.Integral()
 else:
-    ratio_TT_SF = 0.67665655842
+    ratio_TT_SF = 0.661120842707 # 0.67665655842
 
 print 'ratio_TT_SF = ', ratio_TT_SF
 h_TT.Scale(ratio_TT_SF)
+h_TT_SF.Scale(ratio_TT_SF)
 
 ##############
 # WJ renormalization
@@ -214,7 +217,7 @@ h_ref_WJ_SF = add('ref_WJ_SF', [h_data_WJ_SF,h_DY_WJ_SF,h_TT_WJ_SF])
 if auto_WJ_SF:
     ratio_WJ_SF = h_ref_WJ_SF.histogram.Integral()/h_WJ_SF.histogram.Integral()
 else:
-    ratio_WJ_SF = 0.498066833667 #0.353131555122 # 0.469080403348 # .5
+    ratio_WJ_SF = 0.503031524742 # 0.496253271691 #0.353131555122 # 0.469080403348 # .5
 
 print 'ratio_WJ_SF = ', ratio_WJ_SF
 h_WJ.Scale(ratio_WJ_SF)
@@ -353,6 +356,79 @@ if config.parallel:
     h_QCD = h_QCD.compute()
 
 ##############
+# TT plots
+##############
+
+var_TT_plot = var_TT_SF
+
+cuts_TT_plot = copy.copy(cuts_TT_SF)
+cuts_TT_plot['low_mt'] = 'mt>0'
+cuts_TT_plot['os'] = cut_os
+
+cuts_QCD_B_TT_plot = copy.copy(cuts_QCD_B)
+cuts_QCD_B_TT_plot['low_mt'] = cuts_TT_plot['low_mt']
+
+cut_TT_plot = str(cuts_TT_plot)
+cut_TT_plot = '({cut})*({weight})'.format(cut=cut_TT_plot,weight=weight)
+
+cut_QCD_B_TT_plot = str(cuts_QCD_B_TT_plot)
+cut_QCD_B_TT_plot = '({cut})*({weight})'.format(cut=cut_QCD_B_TT_plot,weight=weight)
+
+h_data1_TT_plot = hist('data1_TT_plot', data1, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_data2_TT_plot = hist('data2_TT_plot', data2, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_data3_TT_plot = hist('data3_TT_plot', data3, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_data4_TT_plot = hist('data4_TT_plot', data4, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+
+all_data_TT_plot = [h_data1_TT_plot, h_data2_TT_plot, h_data3_TT_plot, h_data4_TT_plot]
+
+h_data_TT_plot = add('data_TT_plot', all_data_TT_plot)
+h_data_TT_plot.Scale(1)
+
+h_DY_mlt50_TT_plot = hist('DY_mlt50_TT_plot', DYJetsToLL_M10to50_LO, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_DY_mlt50_TT_plot.Scale(DYJetsToLL_M10to50_LO.weight)
+
+h_DY_mht50_TT_plot = hist('DY_mht50_TT_plot', DYJetsToLL_M50_LO_ext, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_DY_mht50_TT_plot.Scale(DYJetsToLL_M50_LO_ext.weight)
+
+h_DY_TT_plot = add('DY_TT_plot', [h_DY_mlt50_TT_plot, h_DY_mht50_TT_plot])
+
+h_TT_plot = hist('TT_plot', TT_pow, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_TT_plot.Scale(TT_pow.weight*ratio_TT_SF)
+
+h_WJ_TT_plot = hist('WJ_TT_plot', WJetsToLNu_LO_ext, var_TT_plot, cut_TT_plot, *bins_TT_plot)
+h_WJ_TT_plot.Scale(WJetsToLNu_LO_ext.weight*ratio_WJ_SF)
+
+h_data1_QCD_B_TT_plot = hist('data1_B_TT_plot', data1, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_data2_QCD_B_TT_plot = hist('data2_B_TT_plot', data2, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_data3_QCD_B_TT_plot = hist('data3_B_TT_plot', data3, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_data4_QCD_B_TT_plot = hist('data4_B_TT_plot', data4, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+
+all_data_QCD_B_TT_plot = [h_data1_QCD_B_TT_plot, h_data2_QCD_B_TT_plot, h_data3_QCD_B_TT_plot, h_data4_QCD_B_TT_plot]
+
+h_data_QCD_B_TT_plot = add('data_QCD_B_TT_plot', all_data_QCD_B_TT_plot)
+
+h_DY_mlt50_QCD_B_TT_plot   = hist('DY_mlt50_QCD_B_TT_plot', DYJetsToLL_M10to50_LO, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_DY_mlt50_QCD_B_TT_plot.Scale(DYJetsToLL_M10to50_LO.weight)
+    
+h_DY_mht50_QCD_B_TT_plot = hist('DY_mht50_QCD_B_TT_plot', DYJetsToLL_M50_LO_ext, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_DY_mht50_QCD_B_TT_plot.Scale(DYJetsToLL_M50_LO_ext.weight)
+    
+h_DY_QCD_B_TT_plot = add('DY_QCD_B_TT_plot', [h_DY_mlt50_QCD_B_TT_plot, h_DY_mht50_QCD_B_TT_plot])
+
+h_TT_QCD_B_TT_plot = hist('TT_QCD_B_TT_plot', TT_pow, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_TT_QCD_B_TT_plot.Scale(TT_pow.weight*ratio_TT_SF)
+
+h_WJ_QCD_B_TT_plot = hist('WJ_QCD_B_TT_plot', WJetsToLNu_LO_ext, var_TT_plot, cut_QCD_B_TT_plot, *bins_TT_plot)
+h_WJ_QCD_B_TT_plot.Scale(WJetsToLNu_LO_ext.weight*ratio_WJ_SF)
+
+h_DY_QCD_B_TT_plot.Scale(-1)
+h_TT_QCD_B_TT_plot.Scale(-1)
+h_WJ_QCD_B_TT_plot.Scale(-1)
+
+h_QCD_TT_plot = add('QCD_TT_plot', [h_data_QCD_B_TT_plot,h_DY_QCD_B_TT_plot,h_WJ_QCD_B_TT_plot,h_TT_QCD_B_TT_plot])
+h_QCD_TT_plot.Scale(ratio_QCD)
+
+##############
 # WJ plots
 ##############
 
@@ -393,8 +469,7 @@ h_TT_WJ_plot = hist('TT_WJ_plot', TT_pow, var_WJ_plot, cut_WJ_plot, *bins_WJ_plo
 h_TT_WJ_plot.Scale(TT_pow.weight*ratio_TT_SF)
 
 h_WJ_plot = hist('WJ_plot', WJetsToLNu_LO_ext, var_WJ_plot, cut_WJ_plot, *bins_WJ_plot)
-h_WJ_plot.Scale(WJetsToLNu_LO_ext.weight)
-h_WJ_plot.Scale(ratio_WJ_SF)
+h_WJ_plot.Scale(WJetsToLNu_LO_ext.weight*ratio_WJ_SF)
 
 h_data1_QCD_B_WJ_plot = hist('data1_B_WJ_plot', data1, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
 h_data2_QCD_B_WJ_plot = hist('data2_B_WJ_plot', data2, var_WJ_plot, cut_QCD_B_WJ_plot, *bins_WJ_plot)
@@ -424,6 +499,7 @@ h_TT_QCD_B_WJ_plot.Scale(-1)
 h_WJ_QCD_B_WJ_plot.Scale(-1)
 
 h_QCD_WJ_plot = add('QCD_WJ_plot', [h_data_QCD_B_WJ_plot,h_DY_QCD_B_WJ_plot,h_TT_QCD_B_WJ_plot,h_WJ_QCD_B_WJ_plot])
+h_QCD_WJ_plot.Scale(ratio_QCD)
 
 ##############
 # Categories
@@ -496,15 +572,36 @@ from ROOT import gPad
 from htt_plot.tools.plotting.tdrstyle import cmsPrel
 
 h_data.stack = False
+plotter = Plotter([h_data_TT_plot, h_DY_TT_plot, h_TT_plot, h_WJ_TT_plot], lumi_in_barn)
+#plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
+plotter.draw('M_{T}^{total} (GeV)', 'Events')
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+#plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
+gPad.SetLogy()
+gPad.Update()
+gPad.SaveAs("plot_TT_SF.png")
+
+plotter.plot.DrawDataOverMCMinus1()
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+
+gPad.Update()
+gPad.SaveAs("plot_TT_SF_ratio.png")
+
+h_data.stack = False
 plotter = Plotter([h_data_WJ_plot, h_DY_WJ_plot, h_WJ_plot, h_TT_WJ_plot, h_QCD_WJ_plot], lumi_in_barn)
 #plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
 plotter.draw('M_{T}^{#mu} (GeV)', 'Events')
 cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
 #plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
 
-
 gPad.Update()
 gPad.SaveAs("plot_WJ_SF.png")
+
+plotter.plot.DrawDataOverMCMinus1()
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+
+gPad.Update()
+gPad.SaveAs("plot_WJ_SF_ratio.png")
 
 h_data.stack = False
 plotter = Plotter([h_data, h_DY, h_WJ, h_TT, h_QCD], lumi_in_barn)
@@ -513,7 +610,11 @@ plotter.draw('M_{T}^{total} (GeV)', 'Events')
 cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
 #plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
 
-
 gPad.Update()
 gPad.SaveAs("plot_inclusive.png")
 
+plotter.plot.DrawDataOverMCMinus1()
+cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
+
+gPad.Update()
+gPad.SaveAs("plot_inclusive_ratio.png")

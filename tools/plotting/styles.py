@@ -59,6 +59,11 @@ histPref = {
     'WJ_plot': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
     'TT_WJ_plot': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
     'data_WJ_plot': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
+    'DY_TT_plot': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
+    'QCD_TT_plot': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
+    'WJ_TT_plot': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
+    'TT_plot': {'style':stt, 'layer':41, 'legend':'t#bar{t}', 'stack': True},
+    'data_TT_plot': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
 }
 
 def set_style(comp):
