@@ -572,12 +572,12 @@ from ROOT import gPad
 from htt_plot.tools.plotting.tdrstyle import cmsPrel
 
 h_data.stack = False
-plotter = Plotter([h_data_TT_plot, h_DY_TT_plot, h_TT_plot, h_WJ_TT_plot], lumi_in_barn)
+plotter = Plotter([h_data_TT_plot, h_DY_TT_plot, h_TT_plot], lumi_in_barn)
 #plotter = Plotter([h_data, h_Ztt, h_Zll, h_WJ, h_TT, h_Jtf], lumi_in_barn)
 plotter.draw('M_{T}^{total} (GeV)', 'Events')
 cmsPrel(lumi,  energy=13.,  simOnly=False,  onLeft=True,  sp=0, textScale=1., xoffset=0.)
 #plotter.print_info('Channel #mu#tau_{h}',xmin=.175, ymin=.8)
-gPad.SetLogy()
+
 gPad.Update()
 gPad.SaveAs("plot_TT_SF.png")
 
