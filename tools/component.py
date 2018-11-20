@@ -10,7 +10,9 @@ class Component(object):
           self.stack = True
           
      def Clone(self, name):
-          return Component(name, *self.args)
+          new = Component(name, *self.args)
+          new.histogram = self.histogram.Clone(name)
+          return new
 
      def Add(self, other):
           self.histogram.Add(other.histogram)

@@ -27,12 +27,15 @@ class Dataset(object):
         self.tfile = TFile(rootfname)
         self.tree = self.tfile.Get('tree')
         
+    def lumi_eq(self):
+        return float(self.nevts) / self.xsection * self.norm_factor
+        
     def compute_weight(self, lumi_data = None):
         if self.is_data:
             self.weight = self.norm_factor
         else:
             if not lumi_data:
                 raise ValueError('provide lumi to weight MC component')
-            self.weight = self.xsection*lumi_data/self.nevts*self.norm_factor
+            self.weight = float(self.xsection)*lumi_data/self.nevts*self.norm_factor
         return self.weight
 

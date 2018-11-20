@@ -21,6 +21,12 @@ def add(name, components):
         comp.Add(other_hist)
     return comp
 
+def scale(component, factor):
+    print 'scaling'
+    component.Scale(factor)
+    return component
+
 if config.parallel:
     hist = delayed(hist)
     add = delayed(add)
+    scale = delayed(scale)

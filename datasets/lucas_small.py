@@ -9,7 +9,7 @@ nevents_fraction = 1./100
 DYJetsToLL_M10to50_LO = Dataset(
     'DYJetsToLL_M10to50_LO',
     basedir+'DYJetsToLL_M10to50_LO.root',
-    35291566*nevents_fraction, 18610.
+    35291566*nevents_fraction, 18610
 )
 DYJetsToLL_M50_LO_ext = Dataset(
     'DYJetsToLL_M50_LO_ext',
@@ -44,21 +44,21 @@ WJetsToLNu_LO_ext = Dataset(
 data1 = Dataset(
     'data1',
     basedir+'data_single_muon_1.root',
-    norm_factor = 1/nevents_fraction
+    norm_factor = 1.
 )
 data2 = Dataset(
     'data1',
     basedir+'data_single_muon_2.root',
-    norm_factor = 1/nevents_fraction
+    norm_factor = 1.
 )
 data3 = Dataset(
     'data1',
     basedir+'data_single_muon_3.root',
-    norm_factor = 1/nevents_fraction
+    norm_factor = 1.
 )
 data4 = Dataset(
     'data1',
     basedir+'data_single_muon_4.root',
-    norm_factor = 1/nevents_fraction
+    norm_factor = 1.
 )
 
