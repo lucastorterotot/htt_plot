@@ -11,11 +11,12 @@ sdata = sData
 histPref = {
     'DY': {'style':sdy, 'layer':30, 'legend':'DY', 'stack': True},
     'WJ': {'style':swj, 'layer':9, 'legend':'WJ', 'stack': True},
-    'TT': {'style':stt, 'layer':10, 'legend':'TT', 'stack': True},
+    'TT*': {'style':stt, 'layer':10, 'legend':'TT', 'stack': True},
     'data': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
 }
 
 def set_style(comp):
+    found=False
     for key, pref in histPref.iteritems():
         if fnmatch.fnmatch(comp.name, key):
             comp.style = pref['style']

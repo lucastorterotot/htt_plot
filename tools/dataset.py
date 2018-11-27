@@ -25,7 +25,7 @@ class Dataset(object):
         else:
             self.is_data = True
         self.tfile = TFile(rootfname)
-        self.tree = self.tfile.Get('tree')
+        self.tree = self.tfile.Get('events')
         
     def lumi_eq(self):
         return float(self.nevts) / self.xsection * self.norm_factor
