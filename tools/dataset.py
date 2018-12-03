@@ -12,7 +12,7 @@ class Dataset(object):
     xsection : xsection   
     '''
     
-    def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1.):
+    def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1., treename='tree'):
         self.name = name
         self.rootfname = rootfname
         self.nevts = nevts
@@ -25,7 +25,7 @@ class Dataset(object):
         else:
             self.is_data = True
         self.tfile = TFile(rootfname)
-        self.tree = self.tfile.Get('events')
+        self.tree = self.tfile.Get(treename)
         
     def lumi_eq(self):
         return float(self.nevts) / self.xsection * self.norm_factor
