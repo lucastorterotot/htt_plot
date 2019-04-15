@@ -1,73 +1,43 @@
-
 import fnmatch
+
+from ROOT import TColor
 
 from cpyroot.tools.style import *
 
-sZtt = Style(markerColor=kOrange-3,
-             markerSize=1,
-             lineColor=1,
-             lineWidth=1,
-             fillColor=kOrange-4,
-             fillStyle=1001)
+qcdcol = TColor.GetColor(250,202,255)
+embedcol =  TColor.GetColor(248,206,104)
+dycol = TColor.GetColor(0,150,255)
+wcol = TColor.GetColor(222,90,106)
+ttcol = TColor.GetColor(155,152,204)
+zlcol = TColor.GetColor(100,182,232)
+dibosoncol = TColor.GetColor(222,90,106)
 
-sJtf = Style(markerColor=kSpring+7,
-             markerSize=1,
-             lineColor=1,
-             lineWidth=1,
-             fillColor=kSpring+5,
-             fillStyle=1001)
-
-sZll = Style(markerColor=kAzure+9,
-             markerSize=1,
-             lineColor=1,
-             lineWidth=1,
-             fillColor=kAzure+8,
-             fillStyle=1001)
-
-sew  = Style(markerColor=kRed-3,
-             markerSize=1,
-             lineColor=1,
-             lineWidth=1,
-             fillColor=kRed-6,
-             fillStyle=1001)
-
-stt = Style(markerColor=kBlue-6,
-            markerSize=1,
-            lineColor=1,
-            lineWidth=1,
-            fillColor=kBlue-8,
-            fillStyle=1001)
-
-sqcd = sJtf # Style(markerColor=3, markerSize=1, lineColor=3, fillColor=3, fillStyle=0)
-sdy = sZtt # Style(markerColor=4, markerSize=1, lineColor=4, fillColor=kBlue-9, fillStyle=3344)
-swj = sew # Style(markerColor=2, markerSize=1, lineColor=2, fillColor=5, fillStyle=0)
-#stt = Style(markerColor=8, markerSize=1, lineColor=8, fillColor=5, fillStyle=0)
+sdy = Style(markerColor=dycol, markerSize=1, lineColor=1, fillColor=dycol, fillStyle=1001)
+sembed = Style(markerColor=embedcol, markerSize=1, lineColor=1, fillColor=embedcol, fillStyle=1001)
+swj = Style(markerColor=wcol, markerSize=1, lineColor=1, fillColor=wcol, fillStyle=1001)
+stt = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillStyle=1001)
+sDiboson = Style(markerColor=dibosoncol, markerSize=1, lineColor=1, fillColor=dibosoncol, fillStyle=1001)
+ssingletop = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillStyle=1001)
+sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=1001)
 sdata = sData
 
 histPref = {
-    'DY': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
-    'QCD': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
-    'WJ': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
-    'TT': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
-    'data': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
-    'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z#rightarrow #tau#tau', 'stack': True},
-    'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet#rightarrow #tau_{h} fakes', 'stack': True},
-    'Zll': {'style':sZll, 'layer':34, 'legend':'Z#rightarrow ll', 'stack': True},
-    'ew': {'style':sew, 'layer':25, 'legend':'Electroweak', 'stack': True},
-    'DY_WJ_plot': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
-    'QCD_WJ_plot': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
-    'WJ_plot': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
-    'TT_WJ_plot': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
-    'data_WJ_plot': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
+    'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
+    'Embedded': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow embedded', 'stack': True},
+    'WJ': {'style':swj, 'layer':9, 'legend':'WJ', 'stack': True},
+    'TTBar': {'style':stt, 'layer':2, 'legend':'TTBar', 'stack': True},
+    'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
+    'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
+    'data': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
+    'fakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
+    
 }
 
 def set_style(comp):
+    found=False
     for key, pref in histPref.iteritems():
         if fnmatch.fnmatch(comp.name, key):
             comp.style = pref['style']
             found = True
     if not found:
-        comp.style = sData
-    
-    
-    
+comp.style = sData

@@ -1,7 +1,7 @@
 from itertools import count
 import fnmatch
 
-from ROOT import TPaveText, TH1
+from ROOT import TPaveText, TH1, TCanvas
 
 from cpyroot import *
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
@@ -12,7 +12,39 @@ class Plotter(object):
 
     _ihist = count(0)
     
+    def buildCanvas(self):
+        can = self.can
+        pad = self.pad
+        padr = self.padr
+        if not all([can, pad, padr]):
+            can = self.can = TCanvas('can', '', 800, 800) if not can else can
+            can.Divide(1, 2, 0.0, 0.0)
+
+            pad = self.pad = can.GetPad(1) if not pad else pad
+            padr = self.padr = can.GetPad(2) if not padr else padr
+
+            # Set Pad sizes
+            pad.SetPad(0.0, 0.32, 1., 1.0)
+            padr.SetPad(0.0, 0.00, 1., 0.34)
+
+            pad.SetTopMargin(0.08)
+            pad.SetLeftMargin(0.16)
+            pad.SetBottomMargin(0.03)
+            pad.SetRightMargin(0.05)
+
+            padr.SetBottomMargin(0.35)
+            padr.SetLeftMargin(0.16)
+            padr.SetRightMargin(0.05)
+
+        can.cd()
+        can.Draw()
+        pad.Draw()
+        padr.Draw()
+    
     def __init__(self, comps, lumi):
+        self.can = None
+        self.pad = None
+        self.padr = None
         self.comps = comps
         for comp in self.comps:
             set_style(comp)
@@ -27,53 +59,45 @@ class Plotter(object):
         print hist_name
         return hist
 
-    def _prepare_plot(self):
+    def _prepare_plot(self, xtitle):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
-            hist = comp.histogram
+            hist = comp.histogram[xtitle]    
             plot.AddHistogram(comp.name, hist)
         return plot
     
-    def draw(self, xtitle, ytitle):
-        self.plot = self._prepare_plot()
+    def draw(self, xtitle, ytitle, makecanvas=True):
+        self.plot = self._prepare_plot(xtitle)
+        if makecanvas:
+            self.buildCanvas()
+            self.pad.cd()
         self.plot.DrawStack()
-        # self.plot.supportHist.GetYaxis().SetTitleOffset(1.35)
-        # self.plot.supportHist.GetYaxis().SetNdivisions(5)
-        # self.plot.supportHist.GetXaxis().SetNdivisions(5)
-        self.plot.supportHist.GetXaxis().SetTitle(xtitle)
-        self.plot.supportHist.GetYaxis().SetTitle(ytitle)
         
-        minX = self.plot.supportHist.GetXaxis().GetXmin()
-        maxX = self.plot.supportHist.GetXaxis().GetXmax()
-        NbinsX = self.plot.supportHist.GetXaxis().GetNbins()
-        NticksX = 5
-        # for tick_num in range(1,NticksX):
-        #     bin_to_label = int(tick_num * 1. * NbinsX/NticksX)
-        #     bin_label = int(minX + tick_num * 1. * (maxX-minX)/NticksX)
-        #     self.plot.supportHist.GetXaxis().SetBinLabel(bin_to_label,"{}".format(bin_label))
-        # self.plot.supportHist.GetXaxis().SetBinLabel(1,"{}".format(int(minX)))
-        # self.plot.supportHist.GetXaxis().SetBinLabel(NbinsX-1,"{}".format(int(maxX)))
-        # self.plot.supportHist.GetXaxis().LabelsOption("h")
-        
-        minY = self.plot.supportHist.GetYaxis().GetXmin()
-        maxY = self.plot.supportHist.GetYaxis().GetXmax()
-        NbinsY = self.plot.supportHist.GetYaxis().GetNbins()
-        NticksY = 5
-        # for tick_num in range(1,NticksY):
-        #     bin_to_label = int(tick_num * 1. * NbinsY/NticksY)
-        #     bin_label = int(minY + tick_num * 1. * (maxY-minY)/NticksY)
-        #     self.plot.supportHist.GetYaxis().SetBinLabel(bin_to_label,"{}".format(bin_label))
-        # self.plot.supportHist.GetYaxis().SetBinLabel(1,"{}".format(int(minY)))
-        # self.plot.supportHist.GetYaxis().SetBinLabel(NbinsY-1,"{}".format(int(maxY)))
-        # self.plot.supportHist.GetYaxis().LabelsOption("h")
-        
-        #import pdb; pdb.set_trace()
-        gPad.Update()
+        Xaxis = self.plot.supportHist.GetXaxis()
+        Yaxis = self.plot.supportHist.GetYaxis()
+        Xaxis.SetTitle(xtitle)
+        Yaxis.SetTitle(ytitle)
+        if makecanvas:
+            self.padr.cd()
+        self.ratioplot = copy.deepcopy(self.plot)
+        self.ratioplot.DrawDataOverMCMinus1(-0.5,0.5)
+        ratioXaxis = self.ratioplot.dataOverMCHist.GetXaxis()
+        ratioYaxis = self.ratioplot.dataOverMCHist.GetYaxis()
+        ratioXaxis.SetTitleSize(Xaxis.GetTitleSize()*2.)
+        ratioYaxis.SetTitleSize(Yaxis.GetTitleSize()*2.)
+        # ratioXaxis.SetTitleOffset(Xaxis.GetTitleOffset()/2.)
+        ratioYaxis.SetTitleOffset(Yaxis.GetTitleOffset()/2.)
+        ratioXaxis.SetLabelSize(Xaxis.GetLabelSize()*2.)
+        ratioYaxis.SetLabelSize(Yaxis.GetLabelSize()*2.)
+        Xaxis.SetLabelColor(0)
+        Xaxis.SetLabelSize(0)
+        if makecanvas:
+            self.padr.Update()
+            self.can.cd()
+            gPad.Update()
    
     def write(self, fname):
-        the_file = open(fname, 'w')
-        the_file.write(str(self.plot))
-        the_file.close()    
+        self.can.SaveAs(fname)
     
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
