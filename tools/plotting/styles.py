@@ -12,7 +12,9 @@ ttcol = TColor.GetColor(155,152,204)
 zlcol = TColor.GetColor(100,182,232)
 dibosoncol = TColor.GetColor(222,90,106)
 
+sqcd = Style(markerColor=qcdcol, markerSize=1, lineColor=1, fillColor=qcdcol, fillStyle=1001)
 sdy = Style(markerColor=dycol, markerSize=1, lineColor=1, fillColor=dycol, fillStyle=1001)
+sZll = Style(markerColor=kAzure+9, markerSize=1, lineColor=1, fillColor=kAzure+8, fillStyle=1001)
 sembed = Style(markerColor=embedcol, markerSize=1, lineColor=1, fillColor=embedcol, fillStyle=1001)
 swj = Style(markerColor=wcol, markerSize=1, lineColor=1, fillColor=wcol, fillStyle=1001)
 stt = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillStyle=1001)
@@ -27,10 +29,10 @@ histPref = {
     'WJ': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
     'TT': {'style':stt, 'layer':10, 'legend':'t#bar{t}', 'stack': True},
     'data': {'style':sdata, 'layer':100, 'legend':'Observation', 'stack': False},
-    'Ztt': {'style':sZtt, 'layer':45, 'legend':'Z#rightarrow #tau#tau', 'stack': True},
-    'Jtf': {'style':sJtf, 'layer':35, 'legend':'jet#rightarrow #tau_{h} fakes', 'stack': True},
+    'Ztt': {'style':sdy, 'layer':45, 'legend':'Z#rightarrow #tau#tau', 'stack': True},
+    'Jtf': {'style':sfakes, 'layer':35, 'legend':'jet#rightarrow #tau_{h} fakes', 'stack': True},
     'Zll': {'style':sZll, 'layer':34, 'legend':'Z#rightarrow ll', 'stack': True},
-    'ew': {'style':sew, 'layer':25, 'legend':'Electroweak', 'stack': True},
+    'ew': {'style':swj, 'layer':25, 'legend':'Electroweak', 'stack': True},
     'DY_WJ_plot': {'style':sdy, 'layer':40, 'legend':'DY', 'stack': True},
     'QCD_WJ_plot': {'style':sqcd, 'layer':30, 'legend':'QCD', 'stack': True},
     'WJ_plot': {'style':swj, 'layer':20, 'legend':'W+Jets', 'stack': True},
