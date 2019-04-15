@@ -9,7 +9,7 @@ def build_component(name, datasets, var, cut, *bins):
     if isinstance(cut,Cut):
         cut = cut.cutstr
     comp = Component(name, datasets, var, cut, *bins)
-    print 'histogramming', name, comp.GetEntries()
+    # print 'histogramming', name, comp.GetEntries()
     return comp
 
 def build_components(names, datasets, var, cut, *bins):
@@ -23,12 +23,13 @@ def build_components(names, datasets, var, cut, *bins):
         components = list(compute(*components))
     return components
 
-def merge_components(name, components):
+def merge_components(name, components, extension=False):
     print 'adding'
     comp = components[0].Clone(name)
-    comp.Reset()
+    comp.reset()
     for other_hist in components:
-        comp.Add(other_hist)
+        for var in comp.variables:
+            comp.histogram[var].Add(other_hist.histogram[var])
     return comp
 
 def scale_component(component, factor):

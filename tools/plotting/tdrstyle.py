@@ -223,7 +223,7 @@ def setTDRStyle(square=True):
 # For the axis:
 
   tdrStyle.SetAxisColor(1, "XYZ")
-  tdrStyle.SetStripDecimals(True)
+  tdrStyle.SetStripDecimals(rt.kTRUE)
   tdrStyle.SetTickLength(0.03, "XYZ")
   # tdrStyle.SetNdivisions(510, "XYZ")
   tdrStyle.SetPadTickX(1)  # To get tick marks on the opposite side of the frame

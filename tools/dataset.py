@@ -30,12 +30,12 @@ class Dataset(object):
     def lumi_eq(self):
         return float(self.nevts) / self.xsection * self.norm_factor
         
-    def compute_weight(self, lumi_data = None):
-        if self.is_data:
+    def compute_weight(self, lumi_data = None, stitched=False):
+        if self.is_data or stitched:
             self.weight = self.norm_factor
         else:
             if not lumi_data:
                 raise ValueError('provide lumi to weight MC component')
-            self.weight = float(self.xsection)*lumi_data/self.nevts*self.norm_factor
+            self.weight = (float(self.xsection)*lumi_data)/(self.nevts*self.norm_factor)
         return self.weight
 

@@ -2,108 +2,309 @@ from htt_plot.tools.dataset import Dataset
 
 import os 
 
-basedir = os.path.expandvars('/data2/gtouquet/MSSM_Samples_201118/')
+basepath = os.path.expandvars('/data2/gtouquet/MSSM_Samples_310119/{}/tree_fakes.root')
 
 treename = 'events'
+data_lumi = 41529
 
-nevents_fraction = 1.
+##### MC
+
+## DY
+
+n_ev_dy_incl = 48675378. + 49125561.
+n_ev_dy_1jet = 42331295. + 33669127.
+n_ev_dy_2jet = 88895. + 9701595.
+n_ev_dy_3jet = 5748466. + 1149467.
+n_ev_dy_4jet = 4328648.
+
+dy_xsec_incl = 5765.4
+k_factor = dy_xsec_incl/5343.0
+dy_xsec_1jet = 877.8 * k_factor
+dy_xsec_2jet = 304.4 * k_factor
+dy_xsec_3jet = 111.5 * k_factor
+dy_xsec_4jet = 44.03 * k_factor
 
 DYJetsToLL_M50 = Dataset(
     'DYJetsToLL_M50',
-    basedir+'DYJetsToLL_M50/NtupleProducer/tree.root',
-    48675378*nevents_fraction, 6225.42,
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_incl, 5765.4,
+    treename = treename
+)
+DYJetsToLL_M50_ext = Dataset(
+    'DYJetsToLL_M50_ext',
+    basepath.format('DYJetsToLL_M50_ext'),
+    n_ev_dy_incl, 5765.4,
+    treename = treename
+)
+DY1JetsToLL_M50 = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_1jet, 5765.4,
+    treename = treename
+)
+DY1JetsToLL_M50_ext = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_1jet, 5765.4,
+    treename = treename
+)
+DY2JetsToLL_M50 = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_2jet, 5765.4,
+    treename = treename
+)
+DY2JetsToLL_M50_ext = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_2jet, 5765.4,
+    treename = treename
+)
+DY3JetsToLL_M50 = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_3jet, 5765.4,
+    treename = treename
+)
+DY3JetsToLL_M50_ext = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_3jet, 5765.4,
+    treename = treename
+)
+DY4JetsToLL_M50 = Dataset(
+    'DYJetsToLL_M50',
+    basepath.format('DYJetsToLL_M50'),
+    n_ev_dy_4jet, 5765.4,
     treename = treename
 )
 
+dy_weight_dict = {
+    0:dy_xsec_incl/n_ev_dy_incl,
+    1:dy_xsec_1jet/(n_ev_dy_incl*dy_xsec_1jet/dy_xsec_incl + n_ev_dy_1jet),
+    2:dy_xsec_2jet/(n_ev_dy_incl*dy_xsec_2jet/dy_xsec_incl  + n_ev_dy_2jet),
+    3:dy_xsec_3jet/(n_ev_dy_incl*dy_xsec_3jet/dy_xsec_incl  + n_ev_dy_3jet),
+    4:dy_xsec_4jet/(n_ev_dy_incl*dy_xsec_4jet/dy_xsec_incl  + n_ev_dy_4jet),
+}
 
-WJetsToLNu_LO = Dataset(
+dy_exps = []
+for njet in range(0, 4):
+    weight = dy_weight_dict[njet]
+    dy_exps.append('(n_up == {njet})*{weight}'.format(njet=njet, weight=weight*data_lumi))
+dy_stitching_weight = '({})'.format(' + '.join(dy_exps))
+
+WJetsToLNu = Dataset(
     'WJetsToLNu',
-    basedir+'WJetsToLNu_LO/NtupleProducer/tree.root',
-    33073306*nevents_fraction, 61526.7,
+    basepath.format('WJetsToLNu_LO'),
+    33073306*(64./65.)+44627200, 61526.7,
     treename = treename
 )
+WJetsToLNu_ext = Dataset(
+    'WJetsToLNu_ext',
+    basepath.format('WJetsToLNu_LO_ext'),
+    33073306*(64./65.)+44627200, 61526.7,
+    treename = treename
+)
+
 
 TTHad_pow = Dataset(
     'TTHad_pow',
-    basedir+'TTHad_pow/NtupleProducer/tree.root',
-    41729120*nevents_fraction, 377.96,
+    basepath.format('TTHad_pow'),
+    41729120, 377.96,
     treename = treename
 )
 TTLep_pow = Dataset(
     'TTLep_pow',
-    basedir+'TTLep_pow/NtupleProducer/tree.root',
-    9000000*nevents_fraction, 88.29,
+    basepath.format('TTLep_pow'),
+    9000000*(7./17.), 88.29,
     treename = treename
 )
 TTSemi_pow = Dataset(
     'TTSemi_pow',
-    basedir+'TTSemi_pow/NtupleProducer/tree.root',
-    43732445*nevents_fraction, 365.35,
+    basepath.format('TTSemi_pow'),
+    43732445, 365.35,
     treename = treename
 )
 
-#data
+##### Single top
+
+TBar_tch = Dataset(
+    'TBar_tch',
+    basepath.format('TBar_tch'),
+    3652340, 80.95,
+    treename = treename
+)
+TBar_tWch = Dataset(
+    'TBar_tWch',
+    basepath.format('TBar_tWch'),
+    7977430*(14./15.), 35.85,
+    treename = treename
+)
+T_tch = Dataset(
+    'T_tch',
+    basepath.format('T_tch'),
+    5982064, 136.02,
+    treename = treename
+)
+T_tWch = Dataset(
+    'T_tWch',
+    basepath.format('T_tWch'),
+    7794186, 35.85,
+    treename = treename
+)
+
+##### DiBoson inclusive
+
+# using inclusive WW and WZ datasets for now
+WW = Dataset(
+    'WW',
+    basepath.format('WW'),
+    7791498, 75.88,
+    treename = treename
+)
+WZ = Dataset(
+    'WZ',
+    basepath.format('WZ'),
+    3928630, 27.57,
+    treename = treename
+)
+# ZZ failed computing, going to exclusive datasets
+# ZZ = Dataset(
+#     'ZZ',
+#     basepath.format('ZZ'),
+#     1949768, 12.14,
+#     treename = treename
+# )
+
+ZZTo4L = Dataset(
+    'ZZTo4L',
+    basepath.format('ZZTo4L'),
+    6964071*(10./12.)+6967853, 1.325,
+    treename = treename
+)
+ZZTo4L_ext = Dataset(
+    'ZZTo4L_ext',
+    basepath.format('ZZTo4L'),
+    6964071+6967853, 1.325,
+    treename = treename
+)
+
+ZZTo2L2Nu = Dataset(
+    'ZZTo2L2Nu',
+    basepath.format('ZZTo2L2Nu'),
+    8744768, 0.6008,
+    treename = treename
+)
+
+ZZTo2L2Q = Dataset(
+    'ZZTo2L2Q',
+    basepath.format('ZZTo2L2Q'),
+    27840918, 3.688,
+    treename = treename
+)
+
+
+##### Data
+
+datapath = os.path.expandvars('/data2/gtouquet/MSSM_Samples_310119/{}/tree_fakes.root')
 
 dataB = Dataset(
     'dataB',
-    basedir+'Tau_Run2017B_31Mar2018/NtupleProducer/tree.root',
+    datapath.format('Tau_Run2017B_31Mar2018'),
     norm_factor = 1.,
     treename = treename
 )
 dataC = Dataset(
     'dataC',
-    basedir+'Tau_Run2017C_31Mar2018/NtupleProducer/tree.root',
+    datapath.format('Tau_Run2017C_31Mar2018'),
     norm_factor = 1.,
     treename = treename
 )
 dataD = Dataset(
     'dataD',
-    basedir+'Tau_Run2017D_31Mar2018/NtupleProducer/tree.root',
+    datapath.format('Tau_Run2017D_31Mar2018'),
     norm_factor = 1.,
     treename = treename
 )
 dataE = Dataset(
     'dataE',
-    basedir+'Tau_Run2017E_31Mar2018/NtupleProducer/tree.root',
+    datapath.format('Tau_Run2017E_31Mar2018'),
     norm_factor = 1.,
     treename = treename
 )
 dataF = Dataset(
     'dataF',
-    basedir+'Tau_Run2017F_31Mar2018/NtupleProducer/tree.root',
+    datapath.format('Tau_Run2017F_31Mar2018'),
     norm_factor = 1.,
     treename = treename
 )
 
-#fakefactored data
+##### Embedded
 
-fakedataB = Dataset(
-    'fakedataB',
-    basedir+'Tau_Run2017B_31Mar2018/NtupleProducer/tree_fakesB.root',
+EmbeddedB = Dataset(
+    'EmbeddedB',
+    basepath.format('Embedded2017B_tt'),
     norm_factor = 1.,
     treename = treename
 )
-fakedataC = Dataset(
-    'fakedataC',
-    basedir+'Tau_Run2017C_31Mar2018/NtupleProducer/tree_fakesC.root',
+EmbeddedC = Dataset(
+    'EmbeddedC',
+    basepath.format('Embedded2017C_tt'),
     norm_factor = 1.,
     treename = treename
 )
-fakedataD = Dataset(
-    'fakedataD',
-    basedir+'Tau_Run2017D_31Mar2018/NtupleProducer/tree_fakesD.root',
+EmbeddedD = Dataset(
+    'EmbeddedD',
+    basepath.format('Embedded2017D_tt'),
     norm_factor = 1.,
     treename = treename
 )
-fakedataE = Dataset(
-    'fakedataE',
-    basedir+'Tau_Run2017E_31Mar2018/NtupleProducer/tree_fakesE.root',
+EmbeddedE = Dataset(
+    'EmbeddedE',
+    basepath.format('Embedded2017E_tt'),
     norm_factor = 1.,
     treename = treename
 )
-fakedataF = Dataset(
-    'fakedataF',
-    basedir+'Tau_Run2017F_31Mar2018/NtupleProducer/tree_fakesF.root',
+EmbeddedF = Dataset(
+    'EmbeddedF',
+    basepath.format('Embedded2017F_tt'),
     norm_factor = 1.,
     treename = treename
 )
+
+## lumi weighting
+
+mc_datasets = [WJetsToLNu,WJetsToLNu_ext,
+               WW,WZ,
+               ZZTo4L,ZZTo4L_ext,ZZTo2L2Nu,ZZTo2L2Q,
+               TBar_tch,TBar_tWch,T_tch,T_tWch]
+
+for dataset in mc_datasets:
+    dataset.compute_weight(data_lumi)
+
+
+TT_datasets = [TTHad_pow,TTLep_pow,TTSemi_pow]
+
+for dataset in TT_datasets:
+    dataset.compute_weight(data_lumi)
+
+stitched_datasets = [DYJetsToLL_M50,DYJetsToLL_M50_ext,
+                     DY1JetsToLL_M50,DY1JetsToLL_M50_ext,
+                     DY2JetsToLL_M50,DY2JetsToLL_M50_ext,
+                     DY3JetsToLL_M50,DY3JetsToLL_M50_ext,
+                     DY4JetsToLL_M50]
+
+
+for dataset in stitched_datasets:
+    dataset.compute_weight(stitched=True)
+    
+data_datasets = [dataB, dataC, dataD, dataE, dataF]
+
+for dataset in data_datasets:
+    dataset.compute_weight()
+
+
+Embedded_datasets = [EmbeddedB, EmbeddedC, EmbeddedD, EmbeddedE, EmbeddedF]
+
+for dataset in Embedded_datasets:
+    dataset.compute_weight()

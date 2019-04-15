@@ -2,9 +2,9 @@ from htt_plot.tools.cut import Cut, CutFlow
 import pprint
 
 triggers_list = [
-	      '!trg_doubletau_lowpt',
-	      '!trg_doubletau_mediso',
-	      '!trg_doubletau'
+	      'trg_doubletau_lowpt',
+	      'trg_doubletau_mediso',
+	      'trg_doubletau'
 	      ]
 
 
