@@ -12,7 +12,7 @@ class Dataset(object):
     xsection : xsection   
     '''
     
-    def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1.):
+    def __init__(self, name, rootfname, nevts=None, xsection=None, norm_factor = 1., treename='tree'):
         self.name = name
         self.rootfname = rootfname
         self.nevts = nevts
@@ -25,14 +25,17 @@ class Dataset(object):
         else:
             self.is_data = True
         self.tfile = TFile(rootfname)
-        self.tree = self.tfile.Get('tree')
+        self.tree = self.tfile.Get(treename)
         
-    def compute_weight(self, lumi_data = None):
-        if self.is_data:
+    def lumi_eq(self):
+        return float(self.nevts) / self.xsection * self.norm_factor
+        
+    def compute_weight(self, lumi_data = None, stitched=False):
+        if self.is_data or stitched:
             self.weight = self.norm_factor
         else:
             if not lumi_data:
                 raise ValueError('provide lumi to weight MC component')
-            self.weight = self.xsection*lumi_data/self.nevts*self.norm_factor
+            self.weight = (float(self.xsection)*lumi_data)/(self.nevts*self.norm_factor)
         return self.weight
 

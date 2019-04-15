@@ -101,3 +101,13 @@ class CutFlow(OrderedDict):
         tmp = ['({})'.format(str(cut)) for cut in self.values()]
         return ' && '.join(tmp)
    
+    def __repr__(self):
+        '''for easy reading'''
+        string = ''
+        for name, val in self.iteritems():
+            string += name
+            string += '\n'
+            string += str(val)
+            string += '\n'
+            string += '\n'
+        return string
