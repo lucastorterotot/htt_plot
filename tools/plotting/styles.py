@@ -40,4 +40,4 @@ def set_style(comp):
             comp.style = pref['style']
             found = True
     if not found:
-comp.style = sData
+        comp.style = sData
