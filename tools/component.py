@@ -22,7 +22,9 @@ class Component(object):
           self.xsection = self.datasets[0].xsection
           self.histogram = {}
           for var in self.variables:
+               import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(name+var, name+var, *self.bins[var])
+               self.histogram[var].Draw()
           if config.parallel:
                self.delayed_objs = []
                for dataset in self.datasets:
