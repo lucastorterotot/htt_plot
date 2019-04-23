@@ -130,4 +130,5 @@ os.system('mkdir {}'.format(output_dir))
 for var in variables:
     plotter.draw(var, 'Number of events')
     plotter.write('{}/{}.png'.format(output_dir,var))
+    plotter.write('{}/{}.tex'.format(output_dir,var))
     print plotter.plot
