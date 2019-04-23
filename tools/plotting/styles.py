@@ -50,7 +50,8 @@ histPref = {
     'fakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
 }
 
-histPref['TTbar']=histPref['TT']
+histPref['TTBar']=histPref['TT']
+histPref['WJ']=histPref['WJ_plot']
 
 def set_style(comp):
     found=False
