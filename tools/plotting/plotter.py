@@ -98,6 +98,9 @@ class Plotter(object):
    
     def write(self, fname):
         self.can.SaveAs(fname)
+        if '.tex' in fname:
+            import os
+            os.system("sed -i 's|mark=|mark=*|g' "+fname)
     
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
