@@ -12,6 +12,7 @@ ttcol = TColor.GetColor(155,152,204)
 zlcol = TColor.GetColor(100,182,232)
 dibosoncol = TColor.GetColor(222,90,106)
 
+sqcd = Style(markerColor=qcdcol, markerSize=1, lineColor=1, fillColor=qcdcol, fillStyle=1001)
 sdy = Style(markerColor=dycol, markerSize=1, lineColor=1, fillColor=dycol, fillStyle=1001)
 sembed = Style(markerColor=embedcol, markerSize=1, lineColor=1, fillColor=embedcol, fillStyle=1001)
 swj = Style(markerColor=wcol, markerSize=1, lineColor=1, fillColor=wcol, fillStyle=1001)
