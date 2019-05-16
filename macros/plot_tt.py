@@ -6,8 +6,9 @@ from htt_plot.datasets.gael_all import *
 
 from htt_plot.tools.cut import Cut
 from htt_plot.cuts.mt import *
-from htt_plot.tools.plot import build_component, build_components, merge_components, scale_component
-
+from htt_plot.tools.plot import build_component, build_components, scale_component
+from htt_plot.tools.component import merge_comp_hist as merge_components
+from htt_plot.tools.component import fill_comp_hist, Component, Component_cfg
 from htt_plot.cuts.generic import *
 from htt_plot.cuts.mt import cuts_mt
 from htt_plot.cuts.tt_triggers import triggers
@@ -115,13 +116,25 @@ fake_components_2 = build_components(['fakesB2','fakesC2','fakesD2','fakesE2','f
 
 for component in fake_components_MC_1+fake_components_MC_2+fake_component_Embedded_1+fake_component_Embedded_2:
     for var in variables:
-        component.histogram[var].Scale(-1.)
+        component.scale = -1.
 
 fakes = merge_components('fakes',fake_components_1+fake_components_2+fake_component_Embedded_1+fake_component_Embedded_2+fake_components_MC_1+fake_components_MC_2)#
 
 
 data_components[0].stack = False
-plotter = Plotter(MC_components+data_components+[fakes]+Embedded_components, data_lumi)
+
+all_comp = []
+for comp in MC_components+data_components+[fakes]+Embedded_components :
+    if isinstance(comp, Component_cfg):
+        all_comp.append(fill_comp_hist(comp))
+    else:
+        all_comp.append(comp)    
+
+from dask import delayed, compute
+to_fill = [delayed(Component.fill)(component) for component in all_comp]
+compute(*to_fill)
+
+plotter = Plotter(all_comp, data_lumi)
 import os
 os.system('rm -rf {}'.format(output_dir))
 os.system('mkdir {}'.format(output_dir))
