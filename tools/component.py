@@ -14,13 +14,15 @@ def merge_comp_hist(name, component_cfgs):
           print 'You made a mistake!'
           import pdb; pdb.set_trace()
           
-     if name == 'auto':
+     if name is None:
           name = component_cfgs[0].name
 
      filled_hists = [fill_comp_hist(component_cfg) for component_cfg in component_cfgs]
 
-     component = Component(component_cfgs[0]).Clone(name)
-     component.reset()
+     component = Component(component_cfgs[0])
+     component.cfg.name = name
+     component.name = name
+     compute(*[comp.delayed for comp in filled_hists])
      for other_hist in filled_hists:
           for var in component.cfg.variables:
                component.delayed.append(delayed(component.histogram[var].Add)(other_hist.histogram[var]))
