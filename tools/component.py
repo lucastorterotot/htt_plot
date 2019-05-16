@@ -4,6 +4,7 @@ from ROOT import TH1F
 
 def fill_comp_hist(component_cfg):
      component = Component(component_cfg)
+     component.delayed.append(delayed(Component.fill)(component))
      return component
 
 def merge_comp_hist(name, component_cfgs):
@@ -22,7 +23,7 @@ def merge_comp_hist(name, component_cfgs):
      component.reset()
      for other_hist in filled_hists:
           for var in component.cfg.variables:
-               delayed(component.histogram[var].Add)(other_hist.histogram[var])
+               component.delayed.append(delayed(component.histogram[var].Add)(other_hist.histogram[var]))
      return component
      
 class Component(object):
@@ -35,6 +36,8 @@ class Component(object):
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(self.name+var, self.name+var, *self.cfg.bins[var])
                self.histogram[var].Draw()
+
+          self.delayed = []
 
      def fill(self):
           for dataset in self.cfg.datasets:

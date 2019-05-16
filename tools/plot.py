@@ -13,8 +13,7 @@ def build_component(name, datasets, var, cut, *bins):
 def build_components(names, datasets, var, cut, *bins):
     components = []
     for name, dataset in zip(names, datasets):
-        components.append(delayed(build_component)(name,dataset,var,cut,*bins))
-    components = list(compute(*components))
+        components.append(build_component(name,dataset,var,cut,*bins))
     return components
 
 def merge_components(name, components, extension=False):

@@ -130,9 +130,11 @@ for comp in MC_components+data_components+[fakes]+Embedded_components :
     else:
         all_comp.append(comp)    
 
-from dask import delayed, compute
-to_fill = [delayed(Component.fill)(component) for component in all_comp]
-compute(*to_fill)
+from dask import compute
+to_compute = []
+for comp in all_comp:
+    to_compute += comp.delayed
+compute(*to_compute)
 
 plotter = Plotter(all_comp, data_lumi)
 import os
