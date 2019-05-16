@@ -1,7 +1,3 @@
-
-import htt_plot.tools.config as config
-config.parallel = False
-
 from htt_plot.datasets.lucas_all import *
 #TODO for debug
 from htt_plot.tools.cut import Cut
@@ -69,10 +65,9 @@ all_data = [h_data1, h_data2, h_data3, h_data4]
 h_data = add('data', all_data)
 h_data.Scale(1)
 # h_data.visualize()
-if config.parallel:
-    print 'running'
-    # h_data = h_data.compute(scheduler='single-threaded')
-    h_data = h_data.compute()
+print 'running'
+# h_data = h_data.compute(scheduler='single-threaded')
+h_data = h_data.compute()
 print h_data.GetEntries()
 print h_data.Integral()
 #h_data.Draw()
@@ -102,8 +97,7 @@ h_DY_mht50 = hist('DY_mht50', DYJetsToLL_M50_LO_ext, var, cut, *bins)
 h_DY_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
 
 h_DY = add('DY', [h_DY_mlt50, h_DY_mht50])
-if config.parallel:
-    h_DY = h_DY.compute()
+h_DY = h_DY.compute()
 print h_DY.GetEntries()
 print h_DY.Integral()
 #h_DY.Draw()
@@ -112,8 +106,7 @@ print h_DY.Integral()
 
 h_TT = hist('TT', TT_pow, var, cut, *bins)
 h_TT.Scale(TT_pow.weight)
-if config.parallel:
-    h_TT = h_TT.compute()
+h_TT = h_TT.compute()
 print h_TT.GetEntries()
 print h_TT.Integral()
 #TT_pow.Draw()
@@ -127,8 +120,7 @@ print h_TT.Integral()
 # h_WJ.Scale(sumMCweights([WJetsToLNu_LO,WJetsToLNu_LO_ext]))
 h_WJ = hist('WJ', WJetsToLNu_LO_ext, var, cut, *bins)
 h_WJ.Scale(WJetsToLNu_LO_ext.weight)
-if config.parallel:
-    h_WJ = h_WJ.compute()
+h_WJ = h_WJ.compute()
 print h_WJ.GetEntries()
 print h_WJ.Integral()
 #h_WJ.Draw()
@@ -352,8 +344,7 @@ else:
 print 'ratio_QCD C/D = ', ratio_QCD
 
 h_QCD.Scale(ratio_QCD)
-if config.parallel:
-    h_QCD = h_QCD.compute()
+h_QCD = h_QCD.compute()
 
 ##############
 # TT plots
@@ -523,8 +514,7 @@ h_Ztt_mht50 = hist('Ztt_mht50', DYJetsToLL_M50_LO_ext, var, cut_ztt, *bins)
 h_Ztt_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
 
 h_Ztt = add('Ztt', [h_Ztt_mlt50, h_Ztt_mht50])
-if config.parallel:
-    h_Ztt = h_Ztt.compute()
+h_Ztt = h_Ztt.compute()
 print h_Ztt.GetEntries()
 print h_Ztt.Integral()
 
@@ -539,8 +529,7 @@ h_Zll_mht50 = hist('Zll_mht50', DYJetsToLL_M50_LO_ext, var, cut_zll, *bins)
 h_Zll_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
 
 h_Zll = add('Zll', [h_Zll_mlt50, h_Zll_mht50])
-if config.parallel:
-    h_Zll = h_Zll.compute()
+h_Zll = h_Zll.compute()
 print h_Zll.GetEntries()
 print h_Zll.Integral()
 
@@ -555,8 +544,7 @@ h_Zj_mht50 = hist('Zj_mht50', DYJetsToLL_M50_LO_ext, var, cut_zj, *bins)
 h_Zj_mht50.Scale(DYJetsToLL_M50_LO_ext.weight)
 
 h_Zj = add('Zj', [h_Zj_mlt50, h_Zj_mht50])
-if config.parallel:
-    h_Zj = h_Zj.compute()
+h_Zj = h_Zj.compute()
 print h_Zj.GetEntries()
 print h_Zj.Integral()
 

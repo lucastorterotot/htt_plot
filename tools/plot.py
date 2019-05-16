@@ -3,8 +3,6 @@ from dask import delayed, compute
 from htt_plot.tools.cut import Cut
 from htt_plot.tools.component import Component
 
-import config
-
 def build_component(name, datasets, var, cut, *bins):
     if isinstance(cut,Cut):
         cut = cut.cutstr
@@ -15,12 +13,8 @@ def build_component(name, datasets, var, cut, *bins):
 def build_components(names, datasets, var, cut, *bins):
     components = []
     for name, dataset in zip(names, datasets):
-        if config.parallel:
-            components.append(delayed(build_component)(name,dataset,var,cut,*bins))
-        else:
-            components.append(build_component(name,dataset,var,cut,*bins))
-    if config.parallel:
-        components = list(compute(*components))
+        components.append(delayed(build_component)(name,dataset,var,cut,*bins))
+    components = list(compute(*components))
     return components
 
 def merge_components(name, components, extension=False):
@@ -37,7 +31,6 @@ def scale_component(component, factor):
     component.Scale(factor)
     return component
 
-#if config.parallel:
-    #build_component = delayed(build_component)
-    #merge_components = delayed(merge_components)
-    #scale_component = delayed(scale_component)
+#build_component = delayed(build_component)
+#merge_components = delayed(merge_components)
+#scale_component = delayed(scale_component)

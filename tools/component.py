@@ -1,5 +1,4 @@
 import copy 
-import config
 from dask import delayed, compute
 from ROOT import TH1F
 
@@ -25,19 +24,13 @@ class Component(object):
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(name+var, name+var, *self.bins[var])
                self.histogram[var].Draw()
-          if config.parallel:
-               self.delayed_objs = []
-               for dataset in self.datasets:
-                    self.delayed_objs.append(delayed(self._add_dataset)(dataset))
-               compute(*self.delayed_objs)
-               for dataset in self.datasets:
-                    for var in self.variables:
-                         self.histogram[var].Add(dataset.histogram[var])
-          else:
-               for dataset in self.datasets:
-                    self._add_dataset(dataset)
-                    for var in self.variables:
-                         self.histogram[var].Add(dataset.histogram[var])
+          self.delayed_objs = []
+          for dataset in self.datasets:
+               self.delayed_objs.append(delayed(self._add_dataset)(dataset))
+          compute(*self.delayed_objs)
+          for dataset in self.datasets:
+               for var in self.variables:
+                    self.histogram[var].Add(dataset.histogram[var])
                     
      def _add_dataset(self, dataset, verbose=True):
           for var in self.variables:

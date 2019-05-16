@@ -1,6 +1,4 @@
 from dask import delayed
-import htt_plot.tools.config as config
-config.parallel = True
 
 from htt_plot.datasets.gael_all import *
 from htt_plot.tools.cut import Cut

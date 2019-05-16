@@ -1,6 +1,4 @@
 from dask import delayed
-import htt_plot.tools.config as config
-config.parallel = True
 
 from ROOT import TCanvas
 
