@@ -3,9 +3,7 @@ from dask import delayed, compute
 from ROOT import TH1F
 
 def fill_comp_hist(component_cfg):
-     component = Component(component_cfg)
-     component.delayed.append(delayed(Component.fill)(component))
-     return component
+     return delayed(Component)(component_cfg)
 
 def merge_comp_hist(name, component_cfgs):
      if not isinstance(component_cfgs, list) and isinstance(component_cfgs, Component_cfg):
@@ -17,19 +15,21 @@ def merge_comp_hist(name, component_cfgs):
      if name is None:
           name = component_cfgs[0].name
 
-     filled_hists = [fill_comp_hist(component_cfg) for component_cfg in component_cfgs]
+     filled_hists = [fill_comp_hist(component_cfg) for component_cfg in component_cfgs[1:]]
 
-     component = Component(component_cfgs[0])
-     component.cfg.name = name
-     component.name = name
-     compute(*[comp.delayed for comp in filled_hists])
+     component_cfg = component_cfgs[0]
+     component_cfg.name = name
+     component = delayed(Component)(component_cfg)
+     
+     return delayed(add_to_merge)(component, filled_hists)
+
+def add_to_merge(component, filled_hists):
      for other_hist in filled_hists:
           for var in component.cfg.variables:
-               component.delayed.append(delayed(component.histogram[var].Add)(other_hist.histogram[var]))
+               component.histogram[var].Add(other_hist.histogram[var])
      return component
      
 class Component(object):
-     
      def __init__(self, component_cfg):
           self.histogram = {}
           self.cfg = component_cfg
@@ -38,10 +38,6 @@ class Component(object):
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(self.name+var, self.name+var, *self.cfg.bins[var])
                self.histogram[var].Draw()
-
-          self.delayed = []
-
-     def fill(self):
           for dataset in self.cfg.datasets:
                self._add_dataset(dataset)
                for var in self.cfg.variables:

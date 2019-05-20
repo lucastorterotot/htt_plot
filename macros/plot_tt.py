@@ -130,18 +130,19 @@ for comp in MC_components+data_components+[fakes]+Embedded_components :
     else:
         all_comp.append(comp)    
 
-from dask import compute
-to_compute = []
-for comp in all_comp:
-    to_compute += comp.delayed
-compute(*to_compute)
+plotter = delayed(Plotter)(all_comp, data_lumi)
 
-plotter = Plotter(all_comp, data_lumi)
-import os
-os.system('rm -rf {}'.format(output_dir))
-os.system('mkdir {}'.format(output_dir))
-for var in variables:
-    plotter.draw(var, 'Number of events')
-    plotter.write('{}/{}.png'.format(output_dir,var))
-    plotter.write('{}/{}.tex'.format(output_dir,var))
-    print plotter.plot
+def write_plots(plotter, variables, output_dir):
+    import os
+    os.system('rm -rf {}'.format(output_dir))
+    os.system('mkdir {}'.format(output_dir))
+    for var in variables:
+        plotter.draw(var, 'Number of events')
+        plotter.write('{}/{}.png'.format(output_dir,var))
+        plotter.write('{}/{}.tex'.format(output_dir,var))
+        print plotter.plot
+
+writter = delayed(write_plots)(plotter, variables, output_dir)
+
+from dask import compute
+compute(writter)
