@@ -1,4 +1,4 @@
-from dask import delayed
+import dask
 
 from ROOT import TCanvas
 
@@ -8,7 +8,6 @@ from htt_plot.tools.cut import Cut
 from htt_plot.cuts.mt import *
 from htt_plot.tools.plot import build_component, build_components, scale_component
 from htt_plot.tools.component import merge_comp_hist as merge_components
-from htt_plot.tools.component import fill_comp_hist, Component, Component_cfg
 from htt_plot.cuts.generic import *
 from htt_plot.cuts.mt import cuts_mt
 from htt_plot.cuts.tt_triggers import triggers
@@ -123,7 +122,7 @@ fakes = merge_components('fakes',fake_components_1+fake_components_2+fake_compon
 
 data_components[0].stack = False
 
-all_comp =  MC_components+data_components+[fakes]+Embedded_components 
+all_comp = MC_components+data_components+[fakes]+Embedded_components
 
 plotter = delayed(Plotter)(all_comp, data_lumi)
 
@@ -131,13 +130,15 @@ def write_plots(plotter, variables, output_dir):
     import os
     os.system('rm -rf {}'.format(output_dir))
     os.system('mkdir {}'.format(output_dir))
-    for var in variables:
-        plotter.draw(var, 'Number of events')
-        plotter.write('{}/{}.png'.format(output_dir,var))
-        plotter.write('{}/{}.tex'.format(output_dir,var))
-        print plotter.plot
+    return [delayed(write_plot)(plotter, var, output_dir) for var in variables]
 
-writter = delayed(write_plots)(plotter, variables, output_dir)
+def write_plot(plotter, var, output_dir):
+    plotter.draw(var, 'Number of events')
+    plotter.write('{}/{}.png'.format(output_dir,var))
+    plotter.write('{}/{}.tex'.format(output_dir,var))
+    print plotter.plot
 
-from dask import compute
-compute(writter)
+writters = write_plots(plotter, variables, output_dir)
+
+dask.visualize(*writters)
+#dask.compute(*writters)
