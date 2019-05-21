@@ -124,13 +124,13 @@ data_components[0].stack = False
 
 all_comp = MC_components+data_components+[fakes]+Embedded_components
 
-plotter = delayed(Plotter)(all_comp, data_lumi)
+plotter = dask.delayed(Plotter)(all_comp, data_lumi)
 
 def write_plots(plotter, variables, output_dir):
     import os
     os.system('rm -rf {}'.format(output_dir))
     os.system('mkdir {}'.format(output_dir))
-    return [delayed(write_plot)(plotter, var, output_dir) for var in variables]
+    return [dask.delayed(write_plot)(plotter, var, output_dir) for var in variables]
 
 def write_plot(plotter, var, output_dir):
     plotter.draw(var, 'Number of events')
