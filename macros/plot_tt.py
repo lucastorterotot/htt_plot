@@ -123,12 +123,7 @@ fakes = merge_components('fakes',fake_components_1+fake_components_2+fake_compon
 
 data_components[0].stack = False
 
-all_comp = []
-for comp in MC_components+data_components+[fakes]+Embedded_components :
-    if isinstance(comp, Component_cfg):
-        all_comp.append(fill_comp_hist(comp))
-    else:
-        all_comp.append(comp)    
+all_comp =  MC_components+data_components+[fakes]+Embedded_components 
 
 plotter = delayed(Plotter)(all_comp, data_lumi)
 

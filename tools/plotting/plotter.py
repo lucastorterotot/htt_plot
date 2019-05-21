@@ -8,6 +8,8 @@ from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
 
 from styles import set_style, histPref
 
+from htt_plot.tools.component import Component, Component_cfg
+
 class Plotter(object):
 
     _ihist = count(0)
@@ -45,7 +47,12 @@ class Plotter(object):
         self.can = None
         self.pad = None
         self.padr = None
-        self.comps = comps
+        self.comps = []
+        for comp in comps:
+            if isinstance(comp, Component_cfg):
+                self.comps.append(Component(comp))
+            else:
+                self.comps.append(comp)
         for comp in self.comps:
             set_style(comp)
         self.lumi = lumi
