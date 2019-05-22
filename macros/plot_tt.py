@@ -24,7 +24,7 @@ import copy
 
 output_dir = 'plots_1912_tt'
 variables = ['l1_eta', 'l1_pt','l2_eta','l2_pt','met','m_vis','mt_tot']
-
+variables = [variables[0]]
 
 
 # adding weight
@@ -115,15 +115,15 @@ fake_components_2 = build_components(['fakesB2','fakesC2','fakesD2','fakesE2','f
                                      variables, l2_FakeFactorApplication_Region, bins)
 
 for component in fake_components_MC_1+fake_components_MC_2+fake_component_Embedded_1+fake_component_Embedded_2:
-    for var in variables:
-        component.scale = -1.
+    component.scale = -1.
 
-fakes = merge_components('fakes',fake_components_1+fake_components_2+fake_component_Embedded_1+fake_component_Embedded_2+fake_components_MC_1+fake_components_MC_2)#
+fakes = fake_components_1+fake_components_2+fake_component_Embedded_1+fake_component_Embedded_2+fake_components_MC_1+fake_components_MC_2
+fakes = [merge_components('fakes',fakes)]
 
 
 data_components[0].stack = False
 
-all_comp =  MC_components+data_components+[fakes]+Embedded_components 
+all_comp =  MC_components+data_components+Embedded_components+fakes
 
 plotter = delayed(Plotter)(all_comp, data_lumi)
 
@@ -140,4 +140,5 @@ def write_plots(plotter, variables, output_dir):
 writter = delayed(write_plots)(plotter, variables, output_dir)
 
 from dask import compute
-compute(writter)
+writter.visualize()
+#compute(writter)

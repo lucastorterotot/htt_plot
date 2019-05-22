@@ -7,25 +7,25 @@ def fill_comp_hist(component_cfg):
 
 def merge_comp_hist(name, component_cfgs):
      if not isinstance(component_cfgs, list) and isinstance(component_cfgs, Component_cfg):
-          component_cfgs = [component_cfgs]
+          cfgs = [component_cfgs]
      elif not(isinstance(component_cfgs, list) and all(isinstance(item, Component_cfg) for item in component_cfgs)):
           print 'You made a mistake!'
           import pdb; pdb.set_trace()
-          
-     if name is None:
-          name = component_cfgs[0].name
-     
-     return delayed(add_to_merge)(name, component_cfgs)
+     else:
+          cfgs = component_cfgs
 
-def add_to_merge(name, component_cfgs):
-     component_cfg = component_cfgs[0]
-     component_cfg.name = name
-     component = Component(component_cfg)
-     if len(component_cfgs)>1:
-          filled_hists = [Component(component_cfg) for component_cfg in component_cfgs[1:]]
-          for other_hist in filled_hists:
-               for var in component.cfg.variables:
-                    component.histogram[var].Add(other_hist.histogram[var])
+     components = [delayed(Component)(cfg) for cfg in cfgs]
+     
+     return delayed(add_to_merge)(name, components)
+
+def add_to_merge(name, components):
+     cfg = copy.copy(components[0].cfg)
+     cfg.name = name
+     cfg.datasets = []
+     component = Component(cfg)
+     for comp in components:
+          for var in component.cfg.variables:
+               component.histogram[var].Add(comp.histogram[var])
      return component
      
 class Component(object):
