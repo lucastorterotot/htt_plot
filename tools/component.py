@@ -38,26 +38,28 @@ class Component(object):
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(self.name+var, self.name+var, *self.cfg.bins[var])
                self.histogram[var].Draw()
-               for dataset in self.cfg.datasets:
-                    histo = TH1F(self.cfg.name+dataset.name+var, self.cfg.name+dataset.name, *self.cfg.bins[var])
-                    if not hasattr(dataset.tree,'Project'):
-                         import pdb;pdb.set_trace()
-                    dataset.tree.Project(self.cfg.name+dataset.name+var, var, self.cfg.cut)
-                    if histo.Integral() == 0 and 'fake' in self.name:
-                         print '\n', 'component :',self.cfg.name, 'dataset :',dataset.name
-                         print dataset
-                         print dataset.tree
-                    if verbose:
-                         print '\n', 'component :',self.cfg.name, 'dataset :',dataset.name
-                         if not dataset.is_data:
-                              print 'lumi prescale:', dataset.nevts/dataset.xsection
-                              print 'lumiweight:', dataset.weight
-                         print 'integral prescale:', histo.Integral()
-                    histo.Scale(dataset.weight)
-                    histo.Scale(self.cfg.scale)
-                    if verbose:
-                         print 'integral postscale:', histo.Integral()
-                    self.histogram[var].Add(histo)
+
+     def project(self):
+          for dataset in self.cfg.datasets:
+               histo = TH1F(self.cfg.name+dataset.name+var, self.cfg.name+dataset.name, *self.cfg.bins[var])
+               if not hasattr(dataset.tree,'Project'):
+                    import pdb;pdb.set_trace()
+               dataset.tree.Project(self.cfg.name+dataset.name+var, var, self.cfg.cut)
+               if histo.Integral() == 0 and 'fake' in self.name:
+                    print '\n', 'component :',self.cfg.name, 'dataset :',dataset.name
+                    print dataset
+                    print dataset.tree
+               if verbose:
+                    print '\n', 'component :',self.cfg.name, 'dataset :',dataset.name
+                    if not dataset.is_data:
+                         print 'lumi prescale:', dataset.nevts/dataset.xsection
+                         print 'lumiweight:', dataset.weight
+                    print 'integral prescale:', histo.Integral()
+               histo.Scale(dataset.weight)
+               histo.Scale(self.cfg.scale)
+               if verbose:
+                    print 'integral postscale:', histo.Integral()
+               self.histogram[var].Add(histo)
                     
      def Clone(self, name):
           new = Component(self.cfg)
