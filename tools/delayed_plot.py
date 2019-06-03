@@ -5,10 +5,7 @@ import copy
 def build_component(name, datasets, var, cut, *bins):
     if isinstance(cut,Cut):
         cut = cut.cutstr
-    datasets = copy.deepcopy(datasets)
     comp = Component_cfg(name, datasets, var, cut, *bins)
-    print name
-    print datasets
     return comp
 
 def build_components(names, datasets, var, cut, *bins):

@@ -1,7 +1,8 @@
 import copy 
 from dask import delayed, compute
 from ROOT import TH1F
-     
+from htt_plot.tools.plotting.styles import set_style
+
 class Component(object):
      def __init__(self, component_cfg):
           self.histogram = {}
@@ -10,7 +11,6 @@ class Component(object):
           for var in self.cfg.variables:
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(self.name+var, self.name+var, *self.cfg.bins[var])
-               self.histogram[var].Draw()
 
      def project(self, verbose=False):
           for dataset in self.cfg.datasets:
@@ -56,7 +56,13 @@ class Component(object):
 
      def reset(self):
           for var in self.cfg.variables:
-               self.histogram[var].Reset()     
+               self.histogram[var].Reset()
+
+     def set_style(self):
+          set_style(self)
+
+     def __getattr__(self, attr):
+          return getattr(self.histogram, attr)
                
 class Component_cfg(object):
      

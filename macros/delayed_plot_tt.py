@@ -41,7 +41,7 @@ def _merge_components(name, comps):
     bins = comps[0].cfg.bins
     cfg0 = Component_cfg(name, datasets, variables, cut, bins)
     cfg0.datasets = []
-    merged = create_component(cfg0)
+    merged = _create_component(cfg0)
     merged.merge(comps)
     return merged
 
@@ -117,16 +117,17 @@ MC_components = [TTBar,DY,singleTop,Diboson,WJ]
 
 #### data
 
-data_cfgs = build_components(['data'],[data_datasets],variables,signal_region, bins)
-data_cfgs[0].stack = False
-data_components = [create_component(cfg) for cfg in data_cfgs]
+data_cfgs = build_components(['data'+str(k) for k in range(len(data_datasets))],data_datasets,variables,signal_region, bins)
+for cfg in data_cfgs:
+    cfg.stack = False
+data_components = [merge_cfgs('data', data_cfgs)]
 #### Embedded
 
-Embedded_cfgs = build_components(['Embedded'],[Embedded_datasets],variables,signal_region_Embedded, bins)# embedded signal region
-Embedded_components = [create_component(cfg) for cfg in Embedded_cfgs]
+Embedded_cfgs = build_components(['Embedded'+str(k) for k in range(len(Embedded_datasets))],Embedded_datasets,variables,signal_region_Embedded, bins)# embedded signal region
+Embedded_components = [merge_cfgs('Embedded', Embedded_cfgs)]
 
-fake_component_Embedded_1 = build_components(['fakesEmbedded1'],[Embedded_datasets],variables,l1_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)# embedded signal region
-fake_component_Embedded_2 = build_components(['fakesEmbedded2'],[Embedded_datasets],variables,l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)# embedded signal region
+fake_component_Embedded_1 = build_components(['fakesEmbedded1'+str(k) for k in range(len(Embedded_datasets))],Embedded_datasets,variables,l1_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)# embedded signal region
+fake_component_Embedded_2 = build_components(['fakesEmbedded2'+str(k) for k in range(len(Embedded_datasets))],Embedded_datasets,variables,l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)# embedded signal region
 
 #### fakes
 
@@ -143,7 +144,7 @@ for component in fake_components_MC_1+fake_components_MC_2+fake_component_Embedd
 fakes = fake_components_1+fake_components_2+fake_component_Embedded_1+fake_component_Embedded_2+fake_components_MC_1+fake_components_MC_2
 fakes = [merge_cfgs('fakes',fakes)]
 
-all_comp =  MC_components+data_components+Embedded_components#+fakes
+all_comp =  MC_components+data_components+Embedded_components+fakes
 
 plotter = delayed(Plotter)(all_comp, data_lumi)
 

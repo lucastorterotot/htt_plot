@@ -39,6 +39,7 @@ class Plotter(object):
             padr.SetRightMargin(0.05)
 
         can.cd()
+        import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         can.Draw()
         pad.Draw()
         padr.Draw()
@@ -47,14 +48,9 @@ class Plotter(object):
         self.can = None
         self.pad = None
         self.padr = None
-        self.comps = []
-        for comp in comps:
-            if isinstance(comp, Component_cfg):
-                self.comps.append(Component(comp))
-            else:
-                self.comps.append(comp)
+        self.comps = comps
         for comp in self.comps:
-            set_style(comp)
+            comp.set_style()
         self.lumi = lumi
                 
     def _project(self, comp, var, cut, *bins):

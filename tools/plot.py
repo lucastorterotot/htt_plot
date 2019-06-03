@@ -2,6 +2,7 @@ from ROOT import TH1F
 from dask import delayed, compute
 from htt_plot.tools.cut import Cut
 from htt_plot.tools.component import Component, Component_cfg
+import copy
 
 def build_component(name, datasets, var, cut, *bins):
     if isinstance(cut,Cut):
