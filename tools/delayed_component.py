@@ -1,33 +1,8 @@
 import copy 
 from dask import delayed, compute
 from ROOT import TH1F
+from htt_plot.tools.plotting.styles import set_style
 
-def fill_comp_hist(component_cfg):
-     return Component(component_cfg)
-
-def merge_comp_hist(name, component_cfgs):
-     if not isinstance(component_cfgs, list) and isinstance(component_cfgs, Component_cfg):
-          cfgs = [component_cfgs]
-     elif not(isinstance(component_cfgs, list) and all(isinstance(item, Component_cfg) for item in component_cfgs)):
-          print 'You made a mistake!'
-          import pdb; pdb.set_trace()
-     else:
-          cfgs = component_cfgs
-
-     components = [delayed(Component)(cfg) for cfg in cfgs]
-     
-     return delayed(add_to_merge)(name, components)
-
-def add_to_merge(name, components):
-     cfg = copy.copy(components[0].cfg)
-     cfg.name = name
-     cfg.datasets = []
-     component = Component(cfg)
-     for comp in components:
-          for var in component.cfg.variables:
-               component.histogram[var].Add(comp.histogram[var])
-     return component
-     
 class Component(object):
      def __init__(self, component_cfg):
           self.histogram = {}
@@ -36,7 +11,6 @@ class Component(object):
           for var in self.cfg.variables:
                import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
                self.histogram[var] = TH1F(self.name+var, self.name+var, *self.cfg.bins[var])
-               self.histogram[var].Draw()
 
      def project(self, verbose=False):
           for dataset in self.cfg.datasets:
@@ -82,7 +56,13 @@ class Component(object):
 
      def reset(self):
           for var in self.cfg.variables:
-               self.histogram[var].Reset()     
+               self.histogram[var].Reset()
+
+     def set_style(self):
+          set_style(self)
+
+     def __getattr__(self, attr):
+          return getattr(self.histogram, attr)
                
 class Component_cfg(object):
      

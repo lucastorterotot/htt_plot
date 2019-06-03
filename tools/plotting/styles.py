@@ -37,6 +37,7 @@ histPref = {
 def set_style(comp):
     found=False
     for key, pref in histPref.iteritems():
+        print comp.name, key
         if fnmatch.fnmatch(comp.name, key):
             comp.style = pref['style']
             found = True
