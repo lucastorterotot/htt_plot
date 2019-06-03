@@ -50,7 +50,7 @@ class Plotter(object):
         self.padr = None
         self.comps = comps
         for comp in self.comps:
-            comp.set_style()
+            set_style(comp)
         self.lumi = lumi
                 
     def _project(self, comp, var, cut, *bins):
