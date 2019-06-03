@@ -32,29 +32,11 @@ class Component(object):
                     if verbose:
                          print 'integral postscale:', histo.Integral()
                     self.histogram[var].Add(histo)
-                    
-     def Clone(self, name):
-          new = Component(self.cfg)
-          for var in self.cfg.variables:
-               new.histogram[var] = self.histogram[var].Clone(name)
-          return new
 
      def merge(self, others):
           for var in self.cfg.variables:
                for other in others:
-                    self.histogram[var].Add(other.histogram[var])
-          
-
-     def Add(self, other, weight=1.):
-          self.cfg.datasets.extend(other.datasets)
-          if weight == 1.:
-               self.histogram.Add(other.histogram)
-          else:
-               self.histogram.Add(other.histogram,weight)
-
-     def reset(self):
-          for var in self.cfg.variables:
-               self.histogram[var].Reset()     
+                    self.histogram[var].Add(other.histogram[var])  
                
 class Component_cfg(object):
      
