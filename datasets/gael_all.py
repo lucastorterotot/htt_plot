@@ -284,16 +284,17 @@ DY_datasets = [DYJetsToLL_M50,DYJetsToLL_M50_ext,
                # DY3JetsToLL_M50,DY3JetsToLL_M50_ext,
                # DY4JetsToLL_M50
 ]
-    
+
+MC_datasets = singleTop_datasets + WJ_datasets + Diboson_datasets + TT_datasets + DY_datasets
+
 data_datasets = [dataB, dataC, dataD, dataE, dataF]
 
 Embedded_datasets = [EmbeddedB, EmbeddedC, EmbeddedD, EmbeddedE, EmbeddedF]
 
-for dataset in singleTop_datasets + Diboson_datasets + TT_datasets + WJ_datasets :
-    dataset.compute_weight(data_lumi)
-    
-for dataset in DY_datasets :
-    dataset.compute_weight(stitched=True)
+stitched_datasets = DY_datasets
+
+for dataset in MC_datasets :
+    dataset.compute_weight(data_lumi, stitched=(dataset in stitched_datasets))
 
 for dataset in data_datasets + Embedded_datasets:
     dataset.compute_weight()
