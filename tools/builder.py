@@ -29,13 +29,8 @@ def _merge_cfgs(name, cfgs):
 merge_cfgs = _merge_cfgs
 
 def _merge_components(name, comps):
-    datasets = comps[0].cfg.datasets
-    variables = comps[0].cfg.variables
-    cut = comps[0].cfg.cut
-    bins = comps[0].cfg.bins
-    cfg0 = Component_cfg(name, datasets, variables, cut, bins)
-    cfg0.datasets = []
     merged = copy.copy(comps[0])
+    merged.name = name
     comps.remove(comps[0])
     merged.merge(comps)
     return merged
