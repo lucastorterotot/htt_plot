@@ -16,27 +16,25 @@ def build_cfgs(names, datasets, var, cut, *bins):
         cfgs.append(build_cfg(name,dataset,var,cut,*bins))
     return cfgs
 
-def _create_component(cfg):
+def create_component(cfg):
     comp = Component(cfg)
     project(comp)
     return comp
 
-create_component = delayed(_create_component)
+create_component = delayed(create_component)
 
-def _merge_cfgs(name, cfgs):
+def merge_cfgs(name, cfgs):
     comps = [create_component(cfg) for cfg in cfgs]
     return merge_components(name, comps)
 
-merge_cfgs = _merge_cfgs
-
-def _merge_components(name, comps):
+def merge_components(name, comps):
     merged = copy.copy(comps[0])
     merged.name = name
     comps.remove(comps[0])
     merge(merged, comps)
     return merged
 
-merge_components = delayed(_merge_components)
+merge_components = delayed(merge_components)
 
 def project(comp, verbose=False):
     for dataset in comp.cfg.datasets:
