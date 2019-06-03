@@ -289,10 +289,10 @@ data_datasets = [dataB, dataC, dataD, dataE, dataF]
 
 Embedded_datasets = [EmbeddedB, EmbeddedC, EmbeddedD, EmbeddedE, EmbeddedF]
 
-for dataset in singleTop_datasets + Diboson_datasets + TT_datasets :
+for dataset in singleTop_datasets + Diboson_datasets + TT_datasets + WJ_datasets :
     dataset.compute_weight(data_lumi)
     
-for dataset in DY_datasets + WJ_datasets:
+for dataset in DY_datasets :
     dataset.compute_weight(stitched=True)
 
 for dataset in data_datasets + Embedded_datasets:
