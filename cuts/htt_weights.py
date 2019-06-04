@@ -1,0 +1,6 @@
+
+weight='weight'
+
+weight_MC = 'weight*l1_weight_mutotaufake_loose*l1_weight_etotaufake_vloose*l1_weight_tauid_vtight*l2_weight_mutotaufake_loose*l2_weight_etotaufake_vloose*l2_weight_tauid_vtight'
+
+weight_MC_DY = 'weight*l1_weight_mutotaufake_loose*l1_weight_etotaufake_vloose*l1_weight_tauid_vtight*l2_weight_mutotaufake_loose*l2_weight_etotaufake_vloose*l2_weight_tauid_vtight*weight_dy*weight_generator'#*'+dy_stitching_weight

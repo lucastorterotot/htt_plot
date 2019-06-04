@@ -1,21 +1,15 @@
 channel = 'tt'
+leg1 = channel[0] if not channel[0] == channel[1] else channel[0]+'1'
+leg2 = channel[1] if not channel[0] == channel[1] else channel[1]+'2'
 
 # dask tools
 from dask import delayed, compute
-
-# datasets
-import htt_plot.datasets.gael_all as datasets
-
-# cuts
-from htt_plot.cuts.mt import *
-from htt_plot.cuts.generic import *
-from htt_plot.cuts.tt_triggers import triggers
 
 # binning
 from htt_plot.binning import bins
 
 # variables
-variables = ['l1_eta', 'l1_pt','l2_eta','l2_pt','met','m_vis','mt_tot']
+variables = bins.keys()
 variables = [variables[0]]
 
 # plotting tools
@@ -24,11 +18,69 @@ from htt_plot.tools.plotting.tdrstyle import setTDRStyle
 setTDRStyle(square=False)
 
 # output
-output_dir = 'delayed_plots_tt'
+output_dir = 'delayed_plots_'+channel
+
+# cuts
+from htt_plot.cuts.htt_cuts import cuts
+cut_signal = cuts[channel]['signal']
+
+from htt_plot.cuts.htt_triggers import triggers_CutFlows
+triggers = triggers_CutFlows[channel]['']
+
+from htt_plot.cuts.htt_isolations import cuts_iso
+cuts_iso = cuts_iso[channel]
+
+from htt_plot.cuts.htt_flags import cuts_flags
+from htt_plot.cuts.htt_vetoes import cuts_vetoes
+from htt_plot.cuts.htt_generic import cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_dy_promptfakeleptons, cut_TT_nogenuine
+
+signal_region_cut = cut_signal + cuts_flags + cuts_vetoes + triggers + cut_os
+for leg in [leg1, leg2]:
+    if 't' in leg:
+        signal_region_cut += cuts_iso['Tight'][leg]
+
+signal_region_MC = signal_region_cut
+signal_region_MC_nofakes = signal_region_MC + ~cut_l1_fakejet + ~cut_l2_fakejet
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes + cut_dy_promptfakeleptons
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes + cut_TT_nogenuine
+
+l1_FakeFactorApplication_Region = cuts_flags + cuts_vetoes + triggers + cut_os + cuts_iso['VLoose'][leg1] + ~cuts_iso['Tight'][leg1] + cuts_iso['Tight'][leg2]
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~cut_l1_fakejet
+
+l2_FakeFactorApplication_Region = cuts_flags + cuts_vetoes + triggers + cut_os + cuts_iso['VLoose'][leg2] + ~cuts_iso['Tight'][leg2]  + cuts_iso['Tight'][leg1]
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~cut_l2_fakejet
+
+from htt_plot.tools.cut import Cut
+import pprint
+pprint.pprint(Cut.available_cuts())
+
+#### cuts+weights
+from htt_plot.cuts.htt_weights import weight, weight_MC, weight_MC_DY
+
+signal_region = '({cut})*({weight})'.format(cut=str(signal_region_cut),weight=weight)
+signal_region_Embedded = '({cut})*({weight})'.format(cut=str(signal_region_cut),weight='weight*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
+signal_region_MC = '({cut})*({weight})'.format(cut=str(signal_region_MC),weight=weight_MC)
+signal_region_MC_nofakes_DY = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes_DY),weight=weight_MC_DY)
+signal_region_MC_nofakes_TT = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes_TT),weight=weight_MC)
+signal_region_MC_nofakes = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes),weight=weight_MC)
+l1_FakeFactorApplication_Region = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region),weight='l1_fakeweight*0.5')
+print 'l1 ASR:',l1_FakeFactorApplication_Region
+l2_FakeFactorApplication_Region = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region),weight='l2_fakeweight*0.5')
+print 'l2 ASR:',l2_FakeFactorApplication_Region
+l1_FakeFactorApplication_Region_genuinetauMC_Embedded = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region_genuinetauMC),weight='weight*l1_fakeweight*0.5*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
+l2_FakeFactorApplication_Region_genuinetauMC_Embedded = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region_genuinetauMC),weight='weight*l2_fakeweight*0.5*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
+l1_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region_genuinetauMC),weight='weight*l1_fakeweight*0.5')
+l2_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region_genuinetauMC),weight='weight*l2_fakeweight*0.5')
 
 #########
 # Cfgs and components
 #########
+
+# datasets
+import htt_plot.datasets.gael_all as datasets
+
+# from htt_plot.datasets.htt import datasets
+# datasets = datasets[channel]
 
 from htt_plot.tools.builder import build_cfgs, merge_cfgs
 
@@ -117,4 +169,4 @@ def write_plots(plotter, variables, output_dir):
 writter = delayed(write_plots)(plotter, variables, output_dir)
 
 writter.visualize()
-compute(writter)
+#compute(writter)
