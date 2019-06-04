@@ -145,4 +145,8 @@ for channel in channels:
             cuts[channel][ptckey]['all'] += cuts[channel][ptckey][category]
         cuts[channel]['signal'] += cuts[channel][ptckey]['all']
         for variable in cuts_signal.keys():
-            cuts[channel]['signal'] += cuts_signal
+            cuts[channel]['signal'] += cuts_signal[variable]
+
+for cut in [cuts_btag_1, cuts_btag_2]:
+    for key in cut.keys():
+        cuts[key] = cut[key]
