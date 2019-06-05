@@ -6,6 +6,3 @@ cuts_vetoes = CutFlow([
     ('thirdleptonveto', '!veto_extra_elec'), 
     ('otherleptonveto', '!veto_extra_muon'), 
 ])
-
-print '\ncut_flow: vetoes:'
-print cuts_vetoes

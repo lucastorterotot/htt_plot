@@ -17,6 +17,3 @@ flags = [
 cuts_flags = CutFlow(
     [(flag, flag) for flag in flags]
 )
-
-print '\ncut_flow: flags: '
-print cuts_flags
