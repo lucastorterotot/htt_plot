@@ -10,7 +10,7 @@ from htt_plot.binning import bins
 
 # variables
 variables = bins.keys()
-variables = [variables[0]]
+variables = [variables[0]] # just for testing
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
