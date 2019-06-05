@@ -29,6 +29,8 @@ cut_signal = cuts[channel]['signal']
 
 from htt_plot.cuts.htt_triggers import triggers_CutFlows
 triggers = triggers_CutFlows[channel]['']
+# as three states for triggers exists, take the one we want
+# which is without suffix --> '' key
 
 from htt_plot.cuts.htt_isolations import cuts_iso
 cuts_iso = cuts_iso[channel]
