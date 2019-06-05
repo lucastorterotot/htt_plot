@@ -22,7 +22,7 @@ for channel in channels:
             if 't' in ptc :
                 cutstr = 'l'+str(leg)+'_'+isolation_strings[wp]+'>0.5'
             else:
-                cutstr = ''
+                cutstr = '1'
             cuts_iso[channel][wp][ptc] = Cut(
                 'l'+str(leg)+'_'+wp+'_isolation',
                 cutstr
