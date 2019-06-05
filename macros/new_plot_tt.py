@@ -5,6 +5,9 @@ leg2 = channel[1] if not channel[0] == channel[1] else channel[1]+'2'
 # datasets
 import htt_plot.datasets.new_test as datasets
 
+# output
+output_dir = 'delayed_plots_'+channel
+
 # dask tools
 from dask import delayed, compute
 
@@ -19,9 +22,6 @@ variables = [variables[0]] # just for testing
 from htt_plot.tools.plotting.plotter import Plotter
 from htt_plot.tools.plotting.tdrstyle import setTDRStyle
 setTDRStyle(square=False)
-
-# output
-output_dir = 'delayed_plots_'+channel
 
 # cuts
 from htt_plot.cuts.htt_cuts import cuts
