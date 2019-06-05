@@ -2,6 +2,9 @@ channel = 'tt'
 leg1 = channel[0] if not channel[0] == channel[1] else channel[0]+'1'
 leg2 = channel[1] if not channel[0] == channel[1] else channel[1]+'2'
 
+# datasets
+import htt_plot.datasets.new_test as datasets
+
 # dask tools
 from dask import delayed, compute
 
@@ -71,12 +74,6 @@ l2_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=s
 #########
 # Cfgs and components
 #########
-
-# datasets
-import htt_plot.datasets.gael_all as datasets
-
-# from htt_plot.datasets.htt import datasets
-# datasets = datasets[channel]
 
 from htt_plot.tools.builder import build_cfgs, merge_cfgs
 
