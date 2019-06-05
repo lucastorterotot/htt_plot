@@ -4,7 +4,7 @@ import pprint
 isolation_strings = {
     'VTight' : 'byVTightIsolationMVArun2017v2DBoldDMwLT2017',
     'Tight' : 'byTightIsolationMVArun2017v2DBoldDMwLT2017',
-    'VLoose' : 'byTightIsolationMVArun2017v2DBoldDMwLT2017',
+    'VLoose' : 'byVLooseIsolationMVArun2017v2DBoldDMwLT2017',
     'VVLoose' : 'byVVLooseIsolationMVArun2017v2DBoldDMwLT2017'
 }
 
