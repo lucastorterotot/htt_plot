@@ -7,5 +7,6 @@ def make_datacards(output_dir, variable, **kwargs):
         component = kwargs[key]
         hist = component.histogram[variable]
         hist.SetName(key)
+        hist.SetTitle('Datacard '+key+' for var '+variable)
         hist.Write()
     rootfile.Close()
