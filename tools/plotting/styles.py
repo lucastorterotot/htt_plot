@@ -29,10 +29,15 @@ histPref = {
     'TTBar': {'style':stt, 'layer':2, 'legend':'TTBar', 'stack': True},
     'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
     'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
+    'VV': {'style':sDiboson, 'layer':4, 'legend':'VV', 'stack': True},
     'data': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
     'fakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
     
 }
+
+histPref['W'] = histPref['WJ']
+histPref['TT'] = histPref['TTBar']
+histPref['ZLL'] = histPref['DY']
 
 def set_style(comp):
     found=False
