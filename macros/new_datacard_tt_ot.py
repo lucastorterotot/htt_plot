@@ -229,7 +229,9 @@ datacards = delayed(make_datacards)(output_dir, 'mt_tot',
                                     VVJ = VVJ_comp,
                                     VV = VV_comp,
                                     W = W_comp,
-                                    jetFakes = data_fakes_comp
+                                    jetFakes = data_fakes_comp,
+                                    data_obs = data_component,
+                                    embedded = Embedded_component
 )
 
 def write_plots(plotter, variables, output_dir):
