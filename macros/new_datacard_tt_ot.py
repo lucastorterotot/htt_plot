@@ -195,7 +195,20 @@ all_comp =  MC_components+[data_component]+[Embedded_component]+[fakes_component
 
 plotter = delayed(Plotter)(all_comp, datasets.data_lumi)
 
-datacards = delayed(make_datacards)(output_dir, VV = VV_comp)
+datacards = delayed(make_datacards)(output_dir,
+                                    ZTT = ZTT_comp,
+                                    ZL = ZL_comp,
+                                    ZJ = ZJ_comp,
+                                    ZLL = ZLL_comp,
+                                    TTT = TTT_comp,
+                                    TTJ = TTJ_comp,
+                                    TT = TT_comp,
+                                    VVT = VVT_comp,
+                                    VVJ = VVJ_comp,
+                                    VV = VV_comp,
+                                    W = W_comp,
+                                    #jetFakes = jetFakes_comp_datacards
+)
 
 def write_plots(plotter, variables, output_dir):
     import os
