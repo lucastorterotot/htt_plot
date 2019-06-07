@@ -97,19 +97,19 @@ from htt_plot.tools.builder import  merge_components as merge_comps
 ZTT_cfgs = build_cfgs(
     [dataset.name+'_ZTT_datacard' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['ZTT'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZTT'].cutstr+')', bins)
 ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
 
 ZL_cfgs = build_cfgs(
     [dataset.name+'_ZL_datacard' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['ZL'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZL'].cutstr+')', bins)
 ZL_comp = merge_cfgs('ZL', ZL_cfgs)
 
 ZJ_cfgs = build_cfgs(
     [dataset.name+'_ZJ_datacard' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['ZJ'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZJ'].cutstr+')', bins)
 ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
 
 ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
@@ -133,13 +133,13 @@ VV_datasets = datasets.singleTop_datasets + datasets.Diboson_datasets
 VVT_cfgs = build_cfgs(
     [dataset.name+'_VVT_datacard' for dataset in VV_datasets], 
     VV_datasets, variables,
-    signal_region_MC_nofakes_TT+'*('+cuts_datacards['VVT'].cutstr+')', bins)
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
 VVT_comp = merge_cfgs('VVT', VVT_cfgs)
 
 VVJ_cfgs = build_cfgs(
     [dataset.name+'_VVJ_datacard' for dataset in VV_datasets], 
     VV_datasets, variables,
-    signal_region_MC_nofakes_TT+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
 VVJ_comp = merge_cfgs('VVJ', VVJ_cfgs)
 
 VV_comp = merge_comps('VV', [VVT_comp, VVJ_comp])
