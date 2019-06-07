@@ -16,7 +16,7 @@ from htt_plot.binning import bins
 
 # variables
 variables = bins.keys()
-variables = [variables[0]] # just for testing
+variables = ['mt_tot'] # just for testing
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
@@ -200,7 +200,7 @@ all_comp =  MC_components+[data_component]+[Embedded_component]+[fakes_component
 
 plotter = delayed(Plotter)(all_comp, datasets.data_lumi)
 
-datacards = delayed(make_datacards)(output_dir,
+datacards = delayed(make_datacards)(output_dir, 'mt_tot',
                                     ZTT = ZTT_comp,
                                     ZL = ZL_comp,
                                     ZJ = ZJ_comp,
@@ -216,9 +216,6 @@ datacards = delayed(make_datacards)(output_dir,
 )
 
 def write_plots(plotter, variables, output_dir):
-    import os
-    os.system('rm -rf {}'.format(output_dir))
-    os.system('mkdir {}'.format(output_dir))
     for var in variables:
         plotter.draw(var, 'Number of events')
         plotter.write('{}/{}.png'.format(output_dir,var))
@@ -227,11 +224,11 @@ def write_plots(plotter, variables, output_dir):
 
 writter = delayed(write_plots)(plotter, variables, output_dir)
 
-def processor(items):
-    for item in items:
-        item
+import os
+os.system('rm -rf {}'.format(output_dir))
+os.system('mkdir {}'.format(output_dir))
 
-process = delayed(processor)([writter, datacards])
+process = delayed([writter, datacards])
         
 process.visualize()
 #compute(process)
