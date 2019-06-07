@@ -9,7 +9,7 @@ import htt_plot.datasets.gael_all as datasets
 output_dir = 'delayed_plots_'+channel
 
 # dask tools
-from dask import delayed, compute
+from dask import delayed, compute, visualize
 
 # binning
 from htt_plot.binning import bins
@@ -228,7 +228,7 @@ import os
 os.system('rm -rf {}'.format(output_dir))
 os.system('mkdir {}'.format(output_dir))
 
-process = delayed([writter, datacards])
+processes = [writter, datacards]
         
-process.visualize()
+visualize(*processes)
 #compute(process)
