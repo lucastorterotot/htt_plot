@@ -130,17 +130,36 @@ TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
 
 VV_datasets = datasets.singleTop_datasets + datasets.Diboson_datasets
 
-VVT_cfgs = build_cfgs(
-    [dataset.name+'_VVT_datacard' for dataset in VV_datasets], 
-    VV_datasets, variables,
+singleTop_VVT_cfgs = build_cfgs(
+    [dataset.name+'_VVT_datacard' for dataset in datasets.singleTop_datasets+[]], 
+    datasets.singleTop_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
-VVT_comp = merge_cfgs('VVT', VVT_cfgs)
+singleTop_VVT_comp = merge_cfgs('VVT', singleTop_VVT_cfgs)
 
-VVJ_cfgs = build_cfgs(
-    [dataset.name+'_VVJ_datacard' for dataset in VV_datasets], 
-    VV_datasets, variables,
+singleTop_VVJ_cfgs = build_cfgs(
+    [dataset.name+'_VVJ_datacard' for dataset in datasets.singleTop_datasets+[]], 
+    datasets.singleTop_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
-VVJ_comp = merge_cfgs('VVJ', VVJ_cfgs)
+singleTop_VVJ_comp = merge_cfgs('VVJ', singleTop_VVJ_cfgs)
+
+singleTop_comp = merge_comps('singleTop', [singleTop_VVT_comp, singleTop_VVJ_comp])
+
+Diboson_VVT_cfgs = build_cfgs(
+    [dataset.name+'_VVT_datacard' for dataset in datasets.Diboson_datasets+[]], 
+    datasets.Diboson_datasets, variables,
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
+Diboson_VVT_comp = merge_cfgs('VVT', Diboson_VVT_cfgs)
+
+Diboson_VVJ_cfgs = build_cfgs(
+    [dataset.name+'_VVJ_datacard' for dataset in datasets.Diboson_datasets+[]], 
+    datasets.Diboson_datasets, variables,
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
+Diboson_VVJ_comp = merge_cfgs('VVJ', Diboson_VVJ_cfgs)
+
+Diboson_comp = merge_comps('Diboson', [Diboson_VVT_comp, Diboson_VVJ_comp])
+
+VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
+VVJ_comp = merge_comps('VVJ', [singleTop_VVJ_comp, Diboson_VVJ_comp])
 
 VV_comp = merge_comps('VV', [VVT_comp, VVJ_comp])
 
@@ -150,7 +169,7 @@ W_cfgs = build_cfgs(
     signal_region_MC_nofakes+'*('+cuts_datacards['W'].cutstr+')', bins)
 W_comp = merge_cfgs('W', W_cfgs)
 
-MC_components = [VV_comp, W_comp, TT_comp, ZLL_comp]
+MC_components = [singleTop_comp, Diboson_comp, W_comp, TT_comp, ZLL_comp]
 
 # data
 data_cfgs = build_cfgs(
