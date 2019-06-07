@@ -128,33 +128,31 @@ TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
 
 TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
 
-VV_datasets = datasets.singleTop_datasets + datasets.Diboson_datasets
-
 singleTop_VVT_cfgs = build_cfgs(
-    [dataset.name+'_VVT_datacard' for dataset in datasets.singleTop_datasets+[]], 
+    [dataset.name+'_VVT_datacard' for dataset in datasets.singleTop_datasets], 
     datasets.singleTop_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
-singleTop_VVT_comp = merge_cfgs('VVT', singleTop_VVT_cfgs)
+singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
 
 singleTop_VVJ_cfgs = build_cfgs(
-    [dataset.name+'_VVJ_datacard' for dataset in datasets.singleTop_datasets+[]], 
+    [dataset.name+'_VVJ_datacard' for dataset in datasets.singleTop_datasets], 
     datasets.singleTop_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
-singleTop_VVJ_comp = merge_cfgs('VVJ', singleTop_VVJ_cfgs)
+singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
 
-singleTop_comp = merge_comps('singleTop', [singleTop_VVT_comp, singleTop_VVJ_comp])
+singleTop_comp = merge_cfgs('singleTop', singleTop_VVT_cfgs + singleTop_VVJ_cfgs)
 
 Diboson_VVT_cfgs = build_cfgs(
-    [dataset.name+'_VVT_datacard' for dataset in datasets.Diboson_datasets+[]], 
+    [dataset.name+'_VVT_datacard' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
-Diboson_VVT_comp = merge_cfgs('VVT', Diboson_VVT_cfgs)
+Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
 
 Diboson_VVJ_cfgs = build_cfgs(
-    [dataset.name+'_VVJ_datacard' for dataset in datasets.Diboson_datasets+[]], 
+    [dataset.name+'_VVJ_datacard' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
-Diboson_VVJ_comp = merge_cfgs('VVJ', Diboson_VVJ_cfgs)
+Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
 
 Diboson_comp = merge_comps('Diboson', [Diboson_VVT_comp, Diboson_VVJ_comp])
 
