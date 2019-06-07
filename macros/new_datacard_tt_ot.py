@@ -185,11 +185,16 @@ fake_cfgs_Embedded_2 = build_cfgs(
     ['fakesEmbedded'+dataset.name[-1]+'2' for dataset in datasets.Embedded_datasets], 
     datasets.Embedded_datasets, variables, l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
 
-for cfg in fake_cfgs_MC_1+fake_cfgs_MC_2+fake_cfgs_Embedded_1+fake_cfgs_Embedded_2:
-    cfg.scale = -1.
+data_fakes_cfgs = fake_cfgs_1 + fake_cfgs_2
+nondata_fakes_cfgs = fake_cfgs_Embedded_1 + fake_cfgs_Embedded_2 + fake_cfgs_MC_1 + fake_cfgs_MC_2
 
-fakes_cfgs = fake_cfgs_1+fake_cfgs_2+fake_cfgs_Embedded_1+fake_cfgs_Embedded_2+fake_cfgs_MC_1+fake_cfgs_MC_2
-fakes_component = merge_cfgs('fakes',fakes_cfgs)
+data_fakes_comp = merge_cfgs('jetFakes', data_fakes_cfgs)
+
+for cfg in nondata_fakes_cfgs:
+    cfg.scale = -1.
+nondata_fakes_comp = merge_cfgs('fakes', nondata_fakes_cfgs)
+    
+fakes_component = merge_comps('fakes',[data_fakes_comp, nondata_fakes_comp])
 
 all_comp =  MC_components+[data_component]+[Embedded_component]+[fakes_component]
 
@@ -207,7 +212,7 @@ datacards = delayed(make_datacards)(output_dir,
                                     VVJ = VVJ_comp,
                                     VV = VV_comp,
                                     W = W_comp,
-                                    #jetFakes = jetFakes_comp_datacards
+                                    jetFakes = data_fakes_comp
 )
 
 def write_plots(plotter, variables, output_dir):
