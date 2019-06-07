@@ -247,7 +247,10 @@ import os
 os.system('rm -rf {}'.format(output_dir))
 os.system('mkdir {}'.format(output_dir))
 
-processes = [writter, datacards]
+def get_processes(processes_list):
+    return processes_list
+
+processes = delayed(get_processes)([writter, datacards])
         
-visualize(*processes)
+visualize(processes)
 #compute(process)
