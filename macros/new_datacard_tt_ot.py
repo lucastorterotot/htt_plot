@@ -140,7 +140,11 @@ singleTop_VVJ_cfgs = build_cfgs(
     signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
 singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
 
-singleTop_comp = merge_cfgs('singleTop', singleTop_VVT_cfgs + singleTop_VVJ_cfgs)
+singleTop_cfgs = build_cfgs(
+    [dataset.name+'_singleTop' for dataset in datasets.singleTop_datasets], 
+    datasets.singleTop_datasets, variables,
+    signal_region_MC_nofakes, bins)
+singleTop_comp = merge_cfgs('singleTop', singleTop_cfgs)
 
 Diboson_VVT_cfgs = build_cfgs(
     [dataset.name+'_VVT_datacard' for dataset in datasets.Diboson_datasets], 
