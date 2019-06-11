@@ -28,9 +28,7 @@ def merge_cfgs(name, cfgs):
     return merge_components(name, comps)
 
 def merge_components(name, comps):
-    merged = copy.copy(comps[0])
-    merged.name = name
-    comps.remove(comps[0])
+    merged = comps[0].get_copy(name)
     merge(merged, comps)
     return merged
 
