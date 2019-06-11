@@ -113,6 +113,7 @@ ZJ_cfgs = build_cfgs(
 ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
 
 ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
+DY_comp = merge_comps('DY', [ZLL_comp, ZTT_comp])
 
 TTT_cfgs = build_cfgs(
     [dataset.name+'_TTT' for dataset in datasets.TT_datasets], 
@@ -165,7 +166,7 @@ W_cfgs = build_cfgs(
     signal_region_MC_nofakes+'*('+cuts_datacards['W'].cutstr+')', bins)
 W_comp = merge_cfgs('W', W_cfgs)
 
-MC_comps = [ZLL_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
+MC_comps = [DY_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
 
 # data
 data_cfgs = build_cfgs(
