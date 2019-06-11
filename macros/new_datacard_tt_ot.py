@@ -93,21 +93,21 @@ l2_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=s
 from htt_plot.tools.builder import build_cfgs, merge_cfgs, merge_components
 from htt_plot.tools.builder import  merge_components as merge_comps
 
-# datacards MC
+# MC
 ZTT_cfgs = build_cfgs(
-    [dataset.name+'_ZTT_datacard' for dataset in datasets.DY_datasets], 
+    [dataset.name+'_ZTT' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
     signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZTT'].cutstr+')', bins)
 ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
 
 ZL_cfgs = build_cfgs(
-    [dataset.name+'_ZL_datacard' for dataset in datasets.DY_datasets], 
+    [dataset.name+'_ZL' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
     signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZL'].cutstr+')', bins)
 ZL_comp = merge_cfgs('ZL', ZL_cfgs)
 
 ZJ_cfgs = build_cfgs(
-    [dataset.name+'_ZJ_datacard' for dataset in datasets.DY_datasets], 
+    [dataset.name+'_ZJ' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
     signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZJ'].cutstr+')', bins)
 ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
@@ -115,63 +115,57 @@ ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
 ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
 
 TTT_cfgs = build_cfgs(
-    [dataset.name+'_TTT_datacard' for dataset in datasets.TT_datasets], 
+    [dataset.name+'_TTT' for dataset in datasets.TT_datasets], 
     datasets.TT_datasets, variables,
     signal_region_MC_nofakes_TT+'*('+cuts_datacards['TTT'].cutstr+')', bins)
 TTT_comp = merge_cfgs('TTT', TTT_cfgs)
 
 TTJ_cfgs = build_cfgs(
-    [dataset.name+'_TTJ_datacard' for dataset in datasets.TT_datasets], 
+    [dataset.name+'_TTJ' for dataset in datasets.TT_datasets], 
     datasets.TT_datasets, variables,
     signal_region_MC_nofakes_TT+'*('+cuts_datacards['TTJ'].cutstr+')', bins)
 TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
 
 TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
 
-singleTop_VVT_cfgs = build_cfgs(
-    [dataset.name+'_VVT_datacard' for dataset in datasets.singleTop_datasets], 
-    datasets.singleTop_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
-singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
-
-singleTop_VVJ_cfgs = build_cfgs(
-    [dataset.name+'_VVJ_datacard' for dataset in datasets.singleTop_datasets], 
-    datasets.singleTop_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
-singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
-
-singleTop_cfgs = build_cfgs(
-    [dataset.name+'_singleTop' for dataset in datasets.singleTop_datasets], 
-    datasets.singleTop_datasets, variables,
-    signal_region_MC_nofakes, bins)
-singleTop_comp = merge_cfgs('singleTop', singleTop_cfgs)
-
 Diboson_VVT_cfgs = build_cfgs(
-    [dataset.name+'_VVT_datacard' for dataset in datasets.Diboson_datasets], 
+    [dataset.name+'_VVT' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
 Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
 
 Diboson_VVJ_cfgs = build_cfgs(
-    [dataset.name+'_VVJ_datacard' for dataset in datasets.Diboson_datasets], 
+    [dataset.name+'_VVJ' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
 Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
 
-Diboson_comp = merge_comps('Diboson', [Diboson_VVT_comp, Diboson_VVJ_comp])
+singleTop_VVT_cfgs = build_cfgs(
+    [dataset.name+'_VVT' for dataset in datasets.singleTop_datasets], 
+    datasets.singleTop_datasets, variables,
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
+singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
+
+singleTop_VVJ_cfgs = build_cfgs(
+    [dataset.name+'_VVJ' for dataset in datasets.singleTop_datasets], 
+    datasets.singleTop_datasets, variables,
+    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
+singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
 
 VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
 VVJ_comp = merge_comps('VVJ', [singleTop_VVJ_comp, Diboson_VVJ_comp])
-
 VV_comp = merge_comps('VV', [VVT_comp, VVJ_comp])
 
+Diboson_comp = merge_comps('Diboson', [Diboson_VVT_comp, Diboson_VVJ_comp])
+singleTop_comp = merge_comps('singleTop', [singleTop_VVT_comp, singleTop_VVJ_comp])
+
 W_cfgs = build_cfgs(
-    [dataset.name+'_W_datacard' for dataset in datasets.WJ_datasets], 
+    [dataset.name+'_W' for dataset in datasets.WJ_datasets], 
     datasets.WJ_datasets, variables,
     signal_region_MC_nofakes+'*('+cuts_datacards['W'].cutstr+')', bins)
 W_comp = merge_cfgs('W', W_cfgs)
 
-MC_components = [singleTop_comp, Diboson_comp, W_comp, TT_comp, ZLL_comp]
+MC_comps = [ZLL_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
 
 # data
 data_cfgs = build_cfgs(
@@ -179,13 +173,13 @@ data_cfgs = build_cfgs(
     datasets.data_datasets, variables, signal_region, bins)
 for cfg in data_cfgs:
     cfg.stack = False
-data_component = merge_cfgs('data', data_cfgs)
+data_comp = merge_cfgs('data', data_cfgs)
 
 # Embedded
 Embedded_cfgs = build_cfgs(
     [dataset.name for dataset in datasets.Embedded_datasets], 
     datasets.Embedded_datasets, variables, signal_region_Embedded, bins)
-Embedded_component = merge_cfgs('Embedded', Embedded_cfgs)
+Embedded_comp = merge_cfgs('Embedded', Embedded_cfgs)
 
 # fakes
 datasets_MC_fakes = datasets.WJ_datasets + datasets.Diboson_datasets + datasets.singleTop_datasets + datasets.DY_datasets + datasets.TT_datasets
@@ -215,9 +209,11 @@ for cfg in nondata_fakes_cfgs:
     cfg.scale = -1.
 nondata_fakes_comp = merge_cfgs('fakes', nondata_fakes_cfgs)
     
-fakes_component = merge_comps('fakes',[data_fakes_comp, nondata_fakes_comp])
+fakes_comp = merge_comps('fakes', [data_fakes_comp, nondata_fakes_comp])
 
-all_comp =  MC_components+[data_component]+[Embedded_component]+[fakes_component]
+# Plotting & datacards
+
+all_comp =  MC_comps + [data_comp, Embedded_comp, fakes_comp]
 
 plotter = delayed(Plotter)(all_comp, datasets.data_lumi)
 
@@ -234,8 +230,8 @@ datacards = delayed(make_datacards)(output_dir, 'mt_tot',
                                     VV = VV_comp,
                                     W = W_comp,
                                     jetFakes = data_fakes_comp,
-                                    data_obs = data_component,
-                                    embedded = Embedded_component
+                                    data_obs = data_comp,
+                                    embedded = Embedded_comp
 )
 
 def write_plots(plotter, variables, output_dir):
