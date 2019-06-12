@@ -61,8 +61,8 @@ signal_region_MC_nofakes_TT = signal_region_MC_nofakes_TT * config.weights['weig
 signal_region_MC_nofakes = signal_region_MC_nofakes * config.weights['weight'] * config.weights['MC']
 l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region * config.weights['l1_fake']
 l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region * config.weights['l2_fake']
-l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed']
-l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed']
+l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed'] * config.weights['l1_fake']
+l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed'] * config.weights['l2_fake']
 l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l1_fake']
 l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l2_fake']
 
