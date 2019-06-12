@@ -4,16 +4,17 @@ from dask import delayed
 import copy
 from ROOT import TH1F
 
-def build_cfg(name, dataset, var, cut, *bins):
-    if isinstance(cut, Cuts):
+def build_cfg(name, dataset, variable, cut, *bins):
+    '''Allows to pass non-str cuts'''
+    if not isinstance(cut, str):
         cut = str(cut)
-    cfg = Component_cfg(name, dataset, var, cut, *bins)
+    cfg = Component_cfg(name, dataset, variable, cut, *bins)
     return cfg
 
-def build_cfgs(names, datasets, var, cut, *bins):
+def build_cfgs(names, datasets, variable, cut, *bins):
     cfgs = []
     for name, dataset in zip(names, datasets):
-        cfgs.append(build_cfg(name,dataset,var,cut,*bins))
+        cfgs.append(build_cfg(name,dataset,variable,cut,*bins))
     return cfgs
 
 def create_component(cfg):
@@ -36,13 +37,13 @@ merge_components = delayed(merge_components)
 
 def project(comp):
     dataset = comp.cfg.dataset
-    for var in comp.cfg.variables:
-        histo = TH1F(comp.name+dataset.name+var, comp.name+dataset.name, *comp.cfg.bins[var])
-        dataset.tree.Project(comp.name+dataset.name+var, var, comp.cfg.cut)
-        histo.Scale(dataset.weight * comp.cfg.scale)
-        comp.histogram[var].Add(histo)
+    var = comp.cfg.variable
+    histo = TH1F(comp.name+dataset.name+var, comp.name+dataset.name, *comp.cfg.bins)
+    dataset.tree.Project(comp.name+dataset.name+var, var, comp.cfg.cut)
+    histo.Scale(dataset.weight * comp.cfg.scale)
+    comp.histogram.Add(histo)
 
 def merge(comp, others):
-    for var in comp.cfg.variables:
-        for other in others:
-            comp.histogram[var].Add(other.histogram[var])
+    var = comp.cfg.variable
+    for other in others:
+        comp.histogram.Add(other.histogram)

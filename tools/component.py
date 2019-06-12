@@ -5,24 +5,23 @@ class Component(object):
           self.cfg = component_cfg
           self.name = self.cfg.name
           if init_TH1F:
-               self.init_hists()
+               self.init_hist()
 
-     def init_hists(self):
-          self.histogram = {}
-          for var in self.cfg.variables:
-               self.histogram[var] = TH1F(self.name+'_'+var, self.name+'_'+var, *self.cfg.bins[var])
+     def init_hist(self):
+          var = self.cfg.variable
+          self.histogram = TH1F(self.name+'_'+var, self.name+'_'+var, *self.cfg.bins)
           
      def get_copy(self, name):
           new = Component(self.cfg, init_TH1F=False)
           new.name = name
-          new.init_hists()
+          new.init_hist()
           return new
           
 class Component_cfg(object):
      
-     def __init__(self, name, dataset, variables, cut, bins):
+     def __init__(self, name, dataset, variable, cut, bins):
           self.name = name
-          self.variables = variables
+          self.variable = variable
           self.cut = str(cut)
           self.bins = bins
           self.stack = True

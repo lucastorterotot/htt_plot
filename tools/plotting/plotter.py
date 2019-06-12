@@ -19,7 +19,7 @@ class Plotter(object):
         pad = self.pad
         padr = self.padr
         if not all([can, pad, padr]):
-            can = self.can = TCanvas('can', '', 800, 800) if not can else can
+            can = self.can = TCanvas('can'+self.comps[0].cfg.variable, '', 800, 800) if not can else can
             can.Divide(1, 2, 0.0, 0.0)
 
             pad = self.pad = can.GetPad(1) if not pad else pad
@@ -65,7 +65,7 @@ class Plotter(object):
     def _prepare_plot(self, xtitle):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
-            hist = comp.histogram[xtitle]    
+            hist = comp.histogram 
             plot.AddHistogram(comp.name, hist)
         return plot
     
