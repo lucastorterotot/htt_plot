@@ -8,8 +8,6 @@ t1_cuts_tt = Cuts(
     l1_charge = 'abs(l1_q) == 1.',
     l1_vertex = 'abs(l1_dz) < 0.2',
     l1_decaymode = 'l1_decayModeFinding > 0.5',
-    l1_against_e = 'l1_againstElectronVLooseMVA6 > 0.5',
-    l1_against_mu = 'l1_againstMuonLoose3 > 0.5',
 )
 
 t2_cuts_tt = Cuts(
@@ -19,8 +17,6 @@ t2_cuts_tt = Cuts(
     l2_charge = 'abs(l2_q) == 1.',
     l2_vertex = 'abs(l2_dz) < 0.2',
     l2_decaymode = 'l2_decayModeFinding > 0.5',
-    l2_against_e = 'l2_againstElectronVLooseMVA6 > 0.5',
-    l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
 m_cuts_mt = Cuts(
@@ -37,8 +33,6 @@ t_cuts_mt = Cuts(
     l2_charge = 'abs(l2_q) == 1.',
     l2_vertex = 'abs(l2_dz) < 0.2',
     l2_decaymode = 'l2_decayModeFinding > 0.5',
-    l2_against_e = 'l2_againstElectronVLooseMVA6 > 0.5',
-    l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
 e_cuts_et = Cuts(
@@ -62,6 +56,18 @@ cuts_btag_2 = Cuts(
     Btag_2 = 'bjet2_csv > 0',
 )
 
-cuts_tt = t1_cuts_tt + t2_cuts_tt + cuts_signal
-cuts_mt = m_cuts_mt + t_cuts_mt + cuts_signal
-cuts_et = e_cuts_et + t_cuts_et + cuts_signal
+cuts_against_leptons_tt = Cuts(
+    l1_against_e = 'l1_againstElectronVLooseMVA6 > 0.5',
+    l1_against_mu = 'l1_againstMuonLoose3 > 0.5',
+    l2_against_e = 'l2_againstElectronVLooseMVA6 > 0.5',
+    l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
+)
+
+cuts_against_leptons_lt = Cuts(
+    l2_against_e = 'l2_againstElectronVLooseMVA6 > 0.5',
+    l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
+)
+
+cuts_tt = t1_cuts_tt + t2_cuts_tt + cuts_signal + cuts_against_leptons_tt
+cuts_mt = m_cuts_mt + t_cuts_mt + cuts_signal + cuts_against_leptons_lt
+cuts_et = e_cuts_et + t_cuts_et + cuts_signal + cuts_against_leptons_lt

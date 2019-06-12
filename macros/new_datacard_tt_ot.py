@@ -4,17 +4,14 @@ import htt_plot.channels_configs.tt as config
 from dask import delayed, compute, visualize
 
 # datasets
-import htt_plot.datasets.gael_all as datasets
+datasets = config.datasets
 
 # output
 output_dir = 'delayed_plots_'+config.channel
 
-# binning
-from htt_plot.binning import bins
-
-# variables
-variables = bins.keys()
-variables = ['mt_tot'] # just for testing
+# binning and variables
+bins = config.bins
+variables = config.variables
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
@@ -25,36 +22,20 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # cuts
-from htt_plot.tools.cut import Cuts
-cuts_against_leptons = Cuts(
-    l1_againstleptons = 'l1_againstElectronVLooseMVA6 > 0.5 && l1_againstMuonLoose3 > 0.5',
-    l2_againstleptons = 'l2_againstElectronVLooseMVA6 > 0.5 && l2_againstMuonLoose3 > 0.5',
-)
-
-basic_cuts = config.basic_cuts + cuts_against_leptons
-
-signal_region_cut = basic_cuts.clone() # + cut_signal
-tau_legs = ['l2']
-if config.channel == 'tt':
-    tau_legs.append('l1')
-for leg in tau_legs:
-    signal_region_cut += config.cuts_iso[leg+'_Tight']
-
-signal_region_MC = signal_region_cut
+signal_region_MC = config.cut_signal
 signal_region_MC_nofakes = signal_region_MC + ~config.cut_l1_fakejet + ~config.cut_l2_fakejet
 signal_region_MC_nofakes_DY = signal_region_MC_nofakes + config.cut_dy_promptfakeleptons
 signal_region_MC_nofakes_TT = signal_region_MC_nofakes + config.cut_TT_nogenuine
 
-l1_FakeFactorApplication_Region = basic_cuts + config.cuts_iso['l1_VLoose'] + ~config.cuts_iso['l1_Tight'] + config.cuts_iso['l2_Tight']
+l1_FakeFactorApplication_Region = config.basic_cuts + config.cuts_iso['l1_VLoose'] + ~config.cuts_iso['l1_Tight'] + config.cuts_iso['l2_Tight']
 l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~config.cut_l1_fakejet
 
-l2_FakeFactorApplication_Region = basic_cuts + config.cuts_iso['l2_VLoose'] + ~config.cuts_iso['l2_Tight'] + config.cuts_iso['l1_Tight']
+l2_FakeFactorApplication_Region = config.basic_cuts + config.cuts_iso['l2_VLoose'] + ~config.cuts_iso['l2_Tight'] + config.cuts_iso['l1_Tight']
 l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~config.cut_l2_fakejet
 
 #### cuts+weights
-
-signal_region = signal_region_cut * config.weights['weight']
-signal_region_Embedded = signal_region_cut * config.weights['weight'] * config.weights['embed']
+signal_region = config.cut_signal * config.weights['weight']
+signal_region_Embedded = signal_region * config.weights['embed']
 signal_region_MC = signal_region_MC * config.weights['weight'] * config.weights['MC']
 signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * config.weights['weight'] * config.weights['MC'] * config.weights['DY'] 
 signal_region_MC_nofakes_TT = signal_region_MC_nofakes_TT * config.weights['weight'] * config.weights['MC']
