@@ -23,7 +23,7 @@ class Component_cfg(object):
      def __init__(self, name, dataset, variables, cut, bins):
           self.name = name
           self.variables = variables
-          self.cut = cut
+          self.cut = str(cut)
           self.bins = bins
           self.stack = True
           self.dataset = dataset

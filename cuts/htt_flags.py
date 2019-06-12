@@ -1,19 +1,14 @@
-from htt_plot.tools.cut import Cut, CutFlow
-import pprint
+from htt_plot.tools.cut import Cuts
 
-flags = [
-    'Flag_goodVertices',
-    'Flag_globalTightHalo2016Filter',
-    # 'Flag_globalSuperTightHalo2016Filter',
-    'Flag_HBHENoiseFilter',
-    'Flag_HBHENoiseIsoFilter',
-    'Flag_EcalDeadCellTriggerPrimitiveFilter',
-    'Flag_BadPFMuonFilter',
-    'Flag_BadChargedCandidateFilter',
-    # 'Flag_eeBadScFilter',
-    'Flag_ecalBadCalibFilter'
-]
-
-cuts_flags = CutFlow(
-    [(flag, flag) for flag in flags]
+cuts_flags = Cuts(
+    goodVertices = 'Flag_goodVertices',
+    TightHalo = 'Flag_globalTightHalo2016Filter',
+    # SuperTightHalo = 'Flag_globalSuperTightHalo2016Filter',
+    Noise = 'Flag_HBHENoiseFilter',
+    NoiseIso = 'Flag_HBHENoiseIsoFilter',
+    EcalDeadCell = 'Flag_EcalDeadCellTriggerPrimitiveFilter',
+    BadPFMuon = 'Flag_BadPFMuonFilter',
+    BadChargedCandidate = 'Flag_BadChargedCandidateFilter',
+    # eeBadSc = 'Flag_eeBadScFilter',
+    ecalBadCalib = 'Flag_ecalBadCalibFilter'
 )

@@ -1,12 +1,12 @@
-from htt_plot.tools.cut import Cut
+from htt_plot.tools.cut import Cuts
 from htt_plot.tools.component import Component, Component_cfg
 from dask import delayed
 import copy
 from ROOT import TH1F
 
 def build_cfg(name, dataset, var, cut, *bins):
-    if isinstance(cut,Cut):
-        cut = cut.cutstr
+    if isinstance(cut, Cuts):
+        cut = str(cut)
     cfg = Component_cfg(name, dataset, var, cut, *bins)
     return cfg
 

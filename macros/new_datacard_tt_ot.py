@@ -1,15 +1,13 @@
-channel = 'tt'
-leg1 = channel[0] if not channel[0] == channel[1] else channel[0]+'1'
-leg2 = channel[1] if not channel[0] == channel[1] else channel[1]+'2'
+import htt_plot.channels_configs.tt as config
+
+# dask tools
+from dask import delayed, compute, visualize
 
 # datasets
 import htt_plot.datasets.gael_all as datasets
 
 # output
-output_dir = 'delayed_plots_'+channel
-
-# dask tools
-from dask import delayed, compute, visualize
+output_dir = 'delayed_plots_'+config.channel
 
 # binning
 from htt_plot.binning import bins
@@ -27,64 +25,46 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # cuts
-from htt_plot.cuts.htt_cuts import cuts
-cut_signal = cuts[channel]['signal']
+from htt_plot.tools.cut import Cuts
+cuts_against_leptons = Cuts(
+    l1_againstleptons = 'l1_againstElectronVLooseMVA6 > 0.5 && l1_againstMuonLoose3 > 0.5',
+    l2_againstleptons = 'l2_againstElectronVLooseMVA6 > 0.5 && l2_againstMuonLoose3 > 0.5',
+)
 
-from htt_plot.cuts.htt_triggers_ot import triggers_CutFlows
-triggers = triggers_CutFlows[channel]['']
-# as three states for triggers exists, take the one we want
-# which is without suffix --> '' key
+basic_cuts = config.basic_cuts + cuts_against_leptons
 
-from htt_plot.cuts.htt_isolations import cuts_iso
-cuts_iso = cuts_iso[channel]
-
-from htt_plot.cuts.htt_flags import cuts_flags
-from htt_plot.cuts.htt_vetoes import cuts_vetoes
-from htt_plot.cuts.htt_generic import cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_dy_promptfakeleptons, cut_TT_nogenuine
-
-basic_cuts = cuts_flags + cuts_vetoes + triggers + cut_os
-
-from htt_plot.tools.cut import Cut, CutFlow
-cuts_against_leptons = CutFlow([
-    ('l1_againstleptons','l1_againstElectronVLooseMVA6 > 0.5 && l1_againstMuonLoose3 > 0.5'),
-    ('l2_againstleptons','l2_againstElectronVLooseMVA6 > 0.5 && l2_againstMuonLoose3 > 0.5')
-])
-basic_cuts += cuts_against_leptons
-
-signal_region_cut = basic_cuts # + cut_signal
-for leg in [leg1, leg2]:
-    if 't' in leg:
-        signal_region_cut += cuts_iso['Tight'][leg]
+signal_region_cut = basic_cuts.clone() # + cut_signal
+tau_legs = ['l2']
+if config.channel == 'tt':
+    tau_legs.append('l1')
+for leg in tau_legs:
+    signal_region_cut += config.cuts_iso[leg+'_Tight']
 
 signal_region_MC = signal_region_cut
-signal_region_MC_nofakes = signal_region_MC + ~cut_l1_fakejet + ~cut_l2_fakejet
-signal_region_MC_nofakes_DY = signal_region_MC_nofakes + cut_dy_promptfakeleptons
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes + cut_TT_nogenuine
+signal_region_MC_nofakes = signal_region_MC + ~config.cut_l1_fakejet + ~config.cut_l2_fakejet
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes + config.cut_dy_promptfakeleptons
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes + config.cut_TT_nogenuine
 
-l1_FakeFactorApplication_Region = basic_cuts + cuts_iso['VLoose'][leg1] + ~cuts_iso['Tight'][leg1] + cuts_iso['Tight'][leg2]
-l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~cut_l1_fakejet
+l1_FakeFactorApplication_Region = basic_cuts + config.cuts_iso['l1_VLoose'] + ~config.cuts_iso['l1_Tight'] + config.cuts_iso['l2_Tight']
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~config.cut_l1_fakejet
 
-l2_FakeFactorApplication_Region = basic_cuts + cuts_iso['VLoose'][leg2] + ~cuts_iso['Tight'][leg2] + cuts_iso['Tight'][leg1]
-l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~cut_l2_fakejet
-
-from htt_plot.cuts.htt_datacards_cuts import cuts_datacards
-cuts_datacards = cuts_datacards[channel]
+l2_FakeFactorApplication_Region = basic_cuts + config.cuts_iso['l2_VLoose'] + ~config.cuts_iso['l2_Tight'] + config.cuts_iso['l1_Tight']
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~config.cut_l2_fakejet
 
 #### cuts+weights
-from htt_plot.cuts.htt_weights import weight, weight_MC, weight_MC_DY
 
-signal_region = '({cut})*({weight})'.format(cut=str(signal_region_cut),weight=weight)
-signal_region_Embedded = '({cut})*({weight})'.format(cut=str(signal_region_cut),weight='weight*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
-signal_region_MC = '({cut})*({weight})'.format(cut=str(signal_region_MC),weight=weight_MC)
-signal_region_MC_nofakes_DY = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes_DY),weight=weight_MC_DY)
-signal_region_MC_nofakes_TT = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes_TT),weight=weight_MC)
-signal_region_MC_nofakes = '({cut})*({weight})'.format(cut=str(signal_region_MC_nofakes),weight=weight_MC)
-l1_FakeFactorApplication_Region = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region),weight='l1_fakeweight*0.5')
-l2_FakeFactorApplication_Region = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region),weight='l2_fakeweight*0.5')
-l1_FakeFactorApplication_Region_genuinetauMC_Embedded = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region_genuinetauMC),weight='weight*l1_fakeweight*0.5*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
-l2_FakeFactorApplication_Region_genuinetauMC_Embedded = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region_genuinetauMC),weight='weight*l2_fakeweight*0.5*weight_embed_DoubleMuonHLT_eff*weight_embed_muonID_eff_l1*weight_embed_muonID_eff_l2*weight_embed_DoubleTauHLT_eff_l1*weight_embed_DoubleTauHLT_eff_l2*weight_embed_track_l1*weight_embed_track_l2')
-l1_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=str(l1_FakeFactorApplication_Region_genuinetauMC),weight='weight*l1_fakeweight*0.5')
-l2_FakeFactorApplication_Region_genuinetauMC = '({cut})*({weight})'.format(cut=str(l2_FakeFactorApplication_Region_genuinetauMC),weight='weight*l2_fakeweight*0.5')
+signal_region = signal_region_cut * config.weights['weight']
+signal_region_Embedded = signal_region_cut * config.weights['weight'] * config.weights['embed']
+signal_region_MC = signal_region_MC * config.weights['weight'] * config.weights['MC']
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * config.weights['weight'] * config.weights['MC'] * config.weights['DY'] 
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes_TT * config.weights['weight'] * config.weights['MC']
+signal_region_MC_nofakes = signal_region_MC_nofakes * config.weights['weight'] * config.weights['MC']
+l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region * config.weights['l1_fake']
+l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region * config.weights['l2_fake']
+l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed']
+l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed']
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l1_fake']
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l2_fake']
 
 #########
 # Cfgs and components
@@ -97,19 +77,19 @@ from htt_plot.tools.builder import  merge_components as merge_comps
 ZTT_cfgs = build_cfgs(
     [dataset.name+'_ZTT' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZTT'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY * config.cuts_datacards['ZTT'], bins)
 ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
 
 ZL_cfgs = build_cfgs(
     [dataset.name+'_ZL' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZL'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY * config.cuts_datacards['ZL'], bins)
 ZL_comp = merge_cfgs('ZL', ZL_cfgs)
 
 ZJ_cfgs = build_cfgs(
     [dataset.name+'_ZJ' for dataset in datasets.DY_datasets], 
     datasets.DY_datasets, variables,
-    signal_region_MC_nofakes_DY+'*('+cuts_datacards['ZJ'].cutstr+')', bins)
+    signal_region_MC_nofakes_DY * config.cuts_datacards['ZJ'], bins)
 ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
 
 ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
@@ -118,13 +98,13 @@ DY_comp = merge_comps('DY', [ZLL_comp, ZTT_comp])
 TTT_cfgs = build_cfgs(
     [dataset.name+'_TTT' for dataset in datasets.TT_datasets], 
     datasets.TT_datasets, variables,
-    signal_region_MC_nofakes_TT+'*('+cuts_datacards['TTT'].cutstr+')', bins)
+    signal_region_MC_nofakes_TT * config.cuts_datacards['TTT'], bins)
 TTT_comp = merge_cfgs('TTT', TTT_cfgs)
 
 TTJ_cfgs = build_cfgs(
     [dataset.name+'_TTJ' for dataset in datasets.TT_datasets], 
     datasets.TT_datasets, variables,
-    signal_region_MC_nofakes_TT+'*('+cuts_datacards['TTJ'].cutstr+')', bins)
+    signal_region_MC_nofakes_TT * config.cuts_datacards['TTJ'], bins)
 TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
 
 TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
@@ -132,25 +112,25 @@ TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
 Diboson_VVT_cfgs = build_cfgs(
     [dataset.name+'_VVT' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
+    signal_region_MC_nofakes * config.cuts_datacards['VVT'], bins)
 Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
 
 Diboson_VVJ_cfgs = build_cfgs(
     [dataset.name+'_VVJ' for dataset in datasets.Diboson_datasets], 
     datasets.Diboson_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
+    signal_region_MC_nofakes * config.cuts_datacards['VVJ'], bins)
 Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
 
 singleTop_VVT_cfgs = build_cfgs(
     [dataset.name+'_VVT' for dataset in datasets.singleTop_datasets], 
     datasets.singleTop_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVT'].cutstr+')', bins)
+    signal_region_MC_nofakes * config.cuts_datacards['VVT'], bins)
 singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
 
 singleTop_VVJ_cfgs = build_cfgs(
     [dataset.name+'_VVJ' for dataset in datasets.singleTop_datasets], 
     datasets.singleTop_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['VVJ'].cutstr+')', bins)
+    signal_region_MC_nofakes * config.cuts_datacards['VVJ'], bins)
 singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
 
 VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
@@ -163,7 +143,7 @@ singleTop_comp = merge_comps('singleTop', [singleTop_VVT_comp, singleTop_VVJ_com
 W_cfgs = build_cfgs(
     [dataset.name+'_W' for dataset in datasets.WJ_datasets], 
     datasets.WJ_datasets, variables,
-    signal_region_MC_nofakes+'*('+cuts_datacards['W'].cutstr+')', bins)
+    signal_region_MC_nofakes * config.cuts_datacards['W'], bins)
 W_comp = merge_cfgs('W', W_cfgs)
 
 MC_comps = [DY_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
