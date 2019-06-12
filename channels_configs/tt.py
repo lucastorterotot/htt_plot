@@ -1,3 +1,7 @@
+''' General config file for plotting and datacards.
+tau-tau channel
+'''
+
 from htt_plot.tools.cut import Cuts
 
 channel = 'tt'
