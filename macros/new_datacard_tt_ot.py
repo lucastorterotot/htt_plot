@@ -230,7 +230,7 @@ for variable in datacards_variables:
 
 import os
 os.system('rm -rf {}'.format(output_dir))
-os.system('mkdir {}'.format(output_dir))
+os.system('mkdir -p {}'.format(output_dir))
         
 visualize(*processes)
 #compute(*processes)
