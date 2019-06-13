@@ -201,21 +201,25 @@ dc_comps = {}
 for variable in variables:
     components[variable], dc_comps[variable] = get_all_comps(variable, bins[variable])
 
-plotters = {}
+processes = []
+
+def write_plots(plotter, variable, output_dir):
+    plotter.draw(variable, 'Number of events')
+    plotter.write('{}/{}.png'.format(output_dir, variable))
+    plotter.write('{}/{}.tex'.format(output_dir, variable))
+    print plotter.plot
+    
 for variable, comps in components.items():
-    plotters[variable] = delayed(Plotter)(comps, datasets.data_lumi)
+    processes.append(
+        delayed(write_plots)(
+            delayed(Plotter)(comps, datasets.data_lumi),
+            variable,
+            output_dir
+            )
+        )
 
 dc_var = 'mt_tot'
-datacards = delayed(make_datacards)(output_dir, dc_var, dc_comps[dc_var])
-
-def write_plots(plotters, output_dir):
-    for variable, plotter in plotters.items():
-        plotter.draw(variable, 'Number of events')
-        plotter.write('{}/{}.png'.format(output_dir, variable))
-        plotter.write('{}/{}.tex'.format(output_dir, variable))
-        print plotter.plot
-
-writter = delayed(write_plots)(plotters, output_dir)
+processes.append(delayed(make_datacards)(output_dir, dc_var, dc_comps[dc_var]))
 
 import os
 os.system('rm -rf {}'.format(output_dir))
@@ -224,7 +228,7 @@ os.system('mkdir {}'.format(output_dir))
 def get_processes(processes_list):
     return processes_list
 
-processes = delayed(get_processes)([writter, datacards])
+processes = delayed(get_processes)(processes)
         
 visualize(processes)
 #compute(process)
