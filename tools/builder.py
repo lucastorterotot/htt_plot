@@ -24,6 +24,8 @@ def build_cfgs(names, datasets, variable, cut, bins):
     return cfgs
 
 def create_component(cfg):
+    ''' Creates a component object and fills its histogram
+    following its configuration file '''
     comp = Component(cfg)
     project(comp)
     return comp
@@ -31,26 +33,27 @@ def create_component(cfg):
 create_component = delayed(create_component)
 
 def merge_cfgs(name, cfgs):
+    ''' Returns a component which is the merged component of all components
+    that would have been created with all cfgs '''
     comps = [create_component(cfg) for cfg in cfgs]
     return merge_components(name, comps)
 
 def merge_components(name, comps):
+    ''' Take components and returns a new component, which histogram
+    contains all the intial components histograms '''
     merged = comps[0].Clone(name)
     comps.remove(comps[0])
-    merge(merged, comps)
+    for comp in comps:
+        merged.histogram.Add(comp.histogram)
     return merged
 
 merge_components = delayed(merge_components)
 
 def project(comp):
+    ''' fills a component histogram following its configuration file '''
     dataset = comp.cfg['dataset']
     var = comp.var
     histo = TH1F(comp.name+dataset.name+var, comp.name+dataset.name, *comp.cfg['bins'])
     dataset.tree.Project(comp.name+dataset.name+var, var, comp.cfg['cut'])
     histo.Scale(dataset.weight * comp.cfg['scale'])
     comp.histogram.Add(histo)
-
-def merge(comp, others):
-    var = comp.var
-    for other in others:
-        comp.histogram.Add(other.histogram)
