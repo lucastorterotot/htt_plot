@@ -1,20 +1,18 @@
 from ROOT import TH1F
+import copy
 
 class Component(object):
      def __init__(self, component_cfg, init_TH1F=True):
           self.cfg = component_cfg
           self.name = self.cfg.name
-          if init_TH1F:
-               self.init_hist()
-
-     def init_hist(self):
-          var = self.cfg.variable
-          self.histogram = TH1F(self.name+'_'+var, self.name+'_'+var, *self.cfg.bins)
+          self.var = self.cfg.variable
+          self.histogram = TH1F(self.name+'_'+self.var, self.name+'_'+self.var, *self.cfg.bins)
           
-     def get_copy(self, name):
-          new = Component(self.cfg, init_TH1F=False)
+     def Clone(self, name):
+          new = copy.copy(self)
           new.name = name
-          new.init_hist()
+          new.histogram = self.histogram.Clone(new.name+'_'+new.var)
+          new.histogram.SetTitle(new.name+'_'+new.var)
           return new
           
 class Component_cfg(object):
