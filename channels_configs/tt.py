@@ -11,7 +11,8 @@ from htt_plot.binning import bins
 
 # variables
 variables = bins.keys()
-variables = ['mt_tot']+[variables[0]] # just for testing
+datacards_variables = ['mt_tot']
+variables = datacards_variables+[variables[0]] # just for testing
 
 # cuts
 from htt_plot.cuts.htt_cuts import cuts_tt as cut_signal
