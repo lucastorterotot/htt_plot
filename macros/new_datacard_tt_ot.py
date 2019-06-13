@@ -171,7 +171,7 @@ def get_all_comps(variable, bins):
     data_fakes_comp = merge_cfgs('jetFakes', data_fakes_cfgs)
 
     for cfg in nondata_fakes_cfgs:
-        cfg.scale = -1.
+        cfg['scale'] = -1.
     nondata_fakes_comp = merge_cfgs('fakes_nondata', nondata_fakes_cfgs)
     
     fakes_comp = merge_comps('fakes', [data_fakes_comp, nondata_fakes_comp])
