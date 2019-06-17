@@ -46,6 +46,13 @@ Since the server listens to port 8889, you can connect to this port on your loca
 
 In the browser, open [macros/test_dask.ipynb](macros/test_dask.ipynb).
 
+
+## Dataset report
+
+See above how to use jupyter notebook remotely.
+
+Then, in the jupyter notebook, open [harvest/dataset_report.ipynb](harvest/dataset_report.ipynb)
+
 ## TODO
 
 **You should disable parallel mode in the main macro for development and debugging**
