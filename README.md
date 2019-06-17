@@ -51,7 +51,7 @@ In the browser, open [macros/test_dask.ipynb](macros/test_dask.ipynb).
 
 See above how to use jupyter notebook remotely.
 
-Then, in the jupyter notebook, open [harvest/dataset_report.ipynb](harvest/dataset_report.ipynb)
+Then, in the jupyter notebook, open [harvesting/dataset_report.ipynb](harvesting/dataset_report.ipynb)
 
 ## TODO
 
