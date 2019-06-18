@@ -9,10 +9,10 @@ class Cutstring(object):
     ''' Wrapper of a string for ROOT cut strings '''
     
     def __init__(self, string):
-        self.string = string
+        self.string = str(string)
 
     def __str__(self):
-        return str(self.string)
+        return self.string
 
     def __and__(self, other):
         ''' Conserving a object of the same class allows to 
