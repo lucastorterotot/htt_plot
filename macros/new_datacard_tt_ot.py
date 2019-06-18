@@ -1,4 +1,5 @@
 import htt_plot.channels_configs.tt as config
+# config --> cfg
 
 # dask tools
 from dask import delayed, compute, visualize
@@ -10,7 +11,7 @@ datasets = config.datasets
 output_dir = 'delayed_plots_'+config.channel
 
 # binning and variables
-bins = config.bins
+bins = config.bins # avoid this kind of renaming
 variables = config.variables
 datacards_variables = config.datacards_variables
 

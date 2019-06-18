@@ -7,19 +7,26 @@ class Component(object):
      are also available, yet all information can be found in the cfg attribute.'''
      
      def __init__(self, component_cfg, init_TH1F=True):
+          # TODO doc
           self.cfg = component_cfg
           self.name = self.cfg['name']
           self.var = self.cfg['variable']
+          # TODO : ensure unique histo name : counter of compnent objects
+          # https://stackoverflow.com/questions/8628123/counting-instances-of-a-class
           self.histogram = TH1F(self.name+'_'+self.var, self.name+'_'+self.var, *self.cfg['bins'])
           
      def Clone(self, name):
+          # TODO doc
           new = copy.copy(self)
           new.name = name
+          # avoid useless joins
           new.histogram = self.histogram.Clone(new.name+'_'+new.var)
           new.histogram.SetTitle(new.name+'_'+new.var)
           return new
           
 class Component_cfg(dict):
+     # TODO : pass it in the init fct
+     # xsection to be given or contained in daatset
      ''' A configuration class for components. Gives a dict
      containing all key words passed at init. Some defaults are
      provided, yet some key words are necessary, such as
@@ -40,7 +47,8 @@ class Component_cfg(dict):
      }
      
      def __init__(self, **kwargs):
-          super(Component_cfg, self).__init__(Component_cfg.defaults)
+          # TODO : use update method of dict and then __init__ only once
+          super(Component_cfg, self).__init__(self.__class__.defaults)
           super(Component_cfg, self).__init__(kwargs)
           if not 'xsection' in self:
                # as user must provide a dataset

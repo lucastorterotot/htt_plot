@@ -53,6 +53,7 @@ class Cutstring(object):
         return Cutstring('(' + str(self) + ') * (' + str(other) + ')')
 
     def __imul__(self, other):
+        # self.string to be replaced
         self = self * other
         return self
    
