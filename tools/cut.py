@@ -71,3 +71,6 @@ class Cuts(dict):
 
     def __str__(self):
         return pprint.pformat(self)
+
+    def __setitem__(self, key, value):
+        super(Cuts, self).__setitem__(key, Cut(value))
