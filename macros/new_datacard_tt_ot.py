@@ -1,19 +1,19 @@
-import htt_plot.channels_configs.tt as config
+import htt_plot.channels_configs.tt as cfg
 # config --> cfg
 
 # dask tools
 from dask import delayed, compute, visualize
 
 # datasets
-datasets = config.datasets
+datasets = cfg.datasets
 
 # output
-output_dir = 'delayed_plots_'+config.channel
+output_dir = 'delayed_plots_'+cfg.channel
 
 # binning and variables
-bins = config.bins # avoid this kind of renaming
-variables = config.variables
-datacards_variables = config.datacards_variables
+bins = cfg.bins # avoid this kind of renaming
+variables = cfg.variables
+datacards_variables = cfg.datacards_variables
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
@@ -24,30 +24,30 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # cuts
-signal_region_MC = config.cut_signal
-signal_region_MC_nofakes = signal_region_MC + ~config.cut_l1_fakejet + ~config.cut_l2_fakejet
-signal_region_MC_nofakes_DY = signal_region_MC_nofakes + config.cut_dy_promptfakeleptons
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes + config.cut_TT_nogenuine
+signal_region_MC = cfg.cut_signal
+signal_region_MC_nofakes = signal_region_MC + ~cfg.cut_l1_fakejet + ~cfg.cut_l2_fakejet
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes + cfg.cut_dy_promptfakeleptons
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes + cfg.cut_TT_nogenuine
 
-l1_FakeFactorApplication_Region = config.basic_cuts + config.cuts_iso['l1_VLoose'] + ~config.cuts_iso['l1_Tight'] + config.cuts_iso['l2_Tight']
-l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~config.cut_l1_fakejet
+l1_FakeFactorApplication_Region = cfg.basic_cuts + cfg.cuts_iso['l1_VLoose'] + ~cfg.cuts_iso['l1_Tight'] + cfg.cuts_iso['l2_Tight']
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~cfg.cut_l1_fakejet
 
-l2_FakeFactorApplication_Region = config.basic_cuts + config.cuts_iso['l2_VLoose'] + ~config.cuts_iso['l2_Tight'] + config.cuts_iso['l1_Tight']
-l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~config.cut_l2_fakejet
+l2_FakeFactorApplication_Region = cfg.basic_cuts + cfg.cuts_iso['l2_VLoose'] + ~cfg.cuts_iso['l2_Tight'] + cfg.cuts_iso['l1_Tight']
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~cfg.cut_l2_fakejet
 
 #### cuts+weights
-signal_region = config.cut_signal * config.weights['weight']
-signal_region_Embedded = signal_region * config.weights['embed']
-signal_region_MC = signal_region_MC * config.weights['weight'] * config.weights['MC']
-signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * config.weights['weight'] * config.weights['MC'] * config.weights['DY'] 
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes_TT * config.weights['weight'] * config.weights['MC']
-signal_region_MC_nofakes = signal_region_MC_nofakes * config.weights['weight'] * config.weights['MC']
-l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region * config.weights['l1_fake']
-l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region * config.weights['l2_fake']
-l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed'] * config.weights['l1_fake']
-l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['embed'] * config.weights['l2_fake']
-l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l1_fake']
-l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_genuinetauMC * config.weights['weight'] * config.weights['l2_fake']
+signal_region = cfg.cut_signal * cfg.weights['weight']
+signal_region_Embedded = signal_region * cfg.weights['embed']
+signal_region_MC = signal_region_MC * cfg.weights['weight'] * cfg.weights['MC']
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['DY'] 
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes_TT * cfg.weights['weight'] * cfg.weights['MC']
+signal_region_MC_nofakes = signal_region_MC_nofakes * cfg.weights['weight'] * cfg.weights['MC']
+l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region * cfg.weights['l2_fake']
+l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC * cfg.weights['weight'] * cfg.weights['embed'] * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC * cfg.weights['weight'] * cfg.weights['embed'] * cfg.weights['l2_fake']
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region_genuinetauMC * cfg.weights['weight'] * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_genuinetauMC * cfg.weights['weight'] * cfg.weights['l2_fake']
 
 #########
 # Cfgs and components
@@ -60,62 +60,62 @@ def get_all_comps(variable, bins):
     ''' Make the production of components easier '''
     # MC
     ZTT_cfgs = build_cfgs(
-        [dataset.name+'_ZTT' for dataset in datasets.DY_datasets], 
-        datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * config.cuts_datacards['ZTT'], bins)
+        [dataset.name+'_ZTT' for dataset in cfg.datasets.DY_datasets], 
+        cfg.datasets.DY_datasets, variable,
+        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZTT'], bins)
     ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
     
     ZL_cfgs = build_cfgs(
-        [dataset.name+'_ZL' for dataset in datasets.DY_datasets], 
-        datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * config.cuts_datacards['ZL'], bins)
+        [dataset.name+'_ZL' for dataset in cfg.datasets.DY_datasets], 
+        cfg.datasets.DY_datasets, variable,
+        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZL'], bins)
     ZL_comp = merge_cfgs('ZL', ZL_cfgs)
 
     ZJ_cfgs = build_cfgs(
-        [dataset.name+'_ZJ' for dataset in datasets.DY_datasets], 
-        datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * config.cuts_datacards['ZJ'], bins)
+        [dataset.name+'_ZJ' for dataset in cfg.datasets.DY_datasets], 
+        cfg.datasets.DY_datasets, variable,
+        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZJ'], bins)
     ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
     
     ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
     DY_comp = merge_comps('DY', [ZLL_comp, ZTT_comp])
     
     TTT_cfgs = build_cfgs(
-        [dataset.name+'_TTT' for dataset in datasets.TT_datasets], 
-        datasets.TT_datasets, variable,
-        signal_region_MC_nofakes_TT * config.cuts_datacards['TTT'], bins)
+        [dataset.name+'_TTT' for dataset in cfg.datasets.TT_datasets], 
+        cfg.datasets.TT_datasets, variable,
+        signal_region_MC_nofakes_TT * cfg.cuts_datacards['TTT'], bins)
     TTT_comp = merge_cfgs('TTT', TTT_cfgs)
     
     TTJ_cfgs = build_cfgs(
-        [dataset.name+'_TTJ' for dataset in datasets.TT_datasets], 
-        datasets.TT_datasets, variable,
-        signal_region_MC_nofakes_TT * config.cuts_datacards['TTJ'], bins)
+        [dataset.name+'_TTJ' for dataset in cfg.datasets.TT_datasets], 
+        cfg.datasets.TT_datasets, variable,
+        signal_region_MC_nofakes_TT * cfg.cuts_datacards['TTJ'], bins)
     TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
     
     TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
     
     Diboson_VVT_cfgs = build_cfgs(
-        [dataset.name+'_VVT' for dataset in datasets.Diboson_datasets], 
-        datasets.Diboson_datasets, variable,
-        signal_region_MC_nofakes * config.cuts_datacards['VVT'], bins)
+        [dataset.name+'_VVT' for dataset in cfg.datasets.Diboson_datasets], 
+        cfg.datasets.Diboson_datasets, variable,
+        signal_region_MC_nofakes * cfg.cuts_datacards['VVT'], bins)
     Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
     
     Diboson_VVJ_cfgs = build_cfgs(
-        [dataset.name+'_VVJ' for dataset in datasets.Diboson_datasets], 
-        datasets.Diboson_datasets, variable,
-        signal_region_MC_nofakes * config.cuts_datacards['VVJ'], bins)
+        [dataset.name+'_VVJ' for dataset in cfg.datasets.Diboson_datasets], 
+        cfg.datasets.Diboson_datasets, variable,
+        signal_region_MC_nofakes * cfg.cuts_datacards['VVJ'], bins)
     Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
     
     singleTop_VVT_cfgs = build_cfgs(
-        [dataset.name+'_VVT' for dataset in datasets.singleTop_datasets], 
-        datasets.singleTop_datasets, variable,
-        signal_region_MC_nofakes * config.cuts_datacards['VVT'], bins)
+        [dataset.name+'_VVT' for dataset in cfg.datasets.singleTop_datasets], 
+        cfg.datasets.singleTop_datasets, variable,
+        signal_region_MC_nofakes * cfg.cuts_datacards['VVT'], bins)
     singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
     
     singleTop_VVJ_cfgs = build_cfgs(
-        [dataset.name+'_VVJ' for dataset in datasets.singleTop_datasets], 
-        datasets.singleTop_datasets, variable,
-        signal_region_MC_nofakes * config.cuts_datacards['VVJ'], bins)
+        [dataset.name+'_VVJ' for dataset in cfg.datasets.singleTop_datasets], 
+        cfg.datasets.singleTop_datasets, variable,
+        signal_region_MC_nofakes * cfg.cuts_datacards['VVJ'], bins)
     singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
     
     VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
@@ -126,45 +126,45 @@ def get_all_comps(variable, bins):
     singleTop_comp = merge_comps('singleTop', [singleTop_VVT_comp, singleTop_VVJ_comp])
     
     W_cfgs = build_cfgs(
-        [dataset.name+'_W' for dataset in datasets.WJ_datasets], 
-        datasets.WJ_datasets, variable,
-        signal_region_MC_nofakes * config.cuts_datacards['W'], bins)
+        [dataset.name+'_W' for dataset in cfg.datasets.WJ_datasets], 
+        cfg.datasets.WJ_datasets, variable,
+        signal_region_MC_nofakes * cfg.cuts_datacards['W'], bins)
     W_comp = merge_cfgs('W', W_cfgs)
     
     MC_comps = [DY_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
     
     # data
     data_cfgs = build_cfgs(
-        [dataset.name for dataset in datasets.data_datasets], 
-        datasets.data_datasets, variable, signal_region, bins)
+        [dataset.name for dataset in cfg.datasets.data_datasets], 
+        cfg.datasets.data_datasets, variable, signal_region, bins)
     for cfg in data_cfgs:
         cfg.stack = False
     data_comp = merge_cfgs('data', data_cfgs)
         
     # Embedded
     Embedded_cfgs = build_cfgs(
-        [dataset.name for dataset in datasets.Embedded_datasets], 
-        datasets.Embedded_datasets, variable, signal_region_Embedded, bins)
+        [dataset.name for dataset in cfg.datasets.Embedded_datasets], 
+        cfg.datasets.Embedded_datasets, variable, signal_region_Embedded, bins)
     Embedded_comp = merge_cfgs('Embedded', Embedded_cfgs)
 
     # fakes
-    datasets_MC_fakes = datasets.WJ_datasets + datasets.Diboson_datasets + datasets.singleTop_datasets + datasets.DY_datasets + datasets.TT_datasets
+    datasets_MC_fakes = cfg.datasets.WJ_datasets + cfg.datasets.Diboson_datasets + cfg.datasets.singleTop_datasets + cfg.datasets.DY_datasets + cfg.datasets.TT_datasets
     fake_cfgs_MC_1 = build_cfgs(['fakesMC1'], datasets_MC_fakes, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
     fake_cfgs_MC_2 = build_cfgs(['fakesMC2'], datasets_MC_fakes, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
     
     fake_cfgs_1 = build_cfgs(
-        ['fakes'+dataset.name[-1]+'1' for dataset in datasets.data_datasets], 
-        datasets.data_datasets, variable, l1_FakeFactorApplication_Region, bins)
+        ['fakes'+dataset.name[-1]+'1' for dataset in cfg.datasets.data_datasets], 
+        cfg.datasets.data_datasets, variable, l1_FakeFactorApplication_Region, bins)
     fake_cfgs_2 = build_cfgs(
-        ['fakes'+dataset.name[-1]+'2' for dataset in datasets.data_datasets], 
-        datasets.data_datasets, variable, l2_FakeFactorApplication_Region, bins)
+        ['fakes'+dataset.name[-1]+'2' for dataset in cfg.datasets.data_datasets], 
+        cfg.datasets.data_datasets, variable, l2_FakeFactorApplication_Region, bins)
     
     fake_cfgs_Embedded_1 = build_cfgs(
-        ['fakesEmbedded'+dataset.name[-1]+'1' for dataset in datasets.Embedded_datasets], 
-        datasets.Embedded_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
+        ['fakesEmbedded'+dataset.name[-1]+'1' for dataset in cfg.datasets.Embedded_datasets], 
+        cfg.datasets.Embedded_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
     fake_cfgs_Embedded_2 = build_cfgs(
-        ['fakesEmbedded'+dataset.name[-1]+'2' for dataset in datasets.Embedded_datasets], 
-        datasets.Embedded_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
+        ['fakesEmbedded'+dataset.name[-1]+'2' for dataset in cfg.datasets.Embedded_datasets], 
+        cfg.datasets.Embedded_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
     
     data_fakes_cfgs = fake_cfgs_1 + fake_cfgs_2
     nondata_fakes_cfgs = fake_cfgs_Embedded_1 + fake_cfgs_Embedded_2 + fake_cfgs_MC_1 + fake_cfgs_MC_2
@@ -214,7 +214,7 @@ def write_plots(plotter, variable, output_dir):
 for variable in variables:
     processes.append(
         delayed(write_plots)(
-            delayed(Plotter)(components[variable], datasets.data_lumi),
+            delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
             variable,
             output_dir
             )
