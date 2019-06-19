@@ -4,7 +4,7 @@ import htt_plot.channels_configs.tt as cfg
 from dask import delayed, compute, visualize
 
 # output
-output_dir = '_'.join(['delayed_plots'+, cfg.channel])
+output_dir = '_'.join(['delayed_plots', cfg.channel])
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
