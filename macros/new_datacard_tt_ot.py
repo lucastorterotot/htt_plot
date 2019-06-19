@@ -4,11 +4,8 @@ import htt_plot.channels_configs.tt as cfg
 # dask tools
 from dask import delayed, compute, visualize
 
-# datasets
-datasets = cfg.datasets
-
 # output
-output_dir = 'delayed_plots_'+cfg.channel
+output_dir = '_'.join(['delayed_plots'+, cfg.channel])
 
 # binning and variables
 bins = cfg.bins # avoid this kind of renaming
