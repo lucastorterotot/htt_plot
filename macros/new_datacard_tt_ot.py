@@ -16,15 +16,15 @@ from htt_plot.tools.datacards import make_datacards
 
 # cuts
 signal_region_MC = cfg.cut_signal
-signal_region_MC_nofakes = signal_region_MC + ~cfg.cut_l1_fakejet + ~cfg.cut_l2_fakejet
-signal_region_MC_nofakes_DY = signal_region_MC_nofakes + cfg.cut_dy_promptfakeleptons
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes + cfg.cut_TT_nogenuine
+signal_region_MC_nofakes = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet
+signal_region_MC_nofakes_DY = signal_region_MC_nofakes & cfg.cut_dy_promptfakeleptons
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes & cfg.cut_TT_nogenuine
 
-l1_FakeFactorApplication_Region = cfg.basic_cuts + cfg.cuts_iso['l1_VLoose'] + ~cfg.cuts_iso['l1_Tight'] + cfg.cuts_iso['l2_Tight']
-l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region + ~cfg.cut_l1_fakejet
+l1_FakeFactorApplication_Region = cfg.basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
+l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region & ~cfg.cut_l1_fakejet
 
-l2_FakeFactorApplication_Region = cfg.basic_cuts + cfg.cuts_iso['l2_VLoose'] + ~cfg.cuts_iso['l2_Tight'] + cfg.cuts_iso['l1_Tight']
-l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region + ~cfg.cut_l2_fakejet
+l2_FakeFactorApplication_Region = cfg.basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
+l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region & ~cfg.cut_l2_fakejet
 
 #### cuts+weights
 signal_region = cfg.cut_signal * cfg.weights['weight']
