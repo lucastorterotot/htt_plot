@@ -1,2 +1,4 @@
 *.pyc
 *~
+cpyroot
+.ipynb_checkpoints*
