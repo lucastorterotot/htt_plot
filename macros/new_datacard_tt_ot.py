@@ -1,16 +1,10 @@
 import htt_plot.channels_configs.tt as cfg
-# config --> cfg
 
 # dask tools
 from dask import delayed, compute, visualize
 
 # output
 output_dir = '_'.join(['delayed_plots'+, cfg.channel])
-
-# binning and variables
-bins = cfg.bins # avoid this kind of renaming
-variables = cfg.variables
-datacards_variables = cfg.datacards_variables
 
 # plotting tools
 from htt_plot.tools.plotting.plotter import Plotter
@@ -197,8 +191,8 @@ def get_all_comps(variable, bins):
 
 components = {}
 dc_comps = {}
-for variable in set(variables + datacards_variables):
-    components[variable], dc_comps[variable] = get_all_comps(variable, bins[variable])
+for variable in set(cfg.variables + cfg.datacards_variables):
+    components[variable], dc_comps[variable] = get_all_comps(variable, cfg.bins[variable])
 
 processes = []
 
@@ -208,7 +202,7 @@ def write_plots(plotter, variable, output_dir):
     plotter.write('{}/{}.tex'.format(output_dir, variable))
     print plotter.plot
     
-for variable in variables:
+for variable in cfg.variables:
     processes.append(
         delayed(write_plots)(
             delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
@@ -217,7 +211,7 @@ for variable in variables:
             )
         )
 
-for variable in datacards_variables:
+for variable in cfg.datacards_variables:
     processes.append(
         delayed(make_datacards)(
             output_dir,
