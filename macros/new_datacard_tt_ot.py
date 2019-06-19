@@ -47,8 +47,11 @@ l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_g
 from htt_plot.tools.builder import build_cfgs, merge_cfgs, merge_components
 from htt_plot.tools.builder import  merge_components as merge_comps
 
-def get_all_comps(variable, bins):
-    ''' Make the production of components easier '''
+components = {}
+dc_comps = {}
+for variable in set(cfg.variables + cfg.datacards_variables):
+    bins = cfg.bins[variable]
+
     # MC
     ZTT_cfgs = build_cfgs(
         [dataset.name+'_ZTT' for dataset in cfg.datasets.DY_datasets], 
@@ -128,8 +131,8 @@ def get_all_comps(variable, bins):
     data_cfgs = build_cfgs(
         [dataset.name for dataset in cfg.datasets.data_datasets], 
         cfg.datasets.data_datasets, variable, signal_region, bins)
-    for cfg in data_cfgs:
-        cfg.stack = False
+    for data_cfg in data_cfgs:
+        data_cfg.stack = False
     data_comp = merge_cfgs('data', data_cfgs)
         
     # Embedded
@@ -162,15 +165,15 @@ def get_all_comps(variable, bins):
     
     data_fakes_comp = merge_cfgs('jetFakes', data_fakes_cfgs)
 
-    for cfg in nondata_fakes_cfgs:
-        cfg['scale'] = -1.
+    for nondata_fakes_cfg in nondata_fakes_cfgs:
+        nondata_fakes_cfg['scale'] = -1.
     nondata_fakes_comp = merge_cfgs('fakes_nondata', nondata_fakes_cfgs)
     
     fakes_comp = merge_comps('fakes', [data_fakes_comp, nondata_fakes_comp])
 
-    all_comps =  MC_comps + [data_comp, Embedded_comp, fakes_comp]
+    components[variable] =  MC_comps + [data_comp, Embedded_comp, fakes_comp]
 
-    datacards_comps = {
+    dc_comps[variable] = {
         'ZTT' : ZTT_comp,
         'ZL' : ZL_comp,
         'ZJ' : ZJ_comp,
@@ -186,13 +189,6 @@ def get_all_comps(variable, bins):
         'data_obs' : data_comp,
         'embedded' : Embedded_comp,
     }
-    
-    return all_comps, datacards_comps
-
-components = {}
-dc_comps = {}
-for variable in set(cfg.variables + cfg.datacards_variables):
-    components[variable], dc_comps[variable] = get_all_comps(variable, cfg.bins[variable])
 
 processes = []
 
