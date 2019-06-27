@@ -9,39 +9,66 @@ import pprint
 class Cut(object):
     ''' Wrapper of a string for ROOT cut strings '''
     
-    def __init__(self, string):
+    def __init__(self, string, weight = 1):
         self.string = str(string)
+        self.weight = str(weight)
+
+    def set_weight(self, weight):
+        self.weight = str(weight)
+
+    def get_weight(self):
+        return self.weight
+
+    def mul_weight(self, weight):
+        if self.get_weight() == '1':
+            return str(weight)
+        elif weight == '1':
+            return self.get_weight()
+        else:
+            return '({})*({})'.format(self.get_weight(), str(weight))
 
     def __str__(self):
-        return self.string
+        if self.weight == '1':
+            return self.string
+        else:
+            return '(({}) * ({}))'.format(self.string, self.weight)
 
     def __and__(self, other):
         ''' Conserving a object of the same class allows to 
         make other operations later. The double & stands for ROOT usage '''
-        return Cut('({cut1}) && ({cut2})'.format(cut1 = str(self),
-                                                 cut2 = str(other)))
+        if (self.get_weight() != '1' and other.get_weight() != '1'):
+            raise RuntimeError(
+                'Two weights set:\n{}\n{}\n What to do?'.format(self.get_weight(), other.get_weight())
+            )
+        return Cut('({cut1}) && ({cut2})'.format(cut1 = self.string,
+                                                 cut2 = other.string),
+                   weight = self.mul_weight(other.get_weight()))
 
     def __or__(self, other):
         ''' Conserving a object of the same class allows to 
         make other operations later. The double | stands for ROOT usage '''
-        return Cut('({cut1}) || ({cut2})'.format(cut1 = str(self),
-                                                 cut2 = str(other)))
+        if (self.get_weight() != '1' and other.get_weight() != '1'):
+            raise RuntimeError(
+                'Two weights set:\n{}\n{}\n What to do?'.format(self.get_weight(), other.get_weight())
+            )
+        return Cut('({cut1}) || ({cut2})'.format(cut1 = self.string,
+                                                 cut2 = other.string),
+                   weight = self.mul_weight(other.get_weight()))
 
     def __invert__(self):
         ''' Conserving a object of the same class allows to 
         make other operations later. '''
-        return Cut('!({cut})'.format(cut = str(self)))
+        return Cut(
+            '!({cut})'.format(cut = self.string),
+            weight = self.get_weight())
 
-    def __mul__(self, other):
+    def __mul__(self, weight):
         ''' Conserving a object of the same class allows to 
         make other operations later. '''
-        return Cut('({cut1}) * ({cut2})'.format(cut1 = str(self),
-                                                cut2 = str(other)))
+        return Cut(self.string, weight = self.mul_weight(weight))
 
-    def __imul__(self, other):
-        # self.string to be replaced
-        self.string = '({cut1}) * ({cut2})'.format(cut1 = str(self),
-                                                   cut2 = str(other))
+    def __imul__(self, weight):
+        self.set_weight(self.mul_weight(weight))
         return self
    
     def __repr__(self):

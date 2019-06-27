@@ -56,19 +56,19 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     ZTT_cfgs = build_cfgs(
         [dataset.name+'_ZTT' for dataset in cfg.datasets.DY_datasets], 
         cfg.datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZTT'], bins)
+        signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZTT'], bins)
     ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
     
     ZL_cfgs = build_cfgs(
         [dataset.name+'_ZL' for dataset in cfg.datasets.DY_datasets], 
         cfg.datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZL'], bins)
+        signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZL'], bins)
     ZL_comp = merge_cfgs('ZL', ZL_cfgs)
 
     ZJ_cfgs = build_cfgs(
         [dataset.name+'_ZJ' for dataset in cfg.datasets.DY_datasets], 
         cfg.datasets.DY_datasets, variable,
-        signal_region_MC_nofakes_DY * cfg.cuts_datacards['ZJ'], bins)
+        signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZJ'], bins)
     ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
     
     ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
@@ -77,13 +77,13 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     TTT_cfgs = build_cfgs(
         [dataset.name+'_TTT' for dataset in cfg.datasets.TT_datasets], 
         cfg.datasets.TT_datasets, variable,
-        signal_region_MC_nofakes_TT * cfg.cuts_datacards['TTT'], bins)
+        signal_region_MC_nofakes_TT & cfg.cuts_datacards['TTT'], bins)
     TTT_comp = merge_cfgs('TTT', TTT_cfgs)
     
     TTJ_cfgs = build_cfgs(
         [dataset.name+'_TTJ' for dataset in cfg.datasets.TT_datasets], 
         cfg.datasets.TT_datasets, variable,
-        signal_region_MC_nofakes_TT * cfg.cuts_datacards['TTJ'], bins)
+        signal_region_MC_nofakes_TT & cfg.cuts_datacards['TTJ'], bins)
     TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
     
     TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
@@ -91,25 +91,25 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     Diboson_VVT_cfgs = build_cfgs(
         [dataset.name+'_VVT' for dataset in cfg.datasets.Diboson_datasets], 
         cfg.datasets.Diboson_datasets, variable,
-        signal_region_MC_nofakes * cfg.cuts_datacards['VVT'], bins)
+        signal_region_MC_nofakes & cfg.cuts_datacards['VVT'], bins)
     Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
     
     Diboson_VVJ_cfgs = build_cfgs(
         [dataset.name+'_VVJ' for dataset in cfg.datasets.Diboson_datasets], 
         cfg.datasets.Diboson_datasets, variable,
-        signal_region_MC_nofakes * cfg.cuts_datacards['VVJ'], bins)
+        signal_region_MC_nofakes & cfg.cuts_datacards['VVJ'], bins)
     Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
     
     singleTop_VVT_cfgs = build_cfgs(
         [dataset.name+'_VVT' for dataset in cfg.datasets.singleTop_datasets], 
         cfg.datasets.singleTop_datasets, variable,
-        signal_region_MC_nofakes * cfg.cuts_datacards['VVT'], bins)
+        signal_region_MC_nofakes & cfg.cuts_datacards['VVT'], bins)
     singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
     
     singleTop_VVJ_cfgs = build_cfgs(
         [dataset.name+'_VVJ' for dataset in cfg.datasets.singleTop_datasets], 
         cfg.datasets.singleTop_datasets, variable,
-        signal_region_MC_nofakes * cfg.cuts_datacards['VVJ'], bins)
+        signal_region_MC_nofakes & cfg.cuts_datacards['VVJ'], bins)
     singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
     
     VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
@@ -122,7 +122,7 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     W_cfgs = build_cfgs(
         [dataset.name+'_W' for dataset in cfg.datasets.WJ_datasets], 
         cfg.datasets.WJ_datasets, variable,
-        signal_region_MC_nofakes * cfg.cuts_datacards['W'], bins)
+        signal_region_MC_nofakes & cfg.cuts_datacards['W'], bins)
     W_comp = merge_cfgs('W', W_cfgs)
     
     MC_comps = [DY_comp, TT_comp, singleTop_comp, Diboson_comp, W_comp]
