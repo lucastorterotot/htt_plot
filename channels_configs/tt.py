@@ -39,7 +39,7 @@ cuts_against_leptons = Cuts(
     l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
-cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() & cut_mt_tot
+cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() #& cut_mt_tot
 
 ## triggers
 cuts_triggers = Cuts(
@@ -94,8 +94,8 @@ from htt_plot.channels_configs.htt_common import weights
 # datasets
 import htt_plot.datasets.gael_all as datasets
 
-# ### tmp hack
-# cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts
+cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts
 
 # systematics
 from htt_plot.channels_configs.htt_common import sys_dict
+
