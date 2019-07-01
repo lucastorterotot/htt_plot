@@ -49,12 +49,12 @@ cuts_triggers = Cuts(
     doubletau_40_mediso_tightid = 'trg_doubletau_40_mediso_tightid',
     doubletau_40_tightiso = 'trg_doubletau_40_tightiso',
     )
-# tmp hack for old variable names
-cuts_triggers = Cuts(
-    doubletau_lowpt = 'trg_doubletau_lowpt',
-    doubletau_mediso = 'trg_doubletau_mediso',
-    doubletau = 'trg_doubletau',
-)
+# # tmp hack for old variable names
+# cuts_triggers = Cuts(
+#     doubletau_lowpt = 'trg_doubletau_lowpt',
+#     doubletau_mediso = 'trg_doubletau_mediso',
+#     doubletau = 'trg_doubletau',
+# )
 
 cut_triggers = cuts_triggers.any()
 
@@ -94,5 +94,5 @@ from htt_plot.channels_configs.htt_common import weights
 # datasets
 import htt_plot.datasets.gael_all as datasets
 
-### tmp hack
-cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts
+# ### tmp hack
+# cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts

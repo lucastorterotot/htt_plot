@@ -2,7 +2,7 @@ from htt_plot.tools.dataset import Dataset
 
 import os 
 
-basepath = os.path.expandvars('/data2/gtouquet/MSSM_Samples_310119/{}/tree_fakes.root')
+basepath = os.path.expandvars('/data2/htt/HTT_trees_test/{}/tree_fakes.root')
 
 treename = 'events'
 data_lumi = 41529
@@ -206,7 +206,7 @@ ZZTo2L2Q = Dataset(
 
 ##### Data
 
-datapath = os.path.expandvars('/data2/gtouquet/MSSM_Samples_310119/{}/tree_fakes.root')
+datapath = os.path.expandvars('/data2/htt/HTT_trees_test/{}/tree_fakes.root')
 
 dataB = Dataset(
     'dataB',
