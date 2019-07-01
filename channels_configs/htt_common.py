@@ -70,3 +70,10 @@ weights = Cuts(
     l1_fake = 'l1_fakeweight*0.5',
     l2_fake = 'l2_fakeweight*0.5'
     )
+
+# systematics
+
+sys_dict = {
+    'top pt reweighting': ['TTT','TTJ']
+}
+
