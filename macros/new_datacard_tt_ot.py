@@ -49,6 +49,7 @@ from htt_plot.tools.builder import  merge_components as merge_comps
 
 components = {}
 dc_comps = {}
+fake_comps = {}
 for variable in set(cfg.variables + cfg.datacards_variables):
     dc_comps[variable] = {}
     
@@ -144,16 +145,19 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     Embedded_comp = merge_cfgs('Embedded', Embedded_cfgs)
 
     # fakes
+    fake_comps[variable] = {}
     datasets_MC_fakes = cfg.datasets.WJ_datasets + cfg.datasets.Diboson_datasets + cfg.datasets.singleTop_datasets + cfg.datasets.DY_datasets + cfg.datasets.TT_datasets
-    fake_cfgs_MC_1 = build_cfgs(['fakesMC1'], datasets_MC_fakes, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
-    fake_cfgs_MC_2 = build_cfgs(['fakesMC2'], datasets_MC_fakes, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
     
-    fake_cfgs_1 = build_cfgs(
-        ['fakes'+dataset.name[-1]+'1' for dataset in cfg.datasets.data_datasets], 
-        cfg.datasets.data_datasets, variable, l1_FakeFactorApplication_Region, bins)
-    fake_cfgs_2 = build_cfgs(
-        ['fakes'+dataset.name[-1]+'2' for dataset in cfg.datasets.data_datasets], 
-        cfg.datasets.data_datasets, variable, l2_FakeFactorApplication_Region, bins)
+    fake_cfgs_DY_1 = build_cfgs(['fakesDY1'], cfg.datasets.DY_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_DY_2 = build_cfgs(['fakesDY2'], cfg.datasets.DY_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_TT_1 = build_cfgs(['fakesTT1'], cfg.datasets.TT_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_TT_2 = build_cfgs(['fakesTT2'], cfg.datasets.TT_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_WJ_1 = build_cfgs(['fakesWJ1'], cfg.datasets.WJ_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_WJ_2 = build_cfgs(['fakesWJ2'], cfg.datasets.WJ_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_Diboson_1 = build_cfgs(['fakesDiboson1'], cfg.datasets.Diboson_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_Diboson_2 = build_cfgs(['fakesDiboson2'], cfg.datasets.Diboson_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_singleTop_1 = build_cfgs(['fakessingleTop1'], cfg.datasets.singleTop_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
+    fake_cfgs_singleTop_2 = build_cfgs(['fakessingleTop2'], cfg.datasets.singleTop_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
     
     fake_cfgs_Embedded_1 = build_cfgs(
         ['fakesEmbedded'+dataset.name[-1]+'1' for dataset in cfg.datasets.Embedded_datasets], 
@@ -161,17 +165,28 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     fake_cfgs_Embedded_2 = build_cfgs(
         ['fakesEmbedded'+dataset.name[-1]+'2' for dataset in cfg.datasets.Embedded_datasets], 
         cfg.datasets.Embedded_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
-    
+
+    for cfg in [fake_cfgs_DY_1,fake_cfgs_DY_2,fake_cfgs_TT_1,fake_cfgs_TT_2,fake_cfgs_WJ_1,fake_cfgs_WJ_2,fake_cfgs_Diboson_1,fake_cfgs_Diboson_2,fake_cfgs_singleTop_1,fake_cfgs_singleTop_2,fake_cfgs_Embedded_1,fake_cfgs_Embedded_2]:
+        cfg['scale'] = -1.
+
+    fake_cfgs_1 = build_cfgs(
+        ['fakes'+dataset.name[-1]+'1' for dataset in cfg.datasets.data_datasets], 
+        cfg.datasets.data_datasets, variable, l1_FakeFactorApplication_Region, bins)
+    fake_cfgs_2 = build_cfgs(
+        ['fakes'+dataset.name[-1]+'2' for dataset in cfg.datasets.data_datasets], 
+        cfg.datasets.data_datasets, variable, l2_FakeFactorApplication_Region, bins)
     data_fakes_cfgs = fake_cfgs_1 + fake_cfgs_2
-    nondata_fakes_cfgs = fake_cfgs_Embedded_1 + fake_cfgs_Embedded_2 + fake_cfgs_MC_1 + fake_cfgs_MC_2
-    
     data_fakes_comp = merge_cfgs('jetFakes', data_fakes_cfgs)
 
-    for nondata_fakes_cfg in nondata_fakes_cfgs:
-        nondata_fakes_cfg['scale'] = -1.
-    nondata_fakes_comp = merge_cfgs('fakes_nondata', nondata_fakes_cfgs)
     
-    fakes_comp = merge_comps('fakes', [data_fakes_comp, nondata_fakes_comp])
+    fake_comps[variable] = {'DY': merge_cfgs('DY', [fake_cfgs_DY_1,fake_cfgs_DY_2]),
+                            'TT': merge_cfgs('TT', [fake_cfgs_TT_1,fake_cfgs_TT_2]),
+                            'std_bkg': merge_cfgs('std_bkg', [fake_cfgs_Diboson_1,fake_cfgs_Diboson_2,fake_cfgs_singleTop_1,fake_cfgs_singleTop_2,fake_cfgs_WJ_1,fake_cfgs_WJ_2]),
+                            'Embedded': merge_cfgs('Embedded', [fake_cfgs_Embedded_1,fake_cfgs_Embedded_2]),
+                            'data': data_fakes_comp
+    }
+    
+    fakes_comp = merge_comps('fakes', [comp for name, comp in fake_comps[variable].iteritems()])
 
     components[variable] =  MC_comps + [data_comp, Embedded_comp, fakes_comp]
 
@@ -194,158 +209,271 @@ for variable in set(cfg.variables + cfg.datacards_variables):
 
 
 # systematics
-#cfg.sys_dict
+import copy
 for variable in set(cfg.variables + cfg.datacards_variables):
     for sys in cfg.sys_dict:
+
+        dc_comps[variable][sys] = copy.copy(dc_comps[variable]['nominal'])
+        sys_fake_comp = copy.copy(fake_comps[variable])
         
-        if 'ZTT' in cfg.sys_dict[sys]:
+        if 'ZTT' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes_DY
+            else:
+                datasets = cfg.datasets.DY_datasets
+                cutstring = cfg.sys_dict[sys]['change']
             ZTT_cfgs = build_cfgs(
-                [dataset.name+'_ZTT' for dataset in cfg.datasets.DY_datasets], 
-                cfg.datasets.DY_datasets, variable,
-                signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZTT'], bins)
+                [dataset.name+'_ZTT' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['ZTT'], bins)
             ZTT_comp = merge_cfgs('ZTT', ZTT_cfgs)
-        else:
-            ZTT_comp = dc_comps[variable]['nominal']['ZTT']
+            dc_comps[variable][sys]['ZTT'] = ZTT_comp
             
-        if 'ZL' in cfg.sys_dict[sys]:
+        if 'ZL' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes_DY
+            else:
+                datasets = cfg.datasets.DY_datasets
+                cutstring = cfg.sys_dict[sys]['change']
             ZL_cfgs = build_cfgs(
-                [dataset.name+'_ZL' for dataset in cfg.datasets.DY_datasets], 
-                cfg.datasets.DY_datasets, variable,
-                signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZL'], bins)
+                [dataset.name+'_ZL' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['ZL'], bins)
             ZL_comp = merge_cfgs('ZL', ZL_cfgs)
-        else:
-            ZL_comp = dc_comps[variable]['nominal']['ZL']
+            dc_comps[variable][sys]['ZL'] = ZL_comp
 
-        if 'ZJ' in cfg.sys_dict[sys]:
+        if 'ZJ' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes_DY
+            else:
+                datasets = cfg.datasets.DY_datasets
+                cutstring = cfg.sys_dict[sys]['change']
             ZJ_cfgs = build_cfgs(
-                [dataset.name+'_ZJ' for dataset in cfg.datasets.DY_datasets], 
-                cfg.datasets.DY_datasets, variable,
-                signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZJ'], bins)
+                [dataset.name+'_ZJ' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['ZJ'], bins)
             ZJ_comp = merge_cfgs('ZJ', ZJ_cfgs)
-        else:
-            ZJ_comp = dc_comps[variable]['nominal']['ZJ']
+            dc_comps[variable][sys]['ZJ'] = ZJ_comp
 
-        if 'ZLL' in cfg.sys_dict[sys]:
+        if 'ZLL' in cfg.sys_dict[sys]['processes']:
             ZLL_comp = merge_comps('ZLL', [ZL_comp, ZJ_comp])
-        else:
-            ZLL_comp = dc_comps[variable]['nominal']['ZLL']
+            dc_comps[variable][sys]['ZLL'] = ZLL_comp
 
+        if 'DY' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring_l1 = signal_region_MC_nofakes_DY
+                cutstring_l2 = signal_region_MC_nofakes_DY
+            else:
+                datasets = cfg.datasets.DY_datasets
+                cutstring_l1 = cfg.sys_dict[sys]['fakecutstring_l1']
+                cutstring_l2 = cfg.sys_dict[sys]['fakecutstring_l2']
+            fake_cfgs_DY_1 = build_cfgs(['fakesDY1'], datasets, variable, cutstring_l1, bins)
+            fake_cfgs_DY_2 = build_cfgs(['fakesDY2'], datasets, variable, cutstring_l2, bins)
+            fake_cfgs_DY_1['scale'] = -1.
+            fake_cfgs_DY_2['scale'] = -1.
+            sys_fake_comp['DY'] = merge_cfgs('DY', [fake_cfgs_DY_1,fake_cfgs_DY_2])
             
-        if 'TTT' in cfg.sys_dict[sys]:    
+        if 'TTT' in cfg.sys_dict[sys]['processes']:  
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes_TT
+            else:
+                datasets = cfg.datasets.TT_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             TTT_cfgs = build_cfgs(
-                [dataset.name+'_TTT' for dataset in cfg.datasets.TT_datasets], 
-                cfg.datasets.TT_datasets, variable,
-                signal_region_MC_nofakes_TT & cfg.cuts_datacards['TTT'], bins)
+                [dataset.name+'_TTT' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['TTT'], bins)
             TTT_comp = merge_cfgs('TTT', TTT_cfgs)
-        else:
-            TTT_comp = dc_comps[variable]['nominal']['TTT']
+            dc_comps[variable][sys]['TTT'] = TTT_comp
 
-        if 'TTJ' in cfg.sys_dict[sys]:    
+        if 'TTJ' in cfg.sys_dict[sys]['processes']:    
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes_TT
+            else:
+                datasets = cfg.datasets.TT_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             TTJ_cfgs = build_cfgs(
-                [dataset.name+'_TTJ' for dataset in cfg.datasets.TT_datasets], 
-                cfg.datasets.TT_datasets, variable,
-                signal_region_MC_nofakes_TT & cfg.cuts_datacards['TTJ'], bins)
+                [dataset.name+'_TTJ' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['TTJ'], bins)
             TTJ_comp = merge_cfgs('TTJ', TTJ_cfgs)
-        else:
-            TTJ_comp = dc_comps[variable]['nominal']['TTJ']
+            dc_comps[variable][sys]['TTJ'] = TTJ_comp
 
-        if 'TT' in cfg.sys_dict[sys]:    
+        if 'TT' in cfg.sys_dict[sys]['processes']:    
             TT_comp = merge_comps('TT', [TTT_comp, TTJ_comp])
-        else:
-            TT_comp = dc_comps[variable]['nominal']['TT']
+            dc_comps[variable][sys]['TT'] = TT_comp
 
+        if 'TT' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring_l1 = signal_region_MC_nofakes_TT
+                cutstring_l2 = signal_region_MC_nofakes_TT
+            else:
+                datasets = cfg.datasets.TT_datasets
+                cutstring_l1 = cfg.sys_dict[sys]['fakecutstring_l1']
+                cutstring_l2 = cfg.sys_dict[sys]['fakecutstring_l2']
+            fake_cfgs_TT_1 = build_cfgs(['fakesTT1'], datasets, variable, cutstring_l1, bins)
+            fake_cfgs_TT_2 = build_cfgs(['fakesTT2'], datasets, variable, cutstring_l2, bins)
+            fake_cfgs_TT_1['scale'] = -1.
+            fake_cfgs_TT_2['scale'] = -1.
+            sys_fake_comp['TT'] = merge_cfgs('TT', [fake_cfgs_TT_1,fake_cfgs_TT_2])
 
-        if 'Diboson_VVT' in cfg.sys_dict[sys]:  
+        if 'Diboson_VVT' in cfg.sys_dict[sys]['processes']:  
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.Diboson_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             Diboson_VVT_cfgs = build_cfgs(
-                [dataset.name+'_VVT' for dataset in cfg.datasets.Diboson_datasets], 
-                cfg.datasets.Diboson_datasets, variable,
-                signal_region_MC_nofakes & cfg.cuts_datacards['VVT'], bins)
+                [dataset.name+'_VVT' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['VVT'], bins)
             Diboson_VVT_comp = merge_cfgs('Diboson_VVT', Diboson_VVT_cfgs)
-        else:
-            Diboson_VVT_comp = dc_comps[variable]['nominal']['Diboson_VVT']
 
-        if 'Diboson_VVJ' in cfg.sys_dict[sys]:  
+        if 'Diboson_VVJ' in cfg.sys_dict[sys]['processes']:  
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.Diboson_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             Diboson_VVJ_cfgs = build_cfgs(
-                [dataset.name+'_VVJ' for dataset in cfg.datasets.Diboson_datasets], 
-                cfg.datasets.Diboson_datasets, variable,
-                signal_region_MC_nofakes & cfg.cuts_datacards['VVJ'], bins)
+                [dataset.name+'_VVJ' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['VVJ'], bins)
             Diboson_VVJ_comp = merge_cfgs('Diboson_VVJ', Diboson_VVJ_cfgs)
-        else:
-            Diboson_VVJ_comp = dc_comps[variable]['nominal']['Diboson_VVJ']
     
-        if 'singleTop_VVT' in cfg.sys_dict[sys]:  
+        if 'singleTop_VVT' in cfg.sys_dict[sys]['processes']:  
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.singleTop_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             singleTop_VVT_cfgs = build_cfgs(
-                [dataset.name+'_VVT' for dataset in cfg.datasets.singleTop_datasets], 
-                cfg.datasets.singleTop_datasets, variable,
-                signal_region_MC_nofakes & cfg.cuts_datacards['VVT'], bins)
+                [dataset.name+'_VVT' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['VVT'], bins)
             singleTop_VVT_comp = merge_cfgs('singleTop_VVT', singleTop_VVT_cfgs)
-        else:
-            singleTop_VVT_comp = dc_comps[variable]['nominal']['singleTop_VVT']
             
-        if 'singleTop_VVJ' in cfg.sys_dict[sys]:  
+        if 'singleTop_VVJ' in cfg.sys_dict[sys]['processes']:   
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.singleTop_datasets
+                cutstring = cfg.sys_dict[sys]['change']  
             singleTop_VVJ_cfgs = build_cfgs(
-                [dataset.name+'_VVJ' for dataset in cfg.datasets.singleTop_datasets], 
-                cfg.datasets.singleTop_datasets, variable,
-                signal_region_MC_nofakes & cfg.cuts_datacards['VVJ'], bins)
+                [dataset.name+'_VVJ' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['VVJ'], bins)
             singleTop_VVJ_comp = merge_cfgs('singleTop_VVJ', singleTop_VVJ_cfgs)
-        else:
-            singleTop_VVJ_comp = dc_comps[variable]['nominal']['singleTop_VVJ']
 
-        if 'VVT' in cfg.sys_dict[sys]: 
+        if 'VVT' in cfg.sys_dict[sys]['processes']: 
             VVT_comp = merge_comps('VVT', [singleTop_VVT_comp, Diboson_VVT_comp])
-        else:
-            VVT_comp = dc_comps[variable]['nominal']['VVT']
+            dc_comps[variable][sys]['VVT'] = VVT_comp
         
-        if 'VVJ' in cfg.sys_dict[sys]: 
+        if 'VVJ' in cfg.sys_dict[sys]['processes']: 
             VVJ_comp = merge_comps('VVJ', [singleTop_VVJ_comp, Diboson_VVJ_comp])
-        else:
-            VVJ_comp = dc_comps[variable]['nominal']['VVJ']
+            dc_comps[variable][sys]['VVJ'] = VVJ_comp
         
-        if 'VV' in cfg.sys_dict[sys]: 
+        if 'VV' in cfg.sys_dict[sys]['processes']: 
             VV_comp = merge_comps('VV', [VVT_comp, VVJ_comp])
-        else:
-            VV_comp = dc_comps[variable]['nominal']['VV']
+            dc_comps[variable][sys]['VV'] = VV_comp
 
-        if 'W' in cfg.sys_dict[sys]:
+        if 'W' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.WJ_datasets
+                cutstring = cfg.sys_dict[sys]['change'] 
             W_cfgs = build_cfgs(
-                [dataset.name+'_W' for dataset in cfg.datasets.WJ_datasets], 
-                cfg.datasets.WJ_datasets, variable,
-                signal_region_MC_nofakes & cfg.cuts_datacards['W'], bins)
+                [dataset.name+'_W' for dataset in datasets], 
+                datasets, variable,
+                cutstring & cfg.cuts_datacards['W'], bins)
             W_comp = merge_cfgs('W', W_cfgs)
-        else:
-            W_comp = dc_comps[variable]['nominal']['W']
+            dc_comps[variable][sys]['W'] = W_comp
 
+        if 'std_bkg' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring_l1 = signal_region_MC_nofakes
+                cutstring_l2 = signal_region_MC_nofakes
+            else:
+                datasets = cfg.datasets.WJ_datasets + cfg.datasets.Diboson_datasets + cfg.datasets.singleTop_datasets
+                cutstring_l1 = cfg.sys_dict[sys]['fakecutstring_l1']
+                cutstring_l2 = cfg.sys_dict[sys]['fakecutstring_l2']
+            fake_cfgs_std_bkg_1 = build_cfgs(['fakes_std_bkg1'], datasets, variable, cutstring_l1, bins)
+            fake_cfgs_std_bkg_2 = build_cfgs(['fakes_std_bkg2'], datasets, variable, cutstring_l2, bins)
+            fake_cfgs_std_bkg_1['scale'] = -1.
+            fake_cfgs_std_bkg_2['scale'] = -1.
+            sys_fake_comp['std_bkg'] = merge_cfgs('std_bkg', [fake_cfgs_std_bkg_1,fake_cfgs_std_bkg_2])
+            
         # data
         data_comp = dc_comps[variable]['nominal']['data']
 
         # Embedded
-        if 'Embedded' in cfg.sys_dict[sys]:
+        if 'Embedded' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring = signal_region_Embedded
+            else:
+                datasets = cfg.datasets.Embedded_datasets
+                cutstring = cfg.sys_dict[sys]['change'] 
             Embedded_cfgs = build_cfgs(
-                [dataset.name for dataset in cfg.datasets.Embedded_datasets], 
-                cfg.datasets.Embedded_datasets, variable, signal_region_Embedded, bins)
+                [dataset.name for dataset in datasets], 
+                datasets, variable, cutstring, bins)
+            Embedded_cfgs['scale'] = -1.
             Embedded_comp = merge_cfgs('Embedded', Embedded_cfgs)
-        else:
-            Embedded_comp = dc_comps[variable]['nominal']['Embedded']
-        
-        # fakes
-        if 'fakes' in cfg.sys_dict[sys]:
+            dc_comps[variable][sys]['Embedded'] = Embedded_comp
+
+        if 'Embedded' in cfg.sys_dict[sys]['processes']:
+            if cfg.sys_dict[sys]['change'] == 'dataset':
+                datasets = cfg.sys_datasets[sys]
+                cutstring_l1 = l1_FakeFactorApplication_Region_genuinetauMC_Embedded
+                cutstring_l2 = l2_FakeFactorApplication_Region_genuinetauMC_Embedded
+            else:
+                datasets = cfg.datasets.Embedded_datasets
+                cutstring_l1 = cfg.sys_dict[sys]['fakecutstring_l1']
+                cutstring_l2 = cfg.sys_dict[sys]['fakecutstring_l2']
+            fake_cfgs_Embedded_1 = build_cfgs(['fakesEmbedded1'], datasets, variable, cutstring_l1, bins)
+            fake_cfgs_Embedded_2 = build_cfgs(['fakesEmbedded2'], datasets, variable, cutstring_l2, bins)
+            sys_fake_comp['Embedded'] = merge_cfgs('Embedded', [fake_cfgs_Embedded_1,fake_cfgs_Embedded_2])
+            
+        # propagation of systematics to fakes
+        if sys != 'fakes':
+            fakes_comp = merge_comps('fakes', [comp for name, comp in sys_fake_comp.iteritems()])
+            dc_comps[variable][sys]['jetFakes'] = fakes_comp
+            
+        # fakes systematics
+        if sys = 'fakes':
+            #TODO sys here
             datasets_MC_fakes = cfg.datasets.WJ_datasets + cfg.datasets.Diboson_datasets + cfg.datasets.singleTop_datasets + cfg.datasets.DY_datasets + cfg.datasets.TT_datasets
-            fake_cfgs_MC_1 = build_cfgs(['fakesMC1'], datasets_MC_fakes, variable, l1_FakeFactorApplication_Region_genuinetauMC, bins)
-            fake_cfgs_MC_2 = build_cfgs(['fakesMC2'], datasets_MC_fakes, variable, l2_FakeFactorApplication_Region_genuinetauMC, bins)
-    
+            fake_cfgs_MC_1 = build_cfgs(['fakesMC1'], datasets_MC_fakes, variable, cfg.sys_dict[sys]['change']['l1MC'], bins)
+            fake_cfgs_MC_2 = build_cfgs(['fakesMC2'], datasets_MC_fakes, variable, cfg.sys_dict[sys]['change']['l2MC'], bins)
+
+            
             fake_cfgs_1 = build_cfgs(
                 ['fakes'+dataset.name[-1]+'1' for dataset in cfg.datasets.data_datasets], 
-                cfg.datasets.data_datasets, variable, l1_FakeFactorApplication_Region, bins)
+                cfg.datasets.data_datasets, variable, cfg.sys_dict[sys]['change']['l1'], bins)
             fake_cfgs_2 = build_cfgs(
                 ['fakes'+dataset.name[-1]+'2' for dataset in cfg.datasets.data_datasets], 
-                cfg.datasets.data_datasets, variable, l2_FakeFactorApplication_Region, bins)
+                cfg.datasets.data_datasets, variable, cfg.sys_dict[sys]['change']['l2'], bins)
     
             fake_cfgs_Embedded_1 = build_cfgs(
                 ['fakesEmbedded'+dataset.name[-1]+'1' for dataset in cfg.datasets.Embedded_datasets], 
-                cfg.datasets.Embedded_datasets, variable, l1_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
+                cfg.datasets.Embedded_datasets, variable, cfg.sys_dict[sys]['change']['Embedded_l1'], bins)
             fake_cfgs_Embedded_2 = build_cfgs(
                 ['fakesEmbedded'+dataset.name[-1]+'2' for dataset in cfg.datasets.Embedded_datasets], 
-                cfg.datasets.Embedded_datasets, variable, l2_FakeFactorApplication_Region_genuinetauMC_Embedded, bins)
+                cfg.datasets.Embedded_datasets, variable, cfg.sys_dict[sys]['change']['Embedded_l2'], bins)
     
             data_fakes_cfgs = fake_cfgs_1 + fake_cfgs_2
             nondata_fakes_cfgs = fake_cfgs_Embedded_1 + fake_cfgs_Embedded_2 + fake_cfgs_MC_1 + fake_cfgs_MC_2
@@ -357,25 +485,8 @@ for variable in set(cfg.variables + cfg.datacards_variables):
             nondata_fakes_comp = merge_cfgs('fakes_nondata', nondata_fakes_cfgs)
     
             fakes_comp = merge_comps('fakes', [data_fakes_comp, nondata_fakes_comp])
-        else:
-            data_fakes_comp = dc_comps[variable]['nominal']['jetFakes']
+            dc_comps[variable][sys]['JetFakes'] = fakes_comp
 
-        dc_comps[variable][sys] = {
-            'ZTT' : ZTT_comp,
-            'ZL' : ZL_comp,
-            'ZJ' : ZJ_comp,
-            'ZLL' : ZLL_comp,
-            'TTT' : TTT_comp,
-            'TTJ' : TTJ_comp,
-            'TT' : TT_comp,
-            'VVT' : VVT_comp,
-            'VVJ' : VVJ_comp,
-            'VV' : VV_comp,
-            'W' : W_comp,
-            'jetFakes' : data_fakes_comp,
-            'data_obs' : data_comp,
-            'embedded' : Embedded_comp,
-        }
     
 processes = []
 

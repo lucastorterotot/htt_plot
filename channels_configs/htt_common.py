@@ -74,6 +74,113 @@ weights = Cuts(
 # systematics
 
 sys_dict = {
-    'top pt reweighting': ['TTT','TTJ']
+    
+    'top_pT_reweighting_up':{'processes':['TTT','TTJ','TT'],
+                             'change':'dataset'},
+    
+    'top_pT_reweighting_down': {'processes': ['TTT','TTJ','TT'],
+                                'change':'dataset'},
+    
+    'DY_pT_reweighting_up': {'processes': ['ZTT','ZL','ZJ','ZLL','DY'],
+                             'change':'dataset'},
+    
+    'DY_pT_reweighting_down': {'processes': ['ZTT','ZL','ZJ','ZLL','DY'],
+                               'change':'dataset'},
+    
+    'METrecoil_response_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                              'change':'dataset'},
+    
+    'METrecoil_response_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                'change':'dataset'},
+    
+    'METrecoil_resolution_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                'change':'dataset'},
+    
+    'METrecoil_resolution_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                  'change':'dataset'},
+    
+    'METunclustered_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                          'change':'dataset'},
+    
+    'METunclustered_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                            'change':'dataset'},
+    
+    'TES_HadronicTau_1prong0pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'TES_HadronicTau_1prong0pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                        'change':'dataset'},
+    
+    'TES_HadronicTau_1prong1pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'TES_HadronicTau_1prong1pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                        'change':'dataset'},
+    
+    'TES_HadronicTau_3prong0pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'TES_HadronicTau_3prong0pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                        'change':'dataset'},
+    
+    'TES_HadronicTau_3prong1pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'TES_HadronicTau_3prong1pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                        'change':'dataset'},
+    
+    'TES_promptMuon_1prong0pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                     'change':'dataset'},
+    
+    'TES_promptMuon_1prong0pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                       'change':'dataset'},
+    
+    'TES_promptEle_1prong0pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                    'change':'dataset'},
+    
+    'TES_promptEle_1prong0pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'TES_promptEle_1prong1pi0_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                    'change':'dataset'},
+    
+    'TES_promptEle_1prong1pi0_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','Embedded','DY','std_bkg'],
+                                      'change':'dataset'},
+    
+    'CMS_scale_j_eta0to5_13Tev_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                     'change':'dataset'},
+    
+    'CMS_scale_j_eta0to5_13Tev_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                       'change':'dataset'},
+    
+    'CMS_scale_j_eta0to3_13Tev_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                     'change':'dataset'},
+    
+    'CMS_scale_j_eta0to3_13Tev_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                       'change':'dataset'},
+    
+    'CMS_scale_j_eta3to5_13Tev_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                     'change':'dataset'},
+    
+    'CMS_scale_j_eta3to5_13Tev_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                       'change':'dataset'},
+    
+    'CMS_scale_j_RelativeBal_13TeV_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                         'change':'dataset'},
+    
+    'CMS_scale_j_RelativeBal_13TeV_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                           'change':'dataset'},
+    
+    'CMS_scale_j_RelativeSample_13TeV_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                            'change':'dataset'},
+    
+    'CMS_scale_j_RelativeSample_13TeV_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                                              'change':'dataset'},
+    
+    'Btagging_up': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                    'change':'dataset'},
+    
+    'Btagging_down': {'processes': ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','W','VV','VVJ','VVT','Diboson_VVT','Diboson_VVJ','singleTop_VVT','singleTop_VVJ','DY','std_bkg'],
+                      'change':'dataset'}
 }
 
