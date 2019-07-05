@@ -454,7 +454,7 @@ for variable in set(cfg.variables + cfg.datacards_variables):
             dc_comps[variable][sys]['jetFakes'] = fakes_comp
             
         # fakes systematics
-        if sys = 'fakes':
+        if sys == 'fakes':
             #TODO sys here
             datasets_MC_fakes = cfg.datasets.WJ_datasets + cfg.datasets.Diboson_datasets + cfg.datasets.singleTop_datasets + cfg.datasets.DY_datasets + cfg.datasets.TT_datasets
             fake_cfgs_MC_1 = build_cfgs(['fakesMC1'], datasets_MC_fakes, variable, cfg.sys_dict[sys]['change']['l1MC'], bins)
@@ -517,8 +517,11 @@ for variable in cfg.datacards_variables:
         processes.append(
             delayed(make_datacards)(
                 output_dir,
+                channel,
                 variable,
-                dc_comps[variable][sys]
+                dc_comps[variable][sys],
+                category = 'inclusive',
+                systematic = None
             )
         )
 
