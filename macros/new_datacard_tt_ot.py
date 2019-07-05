@@ -211,7 +211,7 @@ for variable in cfg.datacards_variables:
     processes.append(
         delayed(make_datacards)(
             output_dir,
-            channel,
+            cfg.channel,
             variable,
             dc_comps[variable],
             category = 'inclusive',
