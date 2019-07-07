@@ -49,6 +49,16 @@ def merge_components(name, comps):
 
 merge_components = delayed(merge_components)
 
+def merge(name, objs):
+    '''transparent function to use regardless of whether
+    objs are cfgs or comps'''
+    if all([isinstance(obj,Component_cfg) for obj in objs]):
+        return merge_cfgs(name, cfgs)
+    elif all([isinstance(obj,Component) for obj in objs]):
+        return merge_components(name, cfgs)
+    else:
+        raise ValueError('The objects to merge must be either all Components or Component_cfgs')
+
 def project(comp):
     ''' fills a component histogram following its configuration file '''
     dataset = comp.cfg['dataset']

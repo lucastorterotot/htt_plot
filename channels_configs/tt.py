@@ -81,12 +81,25 @@ cuts_datacards = Cuts(
     TTJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
     VVT = '(l1_gen_match == 5 && l2_gen_match == 5)',
     VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
+    Diboson_VVT = '(l1_gen_match == 5 && l2_gen_match == 5)',
+    Diboson_VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
+    singleTop_VVT = '(l1_gen_match == 5 && l2_gen_match == 5)',
+    singleTop_VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
     W = '1',
     jetFakes = '1',
+    data = '1',
+    embed = '1',
 )
 cuts_datacards['ZLL'] = cuts_datacards['ZL'] | cuts_datacards['ZJ']
 cuts_datacards['TT'] = cuts_datacards['TTT'] | cuts_datacards['TTJ']
 cuts_datacards['VV'] = cuts_datacards['VVT'] | cuts_datacards['VVJ']
+from htt_plot.channels_configs.htt_common import datacard_processes
+
+# ## specific cuts
+
+
+# 'ZTT': signal_region_MC_nofakes_DY & cfg.cuts_datacards['ZTT']
+
 
 # weights
 from htt_plot.channels_configs.htt_common import weights
@@ -97,5 +110,108 @@ import htt_plot.datasets.gael_all as datasets
 cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts
 
 # systematics
-from htt_plot.channels_configs.htt_common import sys_dict
 
+sys_dict_samples = {'top_pT_reweighting_up':{'processes':['TT']},
+    
+    'top_pT_reweighting_down': {'processes': ['TT']},
+    
+    'DY_pT_reweighting_up': {'processes': ['DY']},
+    
+    'DY_pT_reweighting_down': {'processes': ['DY']},
+    
+    'METrecoil_response_up': {'processes': ['all_MC']},
+    
+    'METrecoil_response_down': {'processes': ['all_MC']},
+    
+    'METrecoil_resolution_up': {'processes': ['all_MC']},
+    
+    'METrecoil_resolution_down': {'processes': ['all_MC']},
+    
+    'METunclustered_up': {'processes': ['all_MC']},
+    
+    'METunclustered_down': {'processes': ['all_MC']},
+    
+    'TES_HadronicTau_1prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_1prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_1prong1pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_1prong1pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_3prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_3prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_3prong1pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_HadronicTau_3prong1pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptMuon_1prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptMuon_1prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptEle_1prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptEle_1prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptEle_1prong1pi0_up': {'processes': ['all_MC','Embedded']},
+    
+    'TES_promptEle_1prong1pi0_down': {'processes': ['all_MC','Embedded']},
+    
+    'CMS_scale_j_eta0to5_13Tev_up': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_eta0to5_13Tev_down': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_eta0to3_13Tev_up': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_eta0to3_13Tev_down': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_eta3to5_13Tev_up': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_eta3to5_13Tev_down': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_RelativeBal_13TeV_up': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_RelativeBal_13TeV_down': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_RelativeSample_13TeV_up': {'processes': ['all_MC']},
+    
+    'CMS_scale_j_RelativeSample_13TeV_down': {'processes': ['all_MC']},
+    
+    'Btagging_up': {'processes': ['all_MC']},
+    
+    'Btagging_down': {'processes': ['all_MC']}
+}
+
+for key, item in sys_dict_samples.iteritems():
+    if 'all_MC' in item['processes']:
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W'])
+    if 'DY' in item['processes']:
+        item['DY_cut'] = signal_region_MC_nofakes_DY
+        item['DY_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC#here add DY reweighting in fakes
+        item['DY_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC#here add DY reweighting in fakes
+    if 'TT' in item['processes']:
+        item['TT_cut'] = signal_region_MC_nofakes_TT
+        item['TT_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC#here add TT reweighting in fakes
+        item['TT_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC#here add TT reweighting in fakes
+    if 'all_MC' in item['processes']:
+        item['bkg_cut'] = signal_region_MC_nofakes
+        item['bkg_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC
+        item['bkg_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC
+    if 'Embedded' in item['processes']:
+        item['Embedded_cut'] = signal_region_MC_nofakes
+        item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_Embedded
+        item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_Embedded
+
+
+sys_dict_weights = {}
+
+for up_down in ['up','down']:
+    for syst in ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']:
+        sys_name = 'ff_{}'.format(syst.format(up_down))
+        sys_dict_weights[]
+
+
+sys_dict = sys_dict_samples.copy()
+sys_dict.update(sys_dict_weights)
