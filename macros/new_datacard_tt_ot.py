@@ -93,14 +93,14 @@ for up_down in ['up','down']:
                                       'l1fakecut': l1_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
                                       'l2fakecut': l2_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down)))}
     sys_dict_weights['top_pt_reweighting_{}'.format(up_down)] = {'processes':['TT'],
-                                                                 'TT_cut': signal_region_MC_nofakes_TT, # here find a way to de-apply top pt reweighting and re-apply up or down shift
-                                                                 'TT_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_TT,
-                                                                 'TT_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_TT}
+                                                                 'TT_cut': signal_region_MC_nofakes_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
+                                                                 'TT_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
+                                                                 'TT_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)]}
     cfg.datasets.TT_datasets['top_pt_reweighting_{}'.format(up_down)] = cfg.datasets.TT_datasets['nominal']
     sys_dict_weights['dy_pt_reweighting_{}'.format(up_down)] = {'processes':['DY'],
-                                                                 'DY_cut': signal_region_MC_nofakes_DY, # here find a way to de-apply dy pt reweighting and re-apply up or down shift
-                                                                 'DY_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_DY,
-                                                                 'DY_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_DY}
+                                                                 'DY_cut': signal_region_MC_nofakes_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
+                                                                 'DY_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
+                                                                 'DY_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)]}
     cfg.datasets.DY_datasets['dy_pt_reweighting_{}'.format(up_down)] = cfg.datasets.DY_datasets['nominal']
     
 
