@@ -54,8 +54,6 @@ cut_ss = ~cut_os
 cut_dy_promptfakeleptons = Cut(
     'l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
 
-cut_TT_nogenuine = Cut('!(l1_gen_match==5 && l2_gen_match==5)')
-
 
 
 cut_mt_tot = Cut('mt_tot < 40')
@@ -67,8 +65,9 @@ cut_btag_2 = Cut('bjet2_csv > 0')
 # weights
 weights = Cuts(
     weight = 'weight',
-    MC = 'l1_weight_mutotaufake_loose * l1_weight_etotaufake_vloose * l1_weight_tauid_vtight * l2_weight_mutotaufake_loose * l2_weight_etotaufake_vloose * l2_weight_tauid_vtight',
+    MC = 'l1_weight_mutotaufake_loose * l1_weight_etotaufake_vloose * l1_weight_tauid_tight * l2_weight_mutotaufake_loose * l2_weight_etotaufake_vloose * l2_weight_tauid_tight',
     DY = 'weight_dy * weight_generator',# * '+dy_stitching_weight
+    TT = 'weight_top',
     embed = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * weight_embed_track_l1 * weight_embed_track_l2',
     l1_fake = 'l1_fakeweight*0.5',
     l2_fake = 'l2_fakeweight*0.5'
