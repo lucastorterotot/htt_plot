@@ -69,7 +69,7 @@ for key, item in sys_dict_samples.iteritems():
 sys_dict_weights = {}
 from htt_plot.tools.cut import Cut
 for up_down in ['up','down']:
-    for syst in ['qcd_syst_{}']:#,'qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']:
+    for syst in ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']:
         sys_name = 'ff_{}'.format(syst.format(up_down))
         cfg.datasets.DY_datasets[sys_name] = cfg.datasets.DY_datasets['nominal']
         cfg.datasets.TT_datasets[sys_name] = cfg.datasets.TT_datasets['nominal']
@@ -425,22 +425,11 @@ for variable in cfg.datacards_variables:
             output_dir,
             cfg.channel,
             variable,
-            dc_comps[variable]['nominal'],
+            dc_comps[variable],
             category = 'inclusive',
-            systematic = None
+            systematics = ['nominal']+sys_dict.keys()
         )
     )
-    for sys in sys_dict:
-        processes.append(
-            delayed(make_datacards)(
-                output_dir,
-                channel,
-                variable,
-                dc_comps[variable][sys],
-                category = 'inclusive',
-                systematic = None
-            )
-        )
 
 import os
 os.system('rm -rf {}'.format(output_dir))
