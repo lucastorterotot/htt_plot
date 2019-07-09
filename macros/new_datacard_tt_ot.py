@@ -423,16 +423,22 @@ for variable in cfg.datacards_variables:
     processes.append(
         delayed(make_datacards)(
             output_dir,
+            cfg.channel,
             variable,
-            dc_comps[variable]['nominal']
+            dc_comps[variable]['nominal'],
+            category = 'inclusive',
+            systematic = None
         )
     )
     for sys in sys_dict:
         processes.append(
             delayed(make_datacards)(
                 output_dir,
+                channel,
                 variable,
-                dc_comps[variable][sys]
+                dc_comps[variable][sys],
+                category = 'inclusive',
+                systematic = None
             )
         )
 
