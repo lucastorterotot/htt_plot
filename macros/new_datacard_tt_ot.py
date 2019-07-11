@@ -14,21 +14,36 @@ setTDRStyle(square=False)
 # datacards tools
 from htt_plot.tools.datacards import make_datacards
 
+# category
+category = 'inclusive'#'nobtag','btag'
+if category == 'inclusive':
+    cut_signal = cfg.cut_signal
+    basic_cuts =  cfg.basic_cuts
+elif category == 'nobtag':
+    cut_signal = cfg.cut_signal_nobtag
+    basic_cuts =  cfg.basic_cuts_nobtag
+elif category == 'btag':
+    cut_signal = cfg.cut_signal_btag
+    basic_cuts =  cfg.basic_cuts_btag
+else:
+    raise ValueError('category must be inclusive, nobtag or btag')
+    
+    
 # cuts
-signal_region_MC = cfg.cut_signal
+signal_region_MC = cut_signal
 signal_region_MC_nofakes = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet
 signal_region_MC_nofakes_DY = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet & cfg.cut_dy_promptfakeleptons
 
-l1_FakeFactorApplication_Region_cut = cfg.basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
+l1_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
 l1_FakeFactorApplication_Region_genuinetauMC_cut = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet
 l1_FakeFactorApplication_Region_genuinetauMC_cut_DY = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet & cfg.cut_dy_promptfakeleptons
 
-l2_FakeFactorApplication_Region_cut = cfg.basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
+l2_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
 l2_FakeFactorApplication_Region_genuinetauMC_cut = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet
 l2_FakeFactorApplication_Region_genuinetauMC_cut_DY = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_dy_promptfakeleptons
 
 #### cuts+weights
-signal_region = cfg.cut_signal * cfg.weights['weight']
+signal_region = cut_signal * cfg.weights['weight']
 signal_region_Embedded = signal_region * cfg.weights['embed']
 signal_region_MC = signal_region_MC * cfg.weights['weight'] * cfg.weights['MC']
 signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['DY'] weight already in base weight

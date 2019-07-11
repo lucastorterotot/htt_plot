@@ -51,6 +51,9 @@ cut_l2_fakejet = Cut('l2_gen_match==6')
 cut_os = Cut('l1_q != l2_q')
 cut_ss = ~cut_os
 
+cut_nobtag = Cut('b1_pt == -99')
+cut_btag = ~cut_nobtag
+
 cut_dy_promptfakeleptons = Cut(
     'l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
 
