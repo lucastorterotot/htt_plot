@@ -441,7 +441,7 @@ for variable in cfg.datacards_variables:
             cfg.channel,
             variable,
             dc_comps[variable],
-            category = 'inclusive',
+            category = category,
             systematics = ['nominal']+sys_dict.keys()
         )
     )
