@@ -38,19 +38,32 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,sys='nominal'):
         sys = ''
     infos = dsdb.find('se', {'sample':sample_name,
                         'sample_version':{'$regex':'.*{}$'.format(sys)}})
-    if len(infos) > 1:
-        for info in infos:
-            print 'name:', info['name'], 'version:', info['sample_version']
-        raise ValueError('version {} found in db more than once for sample {}'.format(sys,sample_name))
     if not infos:
         if sys!='nominal':
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
             return fetch_dataset(sample_name,n_events_gen,xs,'nominal')
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
-    info = infos[0]
-    if n_events_gen:
-        n_events_gen = n_events_gen*efficiency(info['name'])
-    return Dataset('{}_{}'.format(sample_name,sys),
-                         '{}/{}/NtupleProducer/tree.root '.format(info['fakes']['replicas']['lyovis10']['dir'],info['name']),
-                         n_events_gen,xs, #those informations should ultimately be retrieved from the db
-                         treename='events')
+    if len(infos)> 1 and infos[0]['name'] == 'Embedded2017B_tt':
+        infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
+        if len(infos)> 1:
+            import pdb;pdb.set_trace()
+    try:
+        info = max(infos, key=lambda info: info['sub_date'])
+        basedir = info['fakes']['replicas']['lyovis10']['dir']
+        if n_events_gen:
+            n_events_gen = n_events_gen*efficiency(info['name'])
+        return Dataset('{}_{}'.format(sample_name,sys),
+                       '{}/{}/NtupleProducer/tree.root '.format(basedir,info['name']),
+                       n_events_gen,xs, #those informations should ultimately be retrieved from the db
+                       treename='events')
+    except KeyError:
+        info= infos[0]
+        print 'sample {} version {} not fully processed!'.format(info['name'],info['sample_version'])
+        newinfo = dsdb.find('se', {'sample':sample_name, 'sample_version':{'$regex':'.*{}$'.format('nominal')}})[0]
+        basedir = newinfo['fakes']['replicas']['lyovis10']['dir']
+        if n_events_gen:
+            n_events_gen = n_events_gen*efficiency(newinfo['name'])
+        return Dataset('{}_{}'.format(sample_name,sys),
+                       '{}/{}/NtupleProducer/tree.root '.format(basedir,newinfo['name']),
+                       n_events_gen,xs, #those informations should ultimately be retrieved from the db
+                       treename='events')
