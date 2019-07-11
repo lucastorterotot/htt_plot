@@ -12,7 +12,7 @@ from htt_plot.channels_configs.htt_common import bins
 from htt_plot.channels_configs.htt_common import variables, datacards_variables
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_dy_promptfakeleptons
+from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_dy_promptfakeleptons, cut_btag, cut_nobtag
 
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt > 40',
@@ -110,3 +110,10 @@ import htt_plot.datasets.gael_all as datasets
 cut_signal = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts
 
 
+# category
+
+basic_cuts_btag = basic_cuts & cut_btag
+cut_signal_btag = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts_btag
+
+basic_cuts_nobtag = basic_cuts & cut_nobtag
+cut_signal_nobtag = cuts_iso['l1_Tight'] & cuts_iso['l2_Tight'] & basic_cuts_nobtag
