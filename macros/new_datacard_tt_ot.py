@@ -15,7 +15,7 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # category
-category = 'inclusive'#'nobtag','btag'
+category = 'inclusive'#'nobtag','btag','inclusive'
 if category == 'inclusive':
     cut_signal = cfg.cut_signal
     basic_cuts =  cfg.basic_cuts
@@ -447,8 +447,9 @@ for variable in cfg.datacards_variables:
     )
 
 import os
-os.system('rm -rf {}'.format(output_dir))
-os.system('mkdir -p {}'.format(output_dir))
+# os.system('rm -rf {}'.format(output_dir))
+if not os.path.exists(output_dir):
+    os.system('mkdir -p {}'.format(output_dir))
         
 visualize(*processes)
 #compute(*processes)

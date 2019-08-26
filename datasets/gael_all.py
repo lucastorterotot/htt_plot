@@ -13,6 +13,82 @@ data_datasets.append(fetch_dataset('Tau_Run2017F_31Mar2018'))
 
 ##### MC
 
+## signal
+
+signal_datasets = {'nominal':{}}
+signal_datasets['nominal']['ggH200'] = fetch_dataset('HiggsSUSYGG200',200000,4.9964523)
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG300',195159,2.0481775))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG400',200000,1.4211406))
+signal_datasets['nominal']['ggH600'] = fetch_dataset('HiggsSUSYGG600',195350,0.24884269)
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG700',190896,0.11233324))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG800',200000,0.054282725))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG900',200000,0.027804535))
+signal_datasets['nominal']['bbH200'] = fetch_dataset('HiggsSUSYBB200',200000,0.75723660)
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB300',200000,0.20989677))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB400',200000,0.069850326))
+signal_datasets['nominal']['bbH600'] = fetch_dataset('HiggsSUSYBB600',194825,0.012318182)
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB700',200000,0.0060249786))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB800',200000,0.0031533239))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB900',200000,0.0017401302))
+#for xs , tan beta set to 3 for now # watch out following xs are for ggH and not ggA # do tan beta 20 and ma=700GeV
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG80',479614,48.366989))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG90',500000,44.882252))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG100',500000,40.586143))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG110',500000,35.632046))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG120',500000,30.370052))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG130',500000,25.236391))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG140',500000,20.428024))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG180',500000,8.8893003))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG200',200000,6.2709937))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG250',200000,3.1832261))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG300',195159,2.0481775))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG350',200000,1.8617147))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG400',200000,1.4211406))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG450',200000,0.92759269))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG600',195350,0.24884269))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG700',190896,0.11233324))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG800',200000,0.054282725))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG900',200000,0.027804535))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG1200',200000,0.0048640342))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG1400',200000,0.0017864610))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG1500',200000,0.0011222996))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG1600',200000,0.00071947579))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG1800',200000,0.00031106206))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG2000',196915,0.00013555137))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG2300',194106,5.2378407e-05))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG2600',200000,2.4348288e-05))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG2900',190493,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYGG3200',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB80',478796,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB90',495914,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB100',500000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB110',493035,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB120',500000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB130',500000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB140',500000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB160',500000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB180',476584,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB200',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB250',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB300',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB350',191582,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB400',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB450',194897,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB600',194825,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB700',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB800',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB900',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB1200',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB1400',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB1500',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB1600',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB1800',193168,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB2000',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB2300',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB2600',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB2900',200000,))
+# signal_datasets['nominal'].append(fetch_dataset('HiggsSUSYBB3200',200000,))
+
 ## DY
 
 n_ev_dy_incl = 48675378. + 49125561.
@@ -39,6 +115,7 @@ DY_datasets = {'nominal':[]}
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50',48675378.,dy_xsec_incl))
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50_ext',49125561.,dy_xsec_incl))
 renorm_nevts(DY_datasets['nominal'])
+
 
 # DY1JetsToLL_M50 = Dataset(
 #     'DYJetsToLL_M50',
@@ -151,6 +228,24 @@ from htt_plot.systematics import sys_dict_samples # TODO put sys_dicts in their 
 
 for sys in sys_dict_samples:
 
+    ## signal
+    if 'signal' in sys_dict_samples[sys]['processes']:
+        signal_datasets[sys] = {}
+        signal_datasets[sys]['ggH200'] = fetch_dataset('HiggsSUSYGG200',200000,4.9964523,sys=sys)
+        # signal_datasets[sys]['ggH300'] = fetch_dataset('HiggsSUSYGG300',195159,2.0481775,sys=sys)
+        # signal_datasets[sys]['ggH400'] = fetch_dataset('HiggsSUSYGG400',200000,1.4211406,sys=sys)
+        signal_datasets[sys]['ggH600'] = fetch_dataset('HiggsSUSYGG600',195350,0.24884269,sys=sys)
+        # signal_datasets[sys]['ggH700'] = fetch_dataset('HiggsSUSYGG700',190896,0.11233324,sys=sys)
+        # signal_datasets[sys]['ggH800'] = fetch_dataset('HiggsSUSYGG800',200000,0.054282725,sys=sys)
+        # signal_datasets[sys]['ggH900'] = fetch_dataset('HiggsSUSYGG900',200000,0.027804535,sys=sys)
+        signal_datasets[sys]['bbH200'] = fetch_dataset('HiggsSUSYBB200',200000,0.75723660,sys=sys)
+        # signal_datasets[sys]['bbH300'] = fetch_dataset('HiggsSUSYBB300',200000,0.20989677,sys=sys)
+        # signal_datasets[sys]['bbH400'] = fetch_dataset('HiggsSUSYBB400',200000,0.069850326,sys=sys)
+        signal_datasets[sys]['bbH600'] = fetch_dataset('HiggsSUSYBB600',194825,0.012318182,sys=sys)
+        # signal_datasets[sys]['bbH700'] = fetch_dataset('HiggsSUSYBB700',200000,0.0060249786,sys=sys)
+        # signal_datasets[sys]['bbH800'] = fetch_dataset('HiggsSUSYBB800',200000,0.0031533239,sys=sys)
+        # signal_datasets[sys]['bbH900'] = fetch_dataset('HiggsSUSYBB900',200000,0.0017401302,sys=sys)
+    
     ## DY
     if 'DY' in sys_dict_samples[sys]['processes']:
         DY_datasets[sys] = []
@@ -209,6 +304,11 @@ for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, 
         for dataset in dataset_list:
             dataset.compute_weight(data_lumi)
 
+for ds_type in [signal_datasets]:
+    for sys, dataset_list in ds_type.iteritems() :
+        for name, dataset in dataset_list.iteritems():
+            dataset.compute_weight(data_lumi)
+            
 for dataset in data_datasets:
     dataset.compute_weight()
 for sys, dataset_list in Embedded_datasets.iteritems():
