@@ -1,21 +1,45 @@
-import htt_plot.channels_configs.tt as cfg
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-# dask tools
-from dask import delayed, compute, visualize
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--cfg", dest = "cfg_name",
+                  default="tt",
+                  help='Name of the config file to use, must be in htt_plot/channels_configs/')
+parser.add_option("-o", "--output", dest = "output_dir",
+                  default="delayed_plots",
+                  help='Output directory base name, channel is added')
+parser.add_option("-C", "--category", dest = "category",
+                  default="inclusive",
+                  help='Category to process: inclusive, btag, nobtag.')
+parser.add_option("-q", "--dryrun", dest = "dry_run",
+                  default=False,
+                  help='Disables dask computing.')
+parser.add_option("-s", "--small", dest = "small_run",
+                  default=False,
+                  help='Use smaller variables and systematics list to test computing.')
 
+(options,args) = parser.parse_args()
+
+cfg = __import__("htt_plot.channels_configs.{}".format(options.cfg_name), fromlist=[''])
+
+# variables
+variables = cfg.variables
+datacards_variables = cfg.datacards_variables
+
+if options.small_run:
+    variables = [variables[0]]
+    datacards_variables = [datacards_variables[0]]
+
+variables = set(variables + datacards_variables)
+    
 # output
-output_dir = '_'.join(['delayed_plots', cfg.channel])
-
-# plotting tools
-from htt_plot.tools.plotting.plotter import Plotter
-from htt_plot.tools.plotting.tdrstyle import setTDRStyle
-setTDRStyle(square=False)
-
-# datacards tools
-from htt_plot.tools.datacards import make_datacards
+output_dir = '_'.join([options.output_dir, cfg.channel])
 
 # category
-category = 'nobtag'#'nobtag','btag','inclusive'
+category = options.category # 'nobtag'#'nobtag','btag','inclusive'
 if category == 'inclusive':
     cut_signal = cfg.cut_signal
     basic_cuts =  cfg.basic_cuts
@@ -27,7 +51,17 @@ elif category == 'btag':
     basic_cuts =  cfg.basic_cuts_btag
 else:
     raise ValueError('category must be inclusive, nobtag or btag')
-    
+
+# dask tools
+from dask import delayed, compute, visualize
+
+# plotting tools
+from htt_plot.tools.plotting.plotter import Plotter
+from htt_plot.tools.plotting.tdrstyle import setTDRStyle
+setTDRStyle(square=False)
+
+# datacards tools
+from htt_plot.tools.datacards import make_datacards    
     
 # cuts
 signal_region_MC = cut_signal
@@ -159,7 +193,7 @@ from htt_plot.tools.utils import add_processes_per_component, add_simple_process
 cfg_dict = {}
 dc_comps = {}
 components = {}
-for variable in set(cfg.variables + cfg.datacards_variables):
+for variable in variables:
     bins = cfg.bins[variable]
     cfg_dict[variable] = {}
     dc_comps[variable] = {}
@@ -302,7 +336,9 @@ for variable in set(cfg.variables + cfg.datacards_variables):
 
 # systematics
 import copy
-for variable in cfg.datacards_variables:
+
+for variable in datacards_variables:
+    bins = cfg.bins[variable]
     for sys in sys_dict:
         cfg_dict[variable][sys] = copy.copy(cfg_dict[variable]['nominal'])
         cfgs = cfg_dict[variable][sys] # for lighter syntax
@@ -463,7 +499,7 @@ def write_plots(plotter, variable, output_dir):
     plotter.write('{}/{}.tex'.format(output_dir, variable))
     print plotter.plot
     
-for variable in cfg.variables:
+for variable in variables:
     processes.append(
         delayed(write_plots)(
             delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
@@ -472,7 +508,7 @@ for variable in cfg.variables:
             )
         )
     
-for variable in cfg.datacards_variables:
+for variable in datacards_variables:
     processes.append(
         delayed(make_datacards)(
             output_dir,
@@ -490,4 +526,5 @@ if not os.path.exists(output_dir):
     os.system('mkdir -p {}'.format(output_dir))
         
 visualize(*processes)
-#compute(*processes)
+if not options.dry_run:
+    compute(*processes)
