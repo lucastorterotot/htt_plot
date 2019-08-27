@@ -61,7 +61,7 @@ from htt_plot.tools.plotting.tdrstyle import setTDRStyle
 setTDRStyle(square=False)
 
 # datacards tools
-from htt_plot.tools.datacards import make_datacards    
+from htt_plot.tools.datacards import make_datacards
     
 # cuts
 signal_region_MC = cut_signal
