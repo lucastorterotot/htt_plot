@@ -26,12 +26,13 @@ parser.add_option("-s", "--small", dest = "small_run",
 cfg = __import__("htt_plot.channels_configs.{}".format(options.cfg_name), fromlist=[''])
 
 # variables
-variables = cfg.variables
-datacards_variables = cfg.datacards_variables
 
 if options.small_run:
-    variables = [variables[0]]
-    datacards_variables = [datacards_variables[0]]
+    variables = [cfg.variables[0]]
+    datacards_variables = [cfg.datacards_variables[0]]
+else:
+    variables = cfg.variables
+    datacards_variables = cfg.datacards_variables
 
 variables = set(variables + datacards_variables)
     
@@ -137,11 +138,12 @@ for key, item in sys_dict_samples.iteritems():
             item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
 
 
-up_downs = ['up','down']
-systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']
 if options.small_run:
-    systs_ff_list = [systs_ff_list[0]]
-    up_downs = [up_downs[0]]
+    up_downs = ['up']
+    systs_ff_list = ['qcd_syst_{}']
+else:
+    up_downs = ['up','down']
+    systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']
     
 sys_dict_weights = {}
 from htt_plot.tools.cut import Cut
