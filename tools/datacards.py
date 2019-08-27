@@ -1,9 +1,9 @@
 from ROOT import TFile, TH1F, TDirectoryFile
 
 channels_names = {
-    'tt' : 'tauTau',
-    'mt' : 'muTau',
-    'et' : 'eleTau'
+    'tt' : 'tt',
+    'mt' : 'tt',
+    'et' : 'tt'
     }
 
 def make_datacards(output_dir, channel, variable, components_dict, category='inclusive', systematics=['nominal']):
@@ -12,7 +12,7 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
     (class Component) that have the ROOT histograms to be used.
     Gives also the output directory and the variable name, so that you can
     make datacards for different variables.'''
-    rootfilename = '_'.join(['htt', channel, 'datacards', variable])
+    rootfilename = '_'.join(['htt', channel+'.inputs', 'datacards', variable])
     rootfile = TFile('{}/{}.root'.format(output_dir, rootfilename), 'UPDATE')
     rootdirname = '_'.join([channels_names[channel], category])
     rootdir = TDirectoryFile(rootdirname, rootdirname)

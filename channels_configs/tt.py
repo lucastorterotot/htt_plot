@@ -90,6 +90,9 @@ cuts_datacards = Cuts(
     data = '1',
     embed = '1',
 )
+cuts_datacards['TTL'] = cuts_datacards['ZL']
+cuts_datacards['Diboson_VVL'] = cuts_datacards['ZL']
+cuts_datacards['singleTop_VVL'] = cuts_datacards['ZL']
 cuts_datacards['ZLL'] = cuts_datacards['ZL'] | cuts_datacards['ZJ']
 cuts_datacards['TT'] = cuts_datacards['TTT'] | cuts_datacards['TTJ']
 cuts_datacards['VV'] = cuts_datacards['VVT'] | cuts_datacards['VVJ']

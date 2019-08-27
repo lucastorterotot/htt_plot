@@ -15,7 +15,7 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # category
-category = 'inclusive'#'nobtag','btag','inclusive'
+category = 'nobtag'#'nobtag','btag','inclusive'
 if category == 'inclusive':
     cut_signal = cfg.cut_signal
     basic_cuts =  cfg.basic_cuts
@@ -31,7 +31,7 @@ else:
     
 # cuts
 signal_region_MC = cut_signal
-signal_region_MC_nofakes = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet
+signal_region_MC_nofakes_cut = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet
 signal_region_MC_nofakes_DY = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet & cfg.cut_dy_promptfakeleptons
 
 l1_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
@@ -47,9 +47,9 @@ signal_region = cut_signal * cfg.weights['weight']
 signal_region_Embedded = signal_region * cfg.weights['embed']
 signal_region_MC = signal_region_MC * cfg.weights['weight'] * cfg.weights['MC']
 signal_region_MC_nofakes_DY = signal_region_MC_nofakes_DY * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['DY'] weight already in base weight
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['TT'] same
-signal_region_MC_nofakes_Embedded = signal_region_MC_nofakes * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed']
-signal_region_MC_nofakes = signal_region_MC_nofakes * cfg.weights['weight'] * cfg.weights['MC']
+signal_region_MC_nofakes_TT = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['TT'] same
+signal_region_MC_nofakes_Embedded = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed']
+signal_region_MC_nofakes = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']
 l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region_cut * cfg.weights['l1_fake'] * cfg.weights['weight']
 l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region_cut * cfg.weights['l2_fake'] * cfg.weights['weight']
 l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed'] * cfg.weights['l1_fake']
@@ -65,6 +65,8 @@ from htt_plot.systematics import sys_dict_samples
 
 
 for key, item in sys_dict_samples.iteritems():
+    if 'signal' in item['processes']:
+        item['signal_cut'] = signal_region
     if 'DY' in item['processes']:
         item['DY_cut'] = signal_region_MC_nofakes_DY 
         item['DY_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_DY
@@ -73,7 +75,7 @@ for key, item in sys_dict_samples.iteritems():
         item['TT_cut'] = signal_region_MC_nofakes_TT
         item['TT_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_TT
         item['TT_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_TT
-    if 'all_MC' in item['processes']:
+    if any([proc in item['processes'] for proc in ['all_MC','W']]):
         item['bkg_cut'] = signal_region_MC_nofakes
         item['bkg_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC
         item['bkg_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC
@@ -81,6 +83,25 @@ for key, item in sys_dict_samples.iteritems():
         item['Embedded_cut'] = signal_region_MC_nofakes_Embedded
         item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_Embedded
         item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_Embedded
+        if key=='Embedding_tracking_1prong_up':
+            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l2_fake']
+        if key=='Embedding_tracking_1prong_down':
+            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l2_fake']
+        if key=='Embedding_tracking_3prong_up':
+            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l2_fake']
+        if key=='Embedding_tracking_3prong_down':
+            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
+
+
+            
 sys_dict_weights = {}
 from htt_plot.tools.cut import Cut
 for up_down in ['up','down']:
@@ -133,7 +154,7 @@ sys_dict.update(sys_dict_weights)
 
 from htt_plot.tools.builder import build_cfgs, merge
 from htt_plot.tools.builder import  merge_components as merge_comps
-from htt_plot.tools.utils import add_processes_per_component
+from htt_plot.tools.utils import add_processes_per_component, add_simple_process
 
 cfg_dict = {}
 dc_comps = {}
@@ -144,6 +165,11 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     dc_comps[variable] = {}
     cfg_dict[variable]['nominal'] = {}
     cfgs = cfg_dict[variable]['nominal'] # for lighter syntax
+
+    #signal
+    for mass in ['200','600']:#,'300','400',,'700','800','900'
+        add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['ggH{}'.format(mass)],variable,signal_region,bins)
+        add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['bbH{}'.format(mass)],variable,signal_region,bins)
     
     #DY
     add_processes_per_component(cfgs,
@@ -162,7 +188,7 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     #TT
     add_processes_per_component(cfgs,
                                 'TT',
-                                ['TTT','TTJ'],
+                                ['TTT','TTJ','TTL'],
                                 cfg.datasets.TT_datasets['nominal'],
                                 variable,
                                 signal_region_MC_nofakes_TT,
@@ -175,7 +201,7 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     #Diboson
     add_processes_per_component(cfgs,
                                 'Diboson',
-                                ['Diboson_VVT','Diboson_VVJ'],
+                                ['Diboson_VVT','Diboson_VVJ','Diboson_VVL'],
                                 cfg.datasets.Diboson_datasets['nominal'],
                                 variable,
                                 signal_region_MC_nofakes,
@@ -188,7 +214,7 @@ for variable in set(cfg.variables + cfg.datacards_variables):
     #singleTop
     add_processes_per_component(cfgs,
                                 'singleTop',
-                                ['singleTop_VVT','singleTop_VVJ'],
+                                ['singleTop_VVT','singleTop_VVJ','singleTop_VVL'],
                                 cfg.datasets.singleTop_datasets['nominal'],
                                 variable,
                                 signal_region_MC_nofakes,
@@ -199,8 +225,9 @@ for variable in set(cfg.variables + cfg.datacards_variables):
                                 mergedict = {'singleTop':['singleTop_VVT','singleTop_VVJ']})
     
     #VV
+    cfgs['VVL'] = merge('VVL', [cfgs['Diboson_VVL'],cfgs['singleTop_VVL']])
     cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT']])
-    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVT']])
+    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVJ']])
     cfgs['VV'] = merge('VV', [cfgs['VVJ'],cfgs['VVT']])
     
     #W
@@ -261,21 +288,16 @@ for variable in set(cfg.variables + cfg.datacards_variables):
                             cfgs['fakes']]
 
     dc_comps[variable]['nominal'] = {
-        'ZTT' : cfgs['ZTT'],
         'ZL' : cfgs['ZL'],
-        'ZJ' : cfgs['ZJ'],
-        'ZLL' : cfgs['ZLL'],
-        'TTT' : cfgs['TTT'],
-        'TTJ' : cfgs['TTJ'],
-        'TT' : cfgs['TT'],
-        'VVT' : cfgs['VVT'],
-        'VVJ' : cfgs['VVJ'],
-        'VV' : cfgs['VV'],
-        'W' : cfgs['W'],
+        'TTL' : cfgs['TTL'],
+        'VVL' : cfgs['VVL'],
         'jetFakes' : cfgs['fakes'],
         'data_obs' : cfgs['data_obs'],
-        'Embedded' : cfgs['Embedded'],
+        'Embedded' : cfgs['Embedded']
     }
+    for mass in ['200','600']:
+        dc_comps[variable]['nominal']['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
+        dc_comps[variable]['nominal']['bbH{}'.format(mass)] = cfgs['bbH{}'.format(mass)]
 
 
 # systematics
@@ -284,6 +306,12 @@ for variable in cfg.datacards_variables:
     for sys in sys_dict:
         cfg_dict[variable][sys] = copy.copy(cfg_dict[variable]['nominal'])
         cfgs = cfg_dict[variable][sys] # for lighter syntax
+
+        #signal
+        if 'signal' in sys_dict[sys]['processes']:
+            for mass in ['200','600']:
+                add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets[sys]['ggH{}'.format(mass)],variable,sys_dict[sys]['signal_cut'],bins)
+                add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets[sys]['bbH{}'.format(mass)],variable,sys_dict[sys]['signal_cut'],bins)
 
         #DY
         if 'DY' in sys_dict[sys]['processes']:
@@ -400,22 +428,32 @@ for variable in cfg.datacards_variables:
                                             cfgs['fakes_W'],
                                             cfgs['fakes_Embedded']])
 
-        dc_comps[variable][sys] = {
-            'ZTT' : cfgs['ZTT'],
-            'ZL' : cfgs['ZL'],
-            'ZJ' : cfgs['ZJ'],
-            'ZLL' : cfgs['ZLL'],
-            'TTT' : cfgs['TTT'],
-            'TTJ' : cfgs['TTJ'],
-            'TT' : cfgs['TT'],
-            'VVT' : cfgs['VVT'],
-            'VVJ' : cfgs['VVJ'],
-            'VV' : cfgs['VV'],
-            'W' : cfgs['W'],
-            'jetFakes' : cfgs['fakes'],
-            'data_obs' : cfgs['data_obs'],
-            'Embedded' : cfgs['Embedded'],
-        }
+
+        dc_comps[variable][sys] = {'jetFakes' : cfgs['fakes']}
+        if not ('ff_' in sys):
+            for process in sys_dict[sys]['processes']:
+                if process in ['ZL','TTL','VVL','Embedded']:
+                    dc_comps[variable][sys][process] = cfgs[process]
+                if process == 'signal':
+                    for mass in ['200','600']:#,'300','400',,'700','800','900'
+                        dc_comps[variable][sys]['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
+                        dc_comps[variable][sys]['bbH{}'.format(mass)] = cfgs['bbH{}'.format(mass)]
+                
+        # dc_comps[variable][sys] = {
+        #     'ZTT' : cfgs['ZTT'],
+        #     'ZL' : cfgs['ZL'],
+        #     'ZJ' : cfgs['ZJ'],
+        #     'ZLL' : cfgs['ZLL'],
+        #     'TTT' : cfgs['TTT'],
+        #     'TTJ' : cfgs['TTJ'],
+        #     'TT' : cfgs['TT'],
+        #     'VVT' : cfgs['VVT'],
+        #     'VVJ' : cfgs['VVJ'],
+        #     'VV' : cfgs['VV'],
+        #     'W' : cfgs['W'],
+        #     'Embedded' : cfgs['Embedded'],
+        #     'ggH200' : cfgs['ggH200']
+        # }
     
 processes = []
 

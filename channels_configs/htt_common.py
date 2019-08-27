@@ -1,6 +1,7 @@
 ''' General config file for plotting and datacards.
 HTT common config
 '''
+from array import array
 from htt_plot.tools.cut import Cut, Cuts
 
 # binning
@@ -11,14 +12,14 @@ bins = {
     'l2_eta' : (50, -2.5, 2.5),
     'l2_pt'  : (32, 0., 160.),
     'met'  : (32, 0., 160.),
-    'mt_tot' : (30, 0., 300.),
+    'mt_tot' : (29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700])),#,900,4000
     'm_vis'   : (32, 0., 200.)
 }
 
 # variables
 variables = bins.keys()
 datacards_variables = ['mt_tot']
-variables = datacards_variables+[variables[0]] # just for testing
+variables = datacards_variables # just for testing
 
 # processes
 datacard_processes = ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','VVT','VVJ','VV','W','jetFakes','data_obs','embedded']
@@ -76,6 +77,10 @@ weights = Cuts(
     TT_pTrweigh_up = '(1+(weight_top-1)*2)/(weight_top)',
     TT_pTrweigh_down = '(1+(weight_top-1)*0)/(weight_top)',
     embed = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * weight_embed_track_l1 * weight_embed_track_l2',
+    embed_track_1prong_up = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.983+(l1_decay_mode==1)*0.983*1.065+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.983+(l2_decay_mode==1)*0.983*1.065+(l2_decay_mode==10)*0.975*0.975*0.975)',
+    embed_track_1prong_down = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.967+(l1_decay_mode==1)*0.967*1.038+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.967+(l2_decay_mode==1)*0.967*1.038+(l2_decay_mode==10)*0.975*0.975*0.975)',
+    embed_track_3prong_up = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.983*0.983*0.983) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.983*0.983*0.983)',
+    embed_track_3prong_down = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.967*0.967*0.967) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.967*0.967*0.967)',
     l1_fake = 'l1_fakeweight*0.5',
     l2_fake = 'l2_fakeweight*0.5'
     )
