@@ -19,7 +19,7 @@ bins = {
 # variables
 variables = bins.keys()
 datacards_variables = ['mt_tot']
-variables = datacards_variables # just for testing
+#variables = datacards_variables # just for testing
 
 # processes
 datacard_processes = ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','VVT','VVJ','VV','W','jetFakes','data_obs','embedded']
