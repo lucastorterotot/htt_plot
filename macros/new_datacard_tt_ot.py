@@ -96,8 +96,10 @@ l1_FakeFactorApplication_Region_genuinetauMC_TT = l1_FakeFactorApplication_Regio
 l2_FakeFactorApplication_Region_genuinetauMC_TT = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l2_fake']# * cfg.weights['TT']
 
 from htt_plot.systematics import sys_dict_samples
-
-
+if options.small_run:
+    sys_dict_samples = {
+        sys_dict_samples.items()[0][0] : sys_dict_samples.items()[0][1]
+    }
 for key, item in sys_dict_samples.iteritems():
     if 'signal' in item['processes']:
         item['signal_cut'] = signal_region
@@ -135,11 +137,16 @@ for key, item in sys_dict_samples.iteritems():
             item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
 
 
-            
+up_downs = ['up','down']
+systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']
+if options.small_run:
+    systs_ff_list = [systs_ff_list[0]]
+    up_downs = [up_downs[0]]
+    
 sys_dict_weights = {}
 from htt_plot.tools.cut import Cut
-for up_down in ['up','down']:
-    for syst in ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']:
+for up_down in up_downs:
+    for syst in systs_ff_list:
         sys_name = 'ff_{}'.format(syst.format(up_down))
         cfg.datasets.DY_datasets[sys_name] = cfg.datasets.DY_datasets['nominal']
         cfg.datasets.TT_datasets[sys_name] = cfg.datasets.TT_datasets['nominal']
