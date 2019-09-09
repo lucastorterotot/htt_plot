@@ -20,6 +20,9 @@ parser.add_option("-q", "--dryrun", dest = "dry_run",
 parser.add_option("-s", "--small", dest = "small_run",
                   default=False,
                   help='Use smaller variables and systematics list to test computing.')
+parser.add_option("-p", dest = "just_plot",
+                  default=False, action="store_true",
+                  help='Do not produce datacards to save time.')
 
 (options,args) = parser.parse_args()
 
@@ -517,18 +520,19 @@ for variable in variables:
             output_dir
             )
         )
-    
-for variable in datacards_variables:
-    processes.append(
-        delayed(make_datacards)(
-            output_dir,
-            cfg.channel,
-            variable,
-            dc_comps[variable],
-            category = category,
-            systematics = ['nominal']+sys_dict.keys()
+
+if not options.just_plot:
+    for variable in datacards_variables:
+        processes.append(
+            delayed(make_datacards)(
+                output_dir,
+                cfg.channel,
+                variable,
+                dc_comps[variable],
+                category = category,
+                systematics = ['nominal']+sys_dict.keys()
+            )
         )
-    )
 
 import os
 # os.system('rm -rf {}'.format(output_dir))
