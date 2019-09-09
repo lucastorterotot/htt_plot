@@ -45,10 +45,8 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,sys='nominal'):
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
             return fetch_dataset(sample_name,n_events_gen,xs,'nominal')
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
-    if len(infos)> 1 and sample_name == 'Embedded2017B_tt':
+    if len(infos)> 1 and sample_name == 'Embedded2017B_tt' and sys=='TES_promptEle_1prong0pi0_down':
         infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
-        if len(infos)> 1:
-            import pdb;pdb.set_trace()
     try:
         info = max(infos, key=lambda info: info['sub_date'])
         if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow']:

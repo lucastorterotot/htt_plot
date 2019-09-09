@@ -25,6 +25,9 @@ class Plotter(object):
             pad = self.pad = can.GetPad(1) if not pad else pad
             padr = self.padr = can.GetPad(2) if not padr else padr
 
+	    #Set Y axes Log scale
+	    pad.SetLogy()
+
             # Set Pad sizes
             pad.SetPad(0.0, 0.32, 1., 1.0)
             padr.SetPad(0.0, 0.00, 1., 0.34)
