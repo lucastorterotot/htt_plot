@@ -10,14 +10,12 @@
 source ./init.sh
 ```
 
-* Copy your small root files in this package, in a directory called `lucas_small` (see [datasets/lucas_small.py](datasets/lucas_small.py))
-
 Also install [cpyroot](https://github.com/cbernet/cpyroot)
 
 ## Test
 
 ```
-ipython -i macros/plot_inclusive_test.py 
+datacard_and_plot_maker -o TEST -s True
 ```
 
 ## Test dask in a jupyter notebook on lyovis10 
