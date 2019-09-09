@@ -506,6 +506,7 @@ def write_plots(plotter, variable, output_dir):
     plotter.draw(variable, 'Number of events')
     plotter.write('{}/{}.png'.format(output_dir, variable))
     plotter.write('{}/{}.tex'.format(output_dir, variable))
+    plotter.write('{}/{}.root'.format(output_dir, variable))
     print plotter.plot
     
 for variable in variables:
