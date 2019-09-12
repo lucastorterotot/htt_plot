@@ -41,9 +41,9 @@ cuts_against_leptons = Cuts(
 
 cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() #& cut_mt_tot
 
+#singletau = 'trg_singletau',
 ## triggers
 cuts_triggers = Cuts(
-    singletau = 'trg_singletau',
     doubletau_35_mediso = 'trg_doubletau_35_mediso',
     doubletau_35_tightiso_tightid = 'trg_doubletau_35_tightiso_tightid',
     doubletau_40_mediso_tightid = 'trg_doubletau_40_mediso_tightid',
