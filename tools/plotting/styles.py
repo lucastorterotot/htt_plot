@@ -1,6 +1,6 @@
 import fnmatch
 
-from ROOT import TColor
+from ROOT import TColor, kBlack
 
 from cpyroot.tools.style import *
 
@@ -21,6 +21,8 @@ sDiboson = Style(markerColor=dibosoncol, markerSize=1, lineColor=1, fillColor=di
 ssingletop = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillStyle=1001)
 sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=1001)
 sdata = sData
+sunc = Style(fillColor=kBlack, fillStyle=3244)
+ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
 
 histPref = {
     'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
@@ -32,7 +34,12 @@ histPref = {
     'VV': {'style':sDiboson, 'layer':4, 'legend':'VV', 'stack': True},
     'data_obs': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
     'fakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
-    
+    'jetFakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
+    'VVL': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
+    'TTL': {'style':stt, 'layer':2, 'legend':'t#bar{t} #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
+    'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
+    'total_background': {'style':sunc, 'layer':1, 'legend':'systematic uncertainties', 'stack': False},
+    'signal_H600': {'style':ssig, 'layer':0, 'legend':'A #rightarrow #tau#tau (m_{A}= 600 GeV, tan#beta = 20)', 'stack': False},
 }
 
 histPref['W'] = histPref['WJ']
