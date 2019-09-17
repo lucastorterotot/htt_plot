@@ -63,6 +63,8 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
                 histname = histname.replace('down','Down')
             hist = component.histogram.Clone(histname)
             hist.SetMinimum(0.000001)
+            hist.SetBinContent(0,0)
+            hist.SetBinContent(hist.GetNbinsX()+1,0)
             hist.SetTitle(key)
             hist.Write()
             if systematic in syst_split_list:
