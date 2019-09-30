@@ -61,7 +61,7 @@ def project(comp):
     ''' fills a component histogram following its configuration file '''
     dataset = comp.cfg['dataset']
     var = comp.var
-    histo = TH1F(comp.name+dataset.name+var, comp.name+dataset.name, *comp.cfg['bins'])
-    dataset.tree.Project(comp.name+dataset.name+var, var, comp.cfg['cut'])
+    histo = TH1F(comp.name+dataset.name, comp.name+dataset.name, *comp.cfg['bins'])
+    dataset.tree.Project(comp.name+dataset.name, var, comp.cfg['cut'])
     histo.Scale(dataset.weight * comp.cfg['scale'])
     comp.histogram.Add(histo)

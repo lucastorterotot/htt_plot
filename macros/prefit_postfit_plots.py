@@ -11,7 +11,7 @@ cat_dict = {'tt_inclusive':'htt_tt_7_2017'}
 
 
 data_file = TFile('htt_tt.inputs_datacards_mt_tot.root')
-shapes_file = TFile('fitDiagnosticstest_1.root')
+shapes_file = TFile('fitDiagnosticstest_output.root')
 
 def plot(prefit=True,bonly=True):
     if prefit:
@@ -50,8 +50,12 @@ def plot(prefit=True,bonly=True):
             comp.var = 'mt_tot'
             comps.append(comp)
 
-        unvar_sig_gg = data_shape_dir.Get('ggH600')
-        unvar_sig_bb = data_shape_dir.Get('bbH600')
+        if prefit:
+            unvar_sig_gg = data_shape_dir.Get('ggH600')
+            unvar_sig_bb = data_shape_dir.Get('bbH600')
+        else:
+            unvar_sig_gg = shapes_dir.Get('ggH')
+            unvar_sig_bb = shapes_dir.Get('bbH')
         sig_hist = copy.copy(data_hist)
         sig_hist.SetName('signal_H600')
         for b in range(sig_hist.GetNbinsX()):
@@ -83,8 +87,8 @@ def plot(prefit=True,bonly=True):
             else:
                 outfilename = 'postfit_s_plots_{}'
         # plotter.write((outfilename+'.root').format(cat))
-        plotter.write((outfilename+'.pdf').format(cat))
-        # plotter.write((outfilename+'.png').format(cat))
+        # plotter.write((outfilename+'.pdf').format(cat))
+        plotter.write((outfilename+'.png').format(cat))
 
 plot(prefit=True,bonly=True)
 # plot(prefit=False,bonly=True)

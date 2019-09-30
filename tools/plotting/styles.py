@@ -21,7 +21,7 @@ sDiboson = Style(markerColor=dibosoncol, markerSize=1, lineColor=1, fillColor=di
 ssingletop = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillStyle=1001)
 sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=1001)
 sdata = sData
-sunc = Style(fillColor=kBlack, fillStyle=3244)
+sunc = Style(fillColor=17, fillStyle=3144)
 ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
 
 histPref = {
@@ -40,6 +40,7 @@ histPref = {
     'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
     'total_background': {'style':sunc, 'layer':1, 'legend':'systematic uncertainties', 'stack': False},
     'signal_H600': {'style':ssig, 'layer':0, 'legend':'A #rightarrow #tau#tau (m_{A}= 600 GeV, tan#beta = 20)', 'stack': False},
+    'EMB': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow embedded', 'stack': True},
 }
 
 histPref['W'] = histPref['WJ']

@@ -81,8 +81,8 @@ class Plotter(object):
         self.plot.DrawStack()
         if sys_error_hist:
             self.sys_error_hist = sys_error_hist
-            self.sys_error_hist.SetFillColor(kBlack)
-            self.sys_error_hist.SetFillStyle(3244)
+            self.sys_error_hist.SetFillColor(15)
+            self.sys_error_hist.SetFillStyle(3544)
             self.sys_error_hist.SetMarkerStyle(0)
             self.sys_error_hist.Draw('e2 same')
         
@@ -107,6 +107,8 @@ class Plotter(object):
         self.lumibox.AddText("#bf{41.5 fb^{-1}}")
         self.lumibox.Draw("same")
 
+        if xtitle == 'mt_tot':
+            xtitle = 'm_{T}^{tot}'
         if xtitle == 'm_{T}^{tot}':
             Xaxis.SetRangeUser(10,4000)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),

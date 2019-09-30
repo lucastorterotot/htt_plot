@@ -9,10 +9,10 @@ channel = 'tt'
 from htt_plot.channels_configs.htt_common import bins
 
 # variables
-from htt_plot.channels_configs.htt_common import variables, datacards_variables
+from htt_plot.channels_configs.htt_common import variables, datacards_variables, var_name_dict
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_dy_promptfakeleptons, cut_btag, cut_nobtag
+from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
 
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt > 40',
@@ -60,6 +60,10 @@ cut_triggers = cuts_triggers.any()
 
 basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()
 
+### CAREFUL HERE ONLY CHANGE TO TEST
+
+# basic_cuts = basic_cuts & Cut('j1_pt > 30 && j2_pt > 30')
+
 ## iso
 cuts_iso = Cuts(
     l1_VTight = 'l1_byVTightIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
@@ -71,6 +75,18 @@ cuts_iso = Cuts(
     l2_VLoose = 'l2_byVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
     l2_VVLoose = 'l2_byVVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
 )
+
+## cut embedding + no fakes (for MC)
+
+cut_embed = Cut('(l1_gen_match == 3 || l1_gen_match == 4 || l1_gen_match == 5) && (l2_gen_match == 3 || l2_gen_match == 4 || l2_gen_match == 5)')
+
+cut_not_embed = ~cut_embed
+
+cut_fakes = Cut('l1_gen_match==6 || l2_gen_match==6')
+
+cut_not_fakes = ~cut_fakes
+
+cut_not_fakes_not_embed = cut_not_embed & cut_not_fakes
 
 ## datacards
 cuts_datacards = Cuts(

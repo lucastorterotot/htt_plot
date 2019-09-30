@@ -33,12 +33,13 @@ types_dir = {
     'TTL' : ['mc_'],
     'VVL' : ['mc_'],
     'ZL' : ['mc_'],
-    'ggH200' : ['mc_'],
-    'bbH200' : ['mc_'],
-    'ggH600' : ['mc_'],
-    'bbH600' : ['mc_'],
     'jetFakes' : ['emb_','mc_']
     }
+
+for mass in [80,100,110,120,130,140,180,200,250,90,350,1600,1800,2000,300,400,450,600,700,800,900,1200,1400,1500,2300,2600,2900,3200]:
+    types_dir['ggH{}'.format(mass)] = ['mc_']
+    types_dir['bbH{}'.format(mass)] = ['mc_']
+
 
 def make_datacards(output_dir, channel, variable, components_dict, category='inclusive', systematics=['nominal']):
     '''This funciton aims at producing a root file containing all
@@ -49,7 +50,9 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
     rootfilename = '_'.join(['htt', channel+'.inputs', 'datacards', variable])
     rootfile = TFile('{}/{}.root'.format(output_dir, rootfilename), 'UPDATE')
     rootdirname = '_'.join([channels_names[channel], category])
-    rootdir = TDirectoryFile(rootdirname, rootdirname)
+    rootdir = rootfile.GetDirectory(rootdirname)
+    if not rootdir:
+        rootdir = TDirectoryFile(rootdirname, rootdirname)
     rootdir.cd()
     for systematic in systematics:
         for key, component in components_dict[systematic].iteritems():
@@ -61,6 +64,8 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
             else:
                 histname = histname.replace('up','Up')
                 histname = histname.replace('down','Down')
+            if rootdir.Get(histname):
+                continue
             hist = component.histogram.Clone(histname)
             hist.SetMinimum(0.000001)
             hist.SetBinContent(0,0)
