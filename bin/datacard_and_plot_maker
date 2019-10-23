@@ -18,7 +18,7 @@ parser.add_option("-q", "--dryrun", dest = "dry_run",
                   default=False,
                   help='Disables dask computing.')
 parser.add_option("-s", "--small", dest = "small_run",
-                  default=False,
+                  default=False, action='store_true',
                   help='Use smaller variables and systematics list to test computing.')
 
 (options,args) = parser.parse_args()
