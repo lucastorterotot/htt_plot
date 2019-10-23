@@ -58,7 +58,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()# test cuts_os
 
 ### CAREFUL HERE ONLY CHANGE TO TEST
 
@@ -78,7 +78,7 @@ cuts_iso = Cuts(
 
 ## cut embedding + no fakes (for MC)
 
-cut_embed = Cut('(l1_gen_match == 3 || l1_gen_match == 4 || l1_gen_match == 5) && (l2_gen_match == 3 || l2_gen_match == 4 || l2_gen_match == 5)')
+cut_embed = Cut('(l1_gen_match == 5) && (l2_gen_match == 5)')
 
 cut_not_embed = ~cut_embed
 

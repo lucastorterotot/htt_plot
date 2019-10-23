@@ -58,7 +58,7 @@ else:
 
 # mass points
 
-mass_points = [2300,2600,2900,3200]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
+mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
 
 cfg.datasets.signal_datasets = cfg.datasets.build_signals(mass_points)
 for sys, dataset_list in cfg.datasets.signal_datasets.iteritems() :
@@ -77,35 +77,38 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # cuts
-signal_region_MC = cut_signal & cfg.cut_not_fakes_not_embed
-signal_region_MC_nofakes_cut = signal_region_MC & ~cfg.cut_l1_fakejet & ~cfg.cut_l2_fakejet
+signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes
+signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes_not_embed
+signal_region_signalMC_cut = cut_signal
+
 
 l1_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
-l1_FakeFactorApplication_Region_genuinetauMC_cut = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet & cfg.cut_not_embed
-l1_FakeFactorApplication_Region_genuinetauMC_cut_embed = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet
+l1_FakeFactorApplication_Region_notjetfakes_cut = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet & cfg.cut_not_embed
+l1_FakeFactorApplication_Region_notjetfakes_cut_embed = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet
 
 l2_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
-l2_FakeFactorApplication_Region_genuinetauMC_cut = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_not_embed
-l2_FakeFactorApplication_Region_genuinetauMC_cut_embed = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet
+l2_FakeFactorApplication_Region_notjetfakes_cut = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_not_embed
+l2_FakeFactorApplication_Region_notjetfakes_cut_embed = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_embed
 
 #### cuts+weights
 signal_region = cut_signal * cfg.weights['weight']
-signal_region_Embedded = cut_signal * cfg.weights['embed']
-signal_region_MC = signal_region_MC * cfg.weights['weight'] #* cfg.weights['MC']
-signal_region_MC_nofakes_DY = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['DY'] weight already in base weight
-signal_region_MC_nofakes_TT = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['TT'] same
-signal_region_MC_nofakes_Embedded = signal_region_MC_nofakes_cut * cfg.weights['embed']
-signal_region_MC_nofakes = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']
-l1_FakeFactorApplication_Region = l1_FakeFactorApplication_Region_cut * cfg.weights['l1_fake'] * cfg.weights['weight']
-l2_FakeFactorApplication_Region = l2_FakeFactorApplication_Region_cut * cfg.weights['l2_fake'] * cfg.weights['weight']
-l1_FakeFactorApplication_Region_genuinetauMC_Embedded = l1_FakeFactorApplication_Region_genuinetauMC_cut_embed * cfg.weights['embed'] * cfg.weights['l1_fake']
-l2_FakeFactorApplication_Region_genuinetauMC_Embedded = l2_FakeFactorApplication_Region_genuinetauMC_cut_embed * cfg.weights['embed'] * cfg.weights['l2_fake']
-l1_FakeFactorApplication_Region_genuinetauMC = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l1_fake']
-l2_FakeFactorApplication_Region_genuinetauMC = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l2_fake']
-l1_FakeFactorApplication_Region_genuinetauMC_DY = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l1_fake']# * cfg.weights['DY'] 
-l2_FakeFactorApplication_Region_genuinetauMC_DY = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l2_fake']# * cfg.weights['DY'] 
-l1_FakeFactorApplication_Region_genuinetauMC_TT = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l1_fake']# * cfg.weights['TT']
-l2_FakeFactorApplication_Region_genuinetauMC_TT = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['l2_fake']# * cfg.weights['TT']
+signal_region_Embedded_nofakes = signal_region_Embed_nofakes * cfg.weights['embed']
+signal_region_MC_nofakes_noembed = signal_region_MC_nojetfakes_noembed_cut * cfg.weights['weight'] * cfg.weights['MC']
+signal_region_signalMC = signal_region_signalMC_cut * cfg.weights['weight'] * cfg.weights['MC']
+# signal_region_MC_nofakes_DY = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['DY'] weight already in base weight
+# signal_region_MC_nofakes_TT = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']# * cfg.weights['TT'] same
+# signal_region_MC_nofakes_Embedded = signal_region_MC_nofakes_cut * cfg.weights['embed']
+# signal_region_MC_nofakes = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC']
+l1_FakeFactorApplication_Region_data = l1_FakeFactorApplication_Region_cut * cfg.weights['l1_fake'] * cfg.weights['weight']
+l2_FakeFactorApplication_Region_data = l2_FakeFactorApplication_Region_cut * cfg.weights['l2_fake'] * cfg.weights['weight']
+l1_FakeFactorApplication_Region_notjetfakes_Embedded = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region_notjetfakes_Embedded = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * cfg.weights['l2_fake']
+l1_FakeFactorApplication_Region_notjetfakes_MC = l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region_notjetfakes_MC = l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l2_fake']
+# l1_FakeFactorApplication_Region_notjetfakes_DY = l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l1_fake']# * cfg.weights['DY'] 
+# l2_FakeFactorApplication_Region_notjetfakes_DY = l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l2_fake']# * cfg.weights['DY'] 
+# l1_FakeFactorApplication_Region_notjetfakes_TT = l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l1_fake']# * cfg.weights['TT']
+# l2_FakeFactorApplication_Region_notjetfakes_TT = l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l2_fake']# * cfg.weights['TT']
 
 from htt_plot.systematics import sys_dict_samples
 if options.small_run:
@@ -114,39 +117,39 @@ if options.small_run:
     }
 for key, item in sys_dict_samples.iteritems():
     if 'signal' in item['processes']:
-        item['signal_cut'] = signal_region
+        item['signal_cut'] = signal_region_signalMC
     if 'DY' in item['processes']:
-        item['DY_cut'] = signal_region_MC_nofakes_DY 
-        item['DY_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_DY
-        item['DY_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_DY
+        item['DY_cut'] = signal_region_MC_nofakes_noembed#signal_region_MC_nofakes_DY 
+        item['DY_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_MC#l1_FakeFactorApplication_Region_notjetfakes_DY
+        item['DY_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_MC#l2_FakeFactorApplication_Region_notjetfakes_DY
     if 'TT' in item['processes']:
-        item['TT_cut'] = signal_region_MC_nofakes_TT
-        item['TT_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_TT
-        item['TT_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_TT
+        item['TT_cut'] = signal_region_MC_nofakes_noembed#signal_region_MC_nofakes_TT
+        item['TT_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_MC#l1_FakeFactorApplication_Region_notjetfakes_TT
+        item['TT_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_MC#l2_FakeFactorApplication_Region_notjetfakes_TT
     if any([proc in item['processes'] for proc in ['all_MC','W']]):
-        item['bkg_cut'] = signal_region_MC_nofakes
-        item['bkg_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC
-        item['bkg_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC
+        item['bkg_cut'] = signal_region_MC_nofakes_noembed#signal_region_MC_nofakes
+        item['bkg_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_MC#l1_FakeFactorApplication_Region_notjetfakes
+        item['bkg_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_MC#l2_FakeFactorApplication_Region_notjetfakes
     if 'Embedded' in item['processes']:
-        item['Embedded_cut'] = signal_region_MC_nofakes_Embedded
-        item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_Embedded
-        item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_Embedded
+        item['Embedded_cut'] = signal_region_Embedded_nofakes#signal_region_MC_nofakes_Embedded
+        item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_Embedded#l1_FakeFactorApplication_Region_notjetfakes_Embedded
+        item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_Embedded#l2_FakeFactorApplication_Region_notjetfakes_Embedded
         if key=='Embedding_tracking_1prong_up':
-            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_up']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l1_fake']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l2_fake']
+            item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_1prong_up'] #signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up']# l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up']#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_up'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_1prong_down':
-            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_down']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l1_fake']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l2_fake']
+            item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_1prong_down'] #signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_1prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down']#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down']#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_1prong_down'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_3prong_up':
-            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_up']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l1_fake']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l2_fake']
+            item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_3prong_up'] #signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up']#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up']#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_up'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_3prong_down':
-            item['Embedded_cut'] = signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_down']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l1_fake']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
+            item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_3prong_down'] #signal_region_MC_nofakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * cfg.weights['embed_track_3prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down']#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down']#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
 
 
 if options.small_run:
@@ -164,39 +167,40 @@ for up_down in up_downs:
         cfg.datasets.DY_datasets[sys_name] = cfg.datasets.DY_datasets['nominal']
         cfg.datasets.TT_datasets[sys_name] = cfg.datasets.TT_datasets['nominal']
         cfg.datasets.Diboson_datasets[sys_name] = cfg.datasets.Diboson_datasets['nominal']
+        cfg.datasets.EWK_datasets[sys_name] = cfg.datasets.Diboson_datasets['nominal']
         cfg.datasets.singleTop_datasets[sys_name] = cfg.datasets.singleTop_datasets['nominal']
         cfg.datasets.WJ_datasets[sys_name] = cfg.datasets.WJ_datasets['nominal']
         cfg.datasets.Embedded_datasets[sys_name] = cfg.datasets.Embedded_datasets['nominal']
         sys_dict_weights[sys_name] = {'processes': ['all_MC','Embedded','data'],
-                                      'DY_cut': signal_region_MC_nofakes_DY,
-                                      'DY_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
-                                      'DY_l2fakecut': l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
-                                      'TT_cut': signal_region_MC_nofakes_TT,
-                                      'TT_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
-                                      'TT_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
-                                      'bkg_cut': signal_region_MC_nofakes,
-                                      'bkg_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
-                                      'bkg_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
-                                      'Embedded_cut': signal_region_MC_nofakes_Embedded,
-                                      'Embedded_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
-                                      'Embedded_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_cut * cfg.weights['weight'] * cfg.weights['embed'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
+                                      'DY_cut': signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes_DY,
+                                      'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
+                                      'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
+                                      'TT_cut': signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes_TT,
+                                      'TT_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
+                                      'TT_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
+                                      'bkg_cut': signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes,
+                                      'bkg_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
+                                      'bkg_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
+                                      'Embedded_cut': signal_region_Embedded_nofakes,#signal_region_MC_nofakes_Embedded,
+                                      'Embedded_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),#l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
+                                      'Embedded_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),#l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['embed'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down))),
                                       'l1fakecut': l1_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut('0.5*l1_fakeweight_{}'.format(syst.format(up_down))),
                                       'l2fakecut': l2_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut('0.5*l2_fakeweight_{}'.format(syst.format(up_down)))}
     sys_dict_weights['top_pt_reweighting_{}'.format(up_down)] = {'processes':['TT'],
-                                                                 'TT_cut': signal_region_MC_nofakes_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
-                                                                 'TT_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
-                                                                 'TT_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)]}
+                                                                 'TT_cut': signal_region_MC_nofakes_noembed *cfg.weights['TT_pTrweigh_{}'.format(up_down)], #signal_region_MC_nofakes_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
+                                                                 'TT_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_MC * cfg.weights['TT_pTrweigh_{}'.format(up_down)],#l1_FakeFactorApplication_Region_notjetfakes_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)],
+                                                                 'TT_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_MC * cfg.weights['TT_pTrweigh_{}'.format(up_down)]}#l2_FakeFactorApplication_Region_notjetfakes_TT * cfg.weights['TT_pTrweigh_{}'.format(up_down)]}
     cfg.datasets.TT_datasets['top_pt_reweighting_{}'.format(up_down)] = cfg.datasets.TT_datasets['nominal']
     sys_dict_weights['dy_pt_reweighting_{}'.format(up_down)] = {'processes':['DY'],
-                                                                 'DY_cut': signal_region_MC_nofakes_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
-                                                                 'DY_l1fakecut': l1_FakeFactorApplication_Region_genuinetauMC_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
-                                                                 'DY_l2fakecut': l2_FakeFactorApplication_Region_genuinetauMC_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)]}
+                                                                 'DY_cut': signal_region_MC_nofakes_noembed *cfg.weights['DY_pTrweigh_{}'.format(up_down)],#signal_region_MC_nofakes_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
+                                                                 'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_MC * cfg.weights['DY_pTrweigh_{}'.format(up_down)],#l1_FakeFactorApplication_Region_notjetfakes_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)],
+                                                                 'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_MC * cfg.weights['DY_pTrweigh_{}'.format(up_down)]}#l2_FakeFactorApplication_Region_notjetfakes_DY * cfg.weights['DY_pTrweigh_{}'.format(up_down)]}
     cfg.datasets.DY_datasets['dy_pt_reweighting_{}'.format(up_down)] = cfg.datasets.DY_datasets['nominal']
     
 
 for key, item in sys_dict_weights.iteritems():
     if 'all_MC' in item['processes']:
-        item['processes'].extend(['DY','TT','Diboson','singleTop','W'])
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W','EWK'])
         
 sys_dict = sys_dict_samples.copy()
 sys_dict.update(sys_dict_weights)
@@ -222,8 +226,8 @@ for variable in variables:
 
     #signal
     for mass in mass_points:#,'300','400',,'700','800','900'
-        add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['ggH{}'.format(mass)],variable,signal_region,bins)
-        add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['bbH{}'.format(mass)],variable,signal_region,bins)
+        add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['ggH{}'.format(mass)],variable,signal_region_signalMC,bins)
+        add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['bbH{}'.format(mass)],variable,signal_region_signalMC,bins)
     
     #DY
     add_processes_per_component(cfgs,
@@ -231,10 +235,10 @@ for variable in variables:
                                 ['ZTT','ZL','ZJ'],
                                 cfg.datasets.DY_datasets['nominal'],
                                 variable,
-                                signal_region_MC_nofakes_DY,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes_DY,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC_DY,
-                                l2_FakeFactorApplication_Region_genuinetauMC_DY,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes_DY,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes_DY,
                                 bins,
                                 mergedict = {'ZLL':['ZL','ZJ'],
                                              'DY':['ZLL','ZTT']})
@@ -245,10 +249,10 @@ for variable in variables:
                                 ['TTT','TTJ','TTL'],
                                 cfg.datasets.TT_datasets['nominal'],
                                 variable,
-                                signal_region_MC_nofakes_TT,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes_TT,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC_TT,
-                                l2_FakeFactorApplication_Region_genuinetauMC_TT,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes_TT,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes_TT,
                                 bins,
                                 mergedict = {'TT':['TTT','TTJ']})
 
@@ -258,12 +262,25 @@ for variable in variables:
                                 ['Diboson_VVT','Diboson_VVJ','Diboson_VVL'],
                                 cfg.datasets.Diboson_datasets['nominal'],
                                 variable,
-                                signal_region_MC_nofakes,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC,
-                                l2_FakeFactorApplication_Region_genuinetauMC,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes,
                                 bins,
                                 mergedict = {'Diboson':['Diboson_VVT','Diboson_VVJ']})
+    
+    #EWK
+    add_processes_per_component(cfgs,
+                                'EWK',
+                                ['EWK_VVT','EWK_VVJ','EWK_VVL'],
+                                cfg.datasets.EWK_datasets['nominal'],
+                                variable,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes,
+                                cfg.cuts_datacards,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes,
+                                bins,
+                                mergedict = {'EWK':['EWK_VVT','EWK_VVJ']})
 
     #singleTop
     add_processes_per_component(cfgs,
@@ -271,17 +288,17 @@ for variable in variables:
                                 ['singleTop_VVT','singleTop_VVJ','singleTop_VVL'],
                                 cfg.datasets.singleTop_datasets['nominal'],
                                 variable,
-                                signal_region_MC_nofakes,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC,
-                                l2_FakeFactorApplication_Region_genuinetauMC,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes,
                                 bins,
                                 mergedict = {'singleTop':['singleTop_VVT','singleTop_VVJ']})
     
     #VV
-    cfgs['VVL'] = merge('VVL', [cfgs['Diboson_VVL'],cfgs['singleTop_VVL']])
-    cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT']])
-    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVJ']])
+    cfgs['VVL'] = merge('VVL', [cfgs['Diboson_VVL'],cfgs['singleTop_VVL'],cfgs['EWK_VVL']])
+    cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT'],cfgs['EWK_VVL']])
+    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVJ'],cfgs['EWK_VVL']])
     cfgs['VV'] = merge('VV', [cfgs['VVJ'],cfgs['VVT']])
     
     #W
@@ -290,10 +307,10 @@ for variable in variables:
                                 ['WJ'],
                                 cfg.datasets.WJ_datasets['nominal'],
                                 variable,
-                                signal_region_MC_nofakes,
+                                signal_region_MC_nofakes_noembed,#signal_region_MC_nofakes,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC,
-                                l2_FakeFactorApplication_Region_genuinetauMC,
+                                l1_FakeFactorApplication_Region_notjetfakes_MC,#l1_FakeFactorApplication_Region_notjetfakes,
+                                l2_FakeFactorApplication_Region_notjetfakes_MC,#l2_FakeFactorApplication_Region_notjetfakes,
                                 bins,
                                 mergedict = {'W':['WJ']})
     
@@ -305,8 +322,8 @@ for variable in variables:
                                 variable,
                                 signal_region,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region,
-                                l2_FakeFactorApplication_Region,
+                                l1_FakeFactorApplication_Region_data,#l1_FakeFactorApplication_Region,
+                                l2_FakeFactorApplication_Region_data,#l2_FakeFactorApplication_Region,
                                 bins,
                                 mergedict = {'data_obs':['data']})
         
@@ -316,10 +333,10 @@ for variable in variables:
                                 ['embed'],
                                 cfg.datasets.Embedded_datasets['nominal'],
                                 variable,
-                                signal_region_Embedded,
+                                signal_region_Embedded_nofakes,#signal_region_Embedded,
                                 cfg.cuts_datacards,
-                                l1_FakeFactorApplication_Region_genuinetauMC_Embedded,
-                                l2_FakeFactorApplication_Region_genuinetauMC_Embedded,
+                                l1_FakeFactorApplication_Region_notjetfakes_Embedded,#l1_FakeFactorApplication_Region_notjetfakes_Embedded,
+                                l2_FakeFactorApplication_Region_notjetfakes_Embedded,#l2_FakeFactorApplication_Region_notjetfakes_Embedded,
                                 bins,
                                 mergedict = {'Embedded':['embed']})
 
@@ -328,6 +345,7 @@ for variable in variables:
                                     cfgs['fakes_DY'],
                                     cfgs['fakes_TT'],
                                     cfgs['fakes_Diboson'],
+                                    cfgs['fakes_EWK'],
                                     cfgs['fakes_singleTop'],
                                     cfgs['fakes_W'],
                                     cfgs['fakes_Embedded']])
@@ -336,6 +354,7 @@ for variable in variables:
                             cfgs['TT'],
                             cfgs['singleTop'],
                             cfgs['Diboson'],
+                            cfgs['EWK'],
                             cfgs['W'],
                             cfgs['data_obs'],
                             cfgs['Embedded'],
@@ -411,6 +430,20 @@ for variable in datacards_variables:
                                         sys_dict[sys]['bkg_l2fakecut'],
                                         bins,
                                         mergedict = {'Diboson':['Diboson_VVT','Diboson_VVJ']})
+        
+        #EWK
+        if 'EWK' in sys_dict[sys]['processes']:
+            add_processes_per_component(cfgs,
+                                        'EWK',
+                                        ['EWK_VVT','EWK_VVJ'],
+                                        cfg.datasets.EWK_datasets[sys],
+                                        variable,
+                                        sys_dict[sys]['bkg_cut'],
+                                        cfg.cuts_datacards,
+                                        sys_dict[sys]['bkg_l1fakecut'],
+                                        sys_dict[sys]['bkg_l2fakecut'],
+                                        bins,
+                                        mergedict = {'EWK':['EWK_VVT','EWK_VVJ']})
 
         #singleTop
         if 'singleTop' in sys_dict[sys]['processes']:
@@ -427,9 +460,9 @@ for variable in datacards_variables:
                                         mergedict = {'singleTop':['singleTop_VVT','singleTop_VVJ']})
     
         #VV
-        if any([name in sys_dict[sys]['processes'] for name in ['Diboson','singleTop']]):
-            cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT']])
-            cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVT']])
+        if any([name in sys_dict[sys]['processes'] for name in ['Diboson','singleTop','EWK']]):
+            cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT'],cfgs['EWK_VVT']])
+            cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVT'],cfgs['EWK_VVT']])
             cfgs['VV'] = merge('VV', [cfgs['VVJ'],cfgs['VVT']])
     
         #W
@@ -475,11 +508,12 @@ for variable in datacards_variables:
                                         mergedict = {'Embedded':['embed']})
 
         # fakes
-        if any([name in sys_dict[sys]['processes'] for name in ['data_obs','DY','TT','Diboson','singleTop','W','Embedded']]):
+        if any([name in sys_dict[sys]['processes'] for name in ['data_obs','DY','TT','Diboson','singleTop','W','Embedded','EWK']]):
             cfgs['fakes'] = merge('fakes', [cfgs['fakes_data_obs'],
                                             cfgs['fakes_DY'],
                                             cfgs['fakes_TT'],
                                             cfgs['fakes_Diboson'],
+                                            cfgs['fakes_EWK'],
                                             cfgs['fakes_singleTop'],
                                             cfgs['fakes_W'],
                                             cfgs['fakes_Embedded']])

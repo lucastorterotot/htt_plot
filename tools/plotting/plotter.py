@@ -114,14 +114,14 @@ class Plotter(object):
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
             Yaxis.SetRangeUser(1,ymax*2)
-            self.plot.Blind(280,4000,False)
+            self.plot.Blind(130,4000,False)
             self.pad.SetLogx()
 
 
         if makecanvas:
             self.padr.cd()
         self.ratioplot = copy.deepcopy(self.plot)
-        self.ratioplot.DrawDataOverMCMinus1(-0.5,0.5)
+        self.ratioplot.DrawDataOverMCMinus1(-0.6,0.6)
         if sys_error_hist:
             self.sys_error_hist_rel = copy.copy(self.sys_error_hist)
             for b in range(self.sys_error_hist.GetNbinsX()):

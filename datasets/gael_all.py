@@ -137,6 +137,13 @@ Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688))
 #     treename = treename
 # )
 
+##### EWK
+
+EWK_datasets = {'nominal':[]}
+EWK_datasets['nominal'].append(fetch_dataset('WToLNu_M50_Plus2J',4358697,29.59))
+EWK_datasets['nominal'].append(fetch_dataset('WToLNu_M50_Minus2J',4385142,23.24))
+EWK_datasets['nominal'].append(fetch_dataset('ZToLL_M50',952504,4.321))
+EWK_datasets['nominal'].append(fetch_dataset('ZToNuNu',2949960,10.66))
 
 ##### Embedded
 
@@ -173,7 +180,15 @@ for sys in sys_dict_samples:
         TT_datasets[sys].append(fetch_dataset('TTHad_pow',41729120,377.96,sys=sys))
         TT_datasets[sys].append(fetch_dataset('TTLep_pow',9000000,88.29,sys=sys))
         TT_datasets[sys].append(fetch_dataset('TTSemi_pow',43732445,365.35,sys=sys))
-    
+
+    # EWK
+    if 'EWK' in sys_dict_samples[sys]['processes']
+        EWK_datasets[sys] = []
+        EWK_datasets[sys].append(fetch_dataset('WToLNu_M50_Plus2J',4358697,29.59,sys=sys))
+        EWK_datasets[sys].append(fetch_dataset('WToLNu_M50_Minus2J',4385142,23.24,sys=sys))
+        EWK_datasets[sys].append(fetch_dataset('ZToLL_M50',952504,4.321,sys=sys))
+        EWK_datasets[sys].append(fetch_dataset('ZToNuNu',2949960,10.66,sys=sys))
+
     ##### Single top
     if 'singleTop' in sys_dict_samples[sys]['processes']:
         singleTop_datasets[sys] = []
@@ -263,6 +278,36 @@ nevents_dict = {
     'bbH3200': 200000,
     }
 
+nevents_dict_amcatnlobbH = {
+    'bbH80': 2476000,
+    'bbH90': 2464000,
+    'bbH110': 2220000,
+    'bbH120': 2488000,
+    'bbH130': 2450000,
+    'bbH140': 2374000,
+    'bbH180': 2449000,
+    'bbH200': 990000,
+    'bbH250': 960000,
+    'bbH300': 995000,
+    'bbH350': 875000,
+    'bbH400': 500000,
+    'bbH450': 491000,
+    'bbH500': 491126,
+    'bbH600': 492000,
+    'bbH700': 485000,
+    'bbH800': 483408,
+    'bbH900': 485000,
+    'bbH1200': 496000,
+    'bbH1400': 500000,
+    'bbH1600': 468000,
+    'bbH1800': 486000,
+    'bbH2000': 476000,
+    'bbH2300': 494928,
+    'bbH2600': 476000,
+    'bbH2900': 500000,
+    'bbH3200': 500000
+    }
+
 def build_signals(mass_points):
                           
     signal_datasets = {'nominal':{}}
@@ -270,7 +315,7 @@ def build_signals(mass_points):
     for mass in mass_points:
         print mass
         signal_datasets['nominal']['ggH{}'.format(mass)] = fetch_dataset('HiggsSUSYGG{}'.format(mass),nevents_dict['ggH{}'.format(mass)],1.)
-        signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1.)
+        signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1.)
 
         
     for sys in sys_dict_samples:
@@ -278,13 +323,13 @@ def build_signals(mass_points):
         for mass in mass_points:
             if 'signal' in sys_dict_samples[sys]['processes']:
                 signal_datasets[sys]['ggH{}'.format(mass)] = fetch_dataset('HiggsSUSYGG{}'.format(mass),nevents_dict['ggH{}'.format(mass)],1.,sys=sys)
-                signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1.,sys=sys)
+                signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1.,sys=sys)
 
     return signal_datasets
 
 ## lumi weighting
 
-for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets]:
+for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets]:
     for sys, dataset_list in ds_type.iteritems() :
         for dataset in dataset_list:
             dataset.compute_weight(data_lumi)
