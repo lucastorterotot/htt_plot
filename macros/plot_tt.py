@@ -135,6 +135,7 @@ def write_plots(plotter, variables, output_dir):
         plotter.draw(var, 'Number of events')
         plotter.write('{}/{}.png'.format(output_dir,var))
         plotter.write('{}/{}.tex'.format(output_dir,var))
+        plotter.write('{}/{}.root'.format(output_dir,var))
         print plotter.plot
 
 writter = delayed(write_plots)(plotter, variables, output_dir)

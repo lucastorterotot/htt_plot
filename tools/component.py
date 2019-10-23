@@ -2,6 +2,7 @@ from ROOT import TH1F
 import copy
 from itertools import count
 
+
 class Component(object):
      ''' Python wrapper for ROOT histograms. Based on a Component_cfg object,
      this gives access to a histogram. Shortcuts for the name and the variable
@@ -15,7 +16,7 @@ class Component(object):
           self.cfg = component_cfg
           self.name = self.cfg['name']
           self.var = self.cfg['variable']
-          TH1F_str = '_'.join([self.name, self.var, str(self.id)])
+          TH1F_str = '_'.join([self.name, str(self.id)])
           self.histogram = TH1F(TH1F_str, TH1F_str, *self.cfg['bins'])
           
      def Clone(self, name):
@@ -23,11 +24,20 @@ class Component(object):
           new = copy.copy(self)
           new.name = name
           new.id = next(self._ids)
-          TH1F_str = '_'.join([new.name, new.var, str(new.id)])
+          TH1F_str = '_'.join([new.name, str(new.id)])
           new.histogram = self.histogram.Clone(TH1F_str)
           new.histogram.SetTitle(TH1F_str)
           return new
+
+class Hist_Component(Component):
+     
+     def __init__(self,hist):
+          self.id = next(self._ids)
+          self.name = hist.GetName()
+          self.histogram = hist
           
+          
+     
 class Component_cfg(dict):
      defaults = {
           'cut' : '1',

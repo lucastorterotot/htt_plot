@@ -9,10 +9,10 @@ channel = 'tt'
 from htt_plot.channels_configs.htt_common import bins
 
 # variables
-from htt_plot.channels_configs.htt_common import variables, datacards_variables
+from htt_plot.channels_configs.htt_common import variables, datacards_variables, var_name_dict
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_dy_promptfakeleptons, cut_btag, cut_nobtag
+from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
 
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt > 40',
@@ -41,9 +41,9 @@ cuts_against_leptons = Cuts(
 
 cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() #& cut_mt_tot
 
+#singletau = 'trg_singletau',
 ## triggers
 cuts_triggers = Cuts(
-    singletau = 'trg_singletau',
     doubletau_35_mediso = 'trg_doubletau_35_mediso',
     doubletau_35_tightiso_tightid = 'trg_doubletau_35_tightiso_tightid',
     doubletau_40_mediso_tightid = 'trg_doubletau_40_mediso_tightid',
@@ -58,7 +58,11 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()# test cuts_os
+
+### CAREFUL HERE ONLY CHANGE TO TEST
+
+# basic_cuts = basic_cuts & Cut('j1_pt > 30 && j2_pt > 30')
 
 ## iso
 cuts_iso = Cuts(
@@ -71,6 +75,18 @@ cuts_iso = Cuts(
     l2_VLoose = 'l2_byVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
     l2_VVLoose = 'l2_byVVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
 )
+
+## cut embedding + no fakes (for MC)
+
+cut_embed = Cut('(l1_gen_match == 5) && (l2_gen_match == 5)')
+
+cut_not_embed = ~cut_embed
+
+cut_fakes = Cut('l1_gen_match==6 || l2_gen_match==6')
+
+cut_not_fakes = ~cut_fakes
+
+cut_not_fakes_not_embed = cut_not_embed & cut_not_fakes
 
 ## datacards
 cuts_datacards = Cuts(
@@ -88,7 +104,7 @@ cuts_datacards = Cuts(
     WJ = '1',
     jetFakes = '1',
     data = '1',
-    embed = '1',
+    embed = 'l1_gen_match == 5 && l2_gen_match == 5',
 )
 cuts_datacards['TTL'] = cuts_datacards['ZL']
 cuts_datacards['Diboson_VVL'] = cuts_datacards['ZL']

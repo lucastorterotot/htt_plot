@@ -32,23 +32,21 @@ def efficiency(name):
         njobs = 99
     return float(nchunks)/njobs
 
-def fetch_dataset(sample_name,n_events_gen=None,xs=None,sys='nominal'):
+def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',sys='nominal'):
     '''returns a dataset created using the db'''
     if 'Embedding_tracking' in sys:
         sys = 'nominal'
-    if n_events_gen==None and xs==None and not ('Embedded' in sample_name):
+    if n_events_gen==None and xs==None and not ('Embedded' in sample_name) and not ('SUSY' in sample_name):
         sys = ''
     infos = dsdb.find('se', {'sample':sample_name,
-                        'sample_version':{'$regex':'.*{}$'.format(sys)}})
+                        'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
     if not infos:
         if sys!='nominal':
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
             return fetch_dataset(sample_name,n_events_gen,xs,'nominal')
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
-    if len(infos)> 1 and sample_name == 'Embedded2017B_tt':
+    if len(infos)> 1 and sample_name == 'Embedded2017B_tt' and sys=='TES_promptEle_1prong0pi0_down':
         infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
-        if len(infos)> 1:
-            import pdb;pdb.set_trace()
     try:
         info = max(infos, key=lambda info: info['sub_date'])
         if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow']:
@@ -63,7 +61,8 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,sys='nominal'):
     except KeyError:
         info= infos[0]
         print 'sample {} version {} not fully processed!'.format(info['name'],info['sample_version'])
-        newinfo = dsdb.find('se', {'sample':sample_name, 'sample_version':{'$regex':'.*{}$'.format('nominal')}})[0]
+        newinfos = dsdb.find('se', {'sample':sample_name, 'sample_version':{'$regex':'.*{}.*{}$'.format(channel,'nominal')}})
+        newinfo = newinfos[0]
         basedir = newinfo['fakes']['replicas']['lyovis10']['dir']
         if n_events_gen:
             n_events_gen = n_events_gen*efficiency(newinfo['name'])

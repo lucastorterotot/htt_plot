@@ -6,20 +6,44 @@ from htt_plot.tools.cut import Cut, Cuts
 
 # binning
 from array import array
+
+var_name_dict = {'sqrt((l1_pt+l2_pt)**2-(l1_pt*cos(l1_phi)+l2_pt*cos(l2_phi))**2-(l1_pt*sin(l1_phi)+l2_pt*sin(l2_phi))**2)':'l1_l2_mt',
+                 'sqrt(2*l1_pt*l2_pt*(1-cos(l1_phi-l2_phi)))':'l1_l2_mt_bis'}
+
 bins = {
-    'l1_eta' : (50, -2.5, 2.5),
-    'l1_pt'  : (32, 0., 160.),
-    'l2_eta' : (50, -2.5, 2.5),
-    'l2_pt'  : (32, 0., 160.),
-    'met'  : (32, 0., 160.),
-    'mt_tot' : (29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700])),#,900,4000
-    'm_vis'   : (32, 0., 200.)
+    # 'l1_eta' : (50, -2.5, 2.5),
+    # 'l1_phi' : (40, -4, 4),
+    # 'l1_pt'  : (40, 0., 600),
+    # 'l2_eta' : (50, -2.5, 2.5),
+    # 'l2_phi' : (40, -4, 4),
+    # 'l2_pt'  : (40, 0., 600),
+    # 'j1_pt'  : (60, 0., 600.),
+    # 'j2_pt'  : (60, 0., 600.),
+    # 'j2_eta' : (50, -2.5, 2.5),
+    # 'j1_eta' : (50, -2.5, 2.5),
+    # 'n_jets_pt20' : (20, 0, 20),
+    # 'b1_pt'  : (30, 0., 600.),
+    # 'b2_pt'  : (30, 0., 600.),
+    # 'b1_eta' : (20, -2.5, 2.5),
+    # 'b2_eta' : (20, -2.5, 2.5),
+    # 'met'  : (60, 0., 600),
+    # 'metphi'  : (30,-4,4),
+    'mt_tot' : (31, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000])),
+    # 'mt_tot' : (35, 0, 700),
+    # 'm_vis'   : (80,0,800),
+    # 'l1_mt'   : (60,0,600),
+    # 'l2_mt'   : (60,0,600),
+    # # 'pt_tt'   : (60,0,600),
+    # 'l1_gen_match' : (8,0,8),
+    # 'l2_gen_match' : (8,0,8),
+    # 'sqrt((l1_pt+l2_pt)**2-(l1_pt*cos(l1_phi)+l2_pt*cos(l2_phi))**2-(l1_pt*sin(l1_phi)+l2_pt*sin(l2_phi))**2)'   : (60,0,600),
+    # 'sqrt(2*l1_pt*l2_pt*(1-cos(l1_phi-l2_phi)))'   : (60,0,1000)
 }
 
 # variables
 variables = bins.keys()
 datacards_variables = ['mt_tot']
-#variables = datacards_variables # just for testing
+# variables = datacards_variables # just for testing
 
 # processes
 datacard_processes = ['ZTT','ZL','ZJ','ZLL','TTT','TTJ','TT','VVT','VVJ','VV','W','jetFakes','data_obs','embedded']
@@ -49,6 +73,7 @@ cuts_vetoes = Cuts(
 cut_l1_fakejet = Cut('l1_gen_match==6')
 cut_l2_fakejet = Cut('l2_gen_match==6')
 
+
 cut_os = Cut('l1_q != l2_q')
 cut_ss = ~cut_os
 
@@ -76,11 +101,14 @@ weights = Cuts(
     TT = 'weight_top',
     TT_pTrweigh_up = '(1+(weight_top-1)*2)/(weight_top)',
     TT_pTrweigh_down = '(1+(weight_top-1)*0)/(weight_top)',
-    embed = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * weight_embed_track_l1 * weight_embed_track_l2',
-    embed_track_1prong_up = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.983+(l1_decay_mode==1)*0.983*1.065+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.983+(l2_decay_mode==1)*0.983*1.065+(l2_decay_mode==10)*0.975*0.975*0.975)',
-    embed_track_1prong_down = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.967+(l1_decay_mode==1)*0.967*1.038+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.967+(l2_decay_mode==1)*0.967*1.038+(l2_decay_mode==10)*0.975*0.975*0.975)',
-    embed_track_3prong_up = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.983*0.983*0.983) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.983*0.983*0.983)',
-    embed_track_3prong_down = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.967*0.967*0.967) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.967*0.967*0.967)',
+    embed = 'weight_generator * weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_track_l1 * weight_embed_track_l2 * (0.18321*(l1_pt>=30 && l1_pt<35) + 0.53906*(l1_pt>=35 && l1_pt<40) + 0.63658*(l1_pt>=40 && l1_pt<45) + 0.73152*(l1_pt>=45 && l1_pt<50) + 0.79002*(l1_pt>=50 && l1_pt<60) + 0.84666*(l1_pt>=60 && l1_pt<80) + 0.84919*(l1_pt>=80 && l1_pt<100) + 0.86819*(l1_pt>=100 && l1_pt<150) + 0.88206*(l1_pt>=150 && l1_pt<200) + (l1_pt>=200)) * (0.18321*(l2_pt>=30 && l2_pt<35) + 0.53906*(l2_pt>=35 && l2_pt<40) + 0.63658*(l2_pt>=40 && l2_pt<45) + 0.73152*(l2_pt>=45 && l2_pt<50) + 0.79002*(l2_pt>=50 && l2_pt<60) + 0.84666*(l2_pt>=60 && l2_pt<80) + 0.84919*(l2_pt>=80 && l2_pt<100) + 0.86819*(l2_pt>=100 && l2_pt<150) + 0.88206*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))',
+    # embed = 'weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * weight_embed_DoubleTauHLT_eff_l1 * weight_embed_DoubleTauHLT_eff_l2 * weight_embed_track_l1 * weight_embed_track_l2',
+    embed_track_1prong_up = 'weight_generator * weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * ((l1_decay_mode==0)*0.983+(l1_decay_mode==1)*0.983*1.065+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.983+(l2_decay_mode==1)*0.983*1.065+(l2_decay_mode==10)*0.975*0.975*0.975) * (0.18321*(l1_pt>=30 && l1_pt<35) + 0.53906*(l1_pt>=35 && l1_pt<40) + 0.63658*(l1_pt>=40 && l1_pt<45) + 0.73152*(l1_pt>=45 && l1_pt<50) + 0.79002*(l1_pt>=50 && l1_pt<60) + 0.84666*(l1_pt>=60 && l1_pt<80) + 0.84919*(l1_pt>=80 && l1_pt<100) + 0.86819*(l1_pt>=100 && l1_pt<150) + 0.88206*(l1_pt>=150 && l1_pt<200) + (l1_pt>=200)) * (0.18321*(l2_pt>=30 && l2_pt<35) + 0.53906*(l2_pt>=35 && l2_pt<40) + 0.63658*(l2_pt>=40 && l2_pt<45) + 0.73152*(l2_pt>=45 && l2_pt<50) + 0.79002*(l2_pt>=50 && l2_pt<60) + 0.84666*(l2_pt>=60 && l2_pt<80) + 0.84919*(l2_pt>=80 && l2_pt<100) + 0.86819*(l2_pt>=100 && l2_pt<150) + 0.88206*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))',
+    embed_track_1prong_down = 'weight_generator * weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * ((l1_decay_mode==0)*0.967+(l1_decay_mode==1)*0.967*1.038+(l1_decay_mode==10)*0.975*0.975*0.975) * ((l2_decay_mode==0)*0.967+(l2_decay_mode==1)*0.967*1.038+(l2_decay_mode==10)*0.975*0.975*0.975) * (0.18321*(l1_pt>=30 && l1_pt<35) + 0.53906*(l1_pt>=35 && l1_pt<40) + 0.63658*(l1_pt>=40 && l1_pt<45) + 0.73152*(l1_pt>=45 && l1_pt<50) + 0.79002*(l1_pt>=50 && l1_pt<60) + 0.84666*(l1_pt>=60 && l1_pt<80) + 0.84919*(l1_pt>=80 && l1_pt<100) + 0.86819*(l1_pt>=100 && l1_pt<150) + 0.88206*(l1_pt>=150 && l1_pt<200) + (l1_pt>=200)) * (0.18321*(l2_pt>=30 && l2_pt<35) + 0.53906*(l2_pt>=35 && l2_pt<40) + 0.63658*(l2_pt>=40 && l2_pt<45) + 0.73152*(l2_pt>=45 && l2_pt<50) + 0.79002*(l2_pt>=50 && l2_pt<60) + 0.84666*(l2_pt>=60 && l2_pt<80) + 0.84919*(l2_pt>=80 && l2_pt<100) + 0.86819*(l2_pt>=100 && l2_pt<150) + 0.88206*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))',
+    embed_track_3prong_up = 'weight_generator * weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.983*0.983*0.983) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.983*0.983*0.983) * (0.18321*(l1_pt>=30 && l1_pt<35) + 0.53906*(l1_pt>=35 && l1_pt<40) + 0.63658*(l1_pt>=40 && l1_pt<45) + 0.73152*(l1_pt>=45 && l1_pt<50) + 0.79002*(l1_pt>=50 && l1_pt<60) + 0.84666*(l1_pt>=60 && l1_pt<80) + 0.84919*(l1_pt>=80 && l1_pt<100) + 0.86819*(l1_pt>=100 && l1_pt<150) + 0.88206*(l1_pt>=150 && l1_pt<200) + (l1_pt>=200)) * (0.18321*(l2_pt>=30 && l2_pt<35) + 0.53906*(l2_pt>=35 && l2_pt<40) + 0.63658*(l2_pt>=40 && l2_pt<45) + 0.73152*(l2_pt>=45 && l2_pt<50) + 0.79002*(l2_pt>=50 && l2_pt<60) + 0.84666*(l2_pt>=60 && l2_pt<80) + 0.84919*(l2_pt>=80 && l2_pt<100) + 0.86819*(l2_pt>=100 && l2_pt<150) + 0.88206*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))',
+    embed_track_3prong_down = 'weight_generator * weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2 * ((l1_decay_mode==0)*0.975+(l1_decay_mode==1)*0.975*1.051+(l1_decay_mode==10)*0.967*0.967*0.967) * ((l2_decay_mode==0)*0.975+(l2_decay_mode==1)*0.975*1.051+(l2_decay_mode==10)*0.967*0.967*0.967) * (0.18321*(l1_pt>=30 && l1_pt<35) + 0.53906*(l1_pt>=35 && l1_pt<40) + 0.63658*(l1_pt>=40 && l1_pt<45) + 0.73152*(l1_pt>=45 && l1_pt<50) + 0.79002*(l1_pt>=50 && l1_pt<60) + 0.84666*(l1_pt>=60 && l1_pt<80) + 0.84919*(l1_pt>=80 && l1_pt<100) + 0.86819*(l1_pt>=100 && l1_pt<150) + 0.88206*(l1_pt>=150 && l1_pt<200) + (l1_pt>=200)) * (0.18321*(l2_pt>=30 && l2_pt<35) + 0.53906*(l2_pt>=35 && l2_pt<40) + 0.63658*(l2_pt>=40 && l2_pt<45) + 0.73152*(l2_pt>=45 && l2_pt<50) + 0.79002*(l2_pt>=50 && l2_pt<60) + 0.84666*(l2_pt>=60 && l2_pt<80) + 0.84919*(l2_pt>=80 && l2_pt<100) + 0.86819*(l2_pt>=100 && l2_pt<150) + 0.88206*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))',
     l1_fake = 'l1_fakeweight*0.5',
     l2_fake = 'l2_fakeweight*0.5'
     )
+
+

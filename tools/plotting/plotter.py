@@ -1,7 +1,7 @@
 from itertools import count
 import fnmatch
 
-from ROOT import TPaveText, TH1, TCanvas
+from ROOT import TPaveText, TH1, TCanvas, TPad
 
 from cpyroot import *
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
@@ -24,6 +24,9 @@ class Plotter(object):
 
             pad = self.pad = can.GetPad(1) if not pad else pad
             padr = self.padr = can.GetPad(2) if not padr else padr
+
+	    #Set Y axes Log scale
+	    pad.SetLogy()
 
             # Set Pad sizes
             pad.SetPad(0.0, 0.32, 1., 1.0)
@@ -65,40 +68,87 @@ class Plotter(object):
     def _prepare_plot(self, xtitle):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
-            hist = comp.histogram 
+            hist = comp.histogram
+            hist.SetStats(0)
             plot.AddHistogram(comp.name, hist)
         return plot
     
-    def draw(self, xtitle, ytitle, makecanvas=True):
+    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None):
         self.plot = self._prepare_plot(xtitle)
         if makecanvas:
             self.buildCanvas()
             self.pad.cd()
         self.plot.DrawStack()
+        if sys_error_hist:
+            self.sys_error_hist = sys_error_hist
+            self.sys_error_hist.SetFillColor(15)
+            self.sys_error_hist.SetFillStyle(3544)
+            self.sys_error_hist.SetMarkerStyle(0)
+            self.sys_error_hist.Draw('e2 same')
         
         Xaxis = self.plot.supportHist.GetXaxis()
         Yaxis = self.plot.supportHist.GetYaxis()
+
         Xaxis.SetTitle(xtitle)
         Yaxis.SetTitle(ytitle)
+
+        if category:
+            self.category = TPaveText(.15,.93,.40,.98,"NDC")
+            self.category.SetFillColor(0)
+            self.category.SetFillStyle(0)
+            self.category.SetLineColor(0)
+            self.category.AddText(category)
+            self.category.Draw("same")
+
+        self.lumibox = TPaveText(.80,.93,.95,.98,"NDC")
+        self.lumibox.SetFillColor(0)
+        self.lumibox.SetFillStyle(0)
+        self.lumibox.SetLineColor(0)
+        self.lumibox.AddText("#bf{41.5 fb^{-1}}")
+        self.lumibox.Draw("same")
+
+        if xtitle == 'mt_tot':
+            xtitle = 'm_{T}^{tot}'
+        if xtitle == 'm_{T}^{tot}':
+            Xaxis.SetRangeUser(10,4000)
+            ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
+                       self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
+            Yaxis.SetRangeUser(1,ymax*2)
+            self.plot.Blind(130,4000,False)
+            self.pad.SetLogx()
+
+
         if makecanvas:
             self.padr.cd()
         self.ratioplot = copy.deepcopy(self.plot)
-        self.ratioplot.DrawDataOverMCMinus1(-0.5,0.5)
+        self.ratioplot.DrawDataOverMCMinus1(-0.6,0.6)
+        if sys_error_hist:
+            self.sys_error_hist_rel = copy.copy(self.sys_error_hist)
+            for b in range(self.sys_error_hist.GetNbinsX()):
+                self.sys_error_hist_rel.SetBinContent(b+1,1)
+                rel_bin_error = self.sys_error_hist.GetBinError(b+1)/self.sys_error_hist.GetBinContent(b+1)
+                self.sys_error_hist_rel.SetBinError(b+1,rel_bin_error)
+            self.sys_error_hist_rel.Draw('e2 same')
         ratioXaxis = self.ratioplot.dataOverMCHist.GetXaxis()
         ratioYaxis = self.ratioplot.dataOverMCHist.GetYaxis()
-        ratioXaxis.SetTitleSize(Xaxis.GetTitleSize()*2.)
-        ratioYaxis.SetTitleSize(Yaxis.GetTitleSize()*2.)
-        # ratioXaxis.SetTitleOffset(Xaxis.GetTitleOffset()/2.)
-        ratioYaxis.SetTitleOffset(Yaxis.GetTitleOffset()/2.)
-        ratioXaxis.SetLabelSize(Xaxis.GetLabelSize()*2.)
-        ratioYaxis.SetLabelSize(Yaxis.GetLabelSize()*2.)
+        ratioXaxis.SetTitleSize(0.12)
+        ratioYaxis.SetTitleSize(0.12)
+        ratioYaxis.SetTitleOffset(0.55)
+        ratioXaxis.SetLabelSize(0.1)
+        ratioYaxis.SetLabelSize(0.1)
         Xaxis.SetLabelColor(0)
         Xaxis.SetLabelSize(0)
+
+        if xtitle == 'm_{T}^{tot}':
+            ratioXaxis.SetRangeUser(10,4000)
+            self.padr.SetLogx()
+
         if makecanvas:
             self.padr.Update()
             self.can.cd()
             gPad.Update()
-   
+
+
     def write(self, fname):
         self.can.SaveAs(fname)
         if '.tex' in fname:

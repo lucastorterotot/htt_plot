@@ -274,7 +274,7 @@ if __name__ == "__main__":
   # h.GetXaxis().SetRangeUser(-70,70)
   h.Draw()
   
-  legend_args = (0.645, 0.79, 0.985, 0.91, '', 'NDC')
+  legend_args = (0.64, 0.7, 0.98, 0.9, '', 'NDC')
 
   legend = TLegend(*legend_args)
   legend.SetFillStyle(0)
