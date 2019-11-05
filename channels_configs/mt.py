@@ -108,9 +108,19 @@ from htt_plot.channels_configs.htt_common import datacard_processes
 # weights
 from htt_plot.channels_configs.htt_common import weights
 weights['MC'] = weights['l2_MC']
+
+emb_weight_simulation_sf = Cut('weight_generator')
+emb_weight_scale_factor = Cut('weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2')
+emb_weight_lepton_sf = Cut('l1_weight_idiso*(l1_weight_trig_mt*(l1_pt>25)+((0.81*(l1_pt>=21 && l1_pt<22) + 0.82*(l1_pt>=22 && l1_pt<23) + 0.83*(l1_pt>=23))*(l1_pt<25)))')
+emb_weight_tau_leg_weight = Cut('(l1_pt>25)+(l1_pt >= 21 && l1_pt<25)*((l2_pt>=20 && l2_pt<25)*0.12714+(l2_pt>=25 && l2_pt<30)*0.46930+0.71983*(l2_pt>=30 && l2_pt<35) + 0.75209*(l2_pt>=35 && l2_pt<40) + 0.78164*(l2_pt>=40 && l2_pt<45) + 0.83241*(l2_pt>=45 && l2_pt<50) + 0.86694*(l2_pt>=50 && l2_pt<60) + 0.89966*(l2_pt>=60 && l2_pt<80) + 0.88534*(l2_pt>=80 && l2_pt<100) + 0.90095*(l2_pt>=100 && l2_pt<150) + 0.84402*(l2_pt>=150 && l2_pt<200) + (l2_pt>=200))')
+emb_weight_emb_tau_id = Cut('(l2_gen_match==5)*0.97+(l2_gen_match!=5)*1.0')
+emb_weight_emb_veto = Cut('(l1_gen_match==4 && l2_gen_match==5)*1.0')
+
+weights['embed'] = emb_weight_simulation_sf * emb_weight_scale_factor * emb_weight_lepton_sf * emb_weight_tau_leg_weight * emb_weight_emb_tau_id * emb_weight_emb_veto
+
 for w in ['embed_track_1prong_up', 'embed_track_1prong_down', 'embed_track_3prong_up', 'embed_track_3prong_down']:
-    weights[w] = weights['embed']*weights['l2_{}'.format(w)]
-weights['embed'] = weights['embed']*Cut('weight_embed_muonID_eff_l2 * weight_embed_track_l2')
+    weights[w] = weights['embed']
+
 weights['l1_fake'] = Cut('1.0')
 weights['l2_fake'] = Cut('l2_fakeweight')
 
