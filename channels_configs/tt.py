@@ -122,6 +122,10 @@ from htt_plot.channels_configs.htt_common import datacard_processes
 
 # weights
 from htt_plot.channels_configs.htt_common import weights
+weights['MC'] = weights['l1_MC']*weights['l2_MC']
+for w in ['embed_track_1prong_up', 'embed_track_1prong_down', 'embed_track_3prong_up', 'embed_track_3prong_down']:
+    weights[w] = weights['embed']*weights['l1_{}'.format(w)]*weights['l2_{}'.format(w)]
+weights['embed'] = weights['embed']*weights['l1_embed']*weights['l2_embed']
 
 # datasets
 import htt_plot.datasets.gael_all as datasets
