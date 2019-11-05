@@ -12,7 +12,10 @@ from htt_plot.channels_configs.htt_common import bins
 from htt_plot.channels_configs.htt_common import variables, datacards_variables, var_name_dict
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_dy_promptfakeleptons, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
+from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
+
+cut_l1_fakejet = Cut('1')
+cut_dy_promptfakeleptons = Cut('l2_gen_match==1 || l2_gen_match==2')
 
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt >= 21',
@@ -35,7 +38,7 @@ cuts_against_leptons = Cuts(
     l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
-cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() & cut_mt_tot
+cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() #& cut_mt_tot
 
 ## triggers
 cuts_triggers = Cuts(
@@ -63,11 +66,11 @@ cuts_iso = Cuts(
 
 ## cut embedding + no fakes (for MC)
 
-cut_embed = Cut('(l1_gen_match == 5) && (l2_gen_match == 5)')
+cut_embed = Cut('l2_gen_match == 5')
 
 cut_not_embed = ~cut_embed
 
-cut_fakes = Cut('l1_gen_match==6 || l2_gen_match==6')
+cut_fakes = Cut('l2_gen_match==6')
 
 cut_not_fakes = ~cut_fakes
 
@@ -107,8 +110,9 @@ from htt_plot.channels_configs.htt_common import weights
 weights['MC'] = weights['l2_MC']
 for w in ['embed_track_1prong_up', 'embed_track_1prong_down', 'embed_track_3prong_up', 'embed_track_3prong_down']:
     weights[w] = weights['embed']*weights['l2_{}'.format(w)]
-weights['embed'] = weights['embed']*weights['l2_embed']
-weights['l1_fake'] = Cut('1')
+weights['embed'] = weights['embed']*Cut('weight_embed_muonID_eff_l2 * weight_embed_track_l2')
+weights['l1_fake'] = Cut('1.0')
+weights['l2_fake'] = Cut('l2_fakeweight')
 
 # datasets
 import htt_plot.datasets.lucas_mt as datasets

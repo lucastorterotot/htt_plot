@@ -80,9 +80,6 @@ cut_ss = ~cut_os
 cut_nobtag = Cut('b1_pt == -99')
 cut_btag = ~cut_nobtag
 
-cut_dy_promptfakeleptons = Cut(
-    'l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
-
 
 
 cut_mt_tot = Cut('mt_tot < 40')
