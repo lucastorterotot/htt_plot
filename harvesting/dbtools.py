@@ -32,24 +32,34 @@ def efficiency(name):
         njobs = 99
     return float(nchunks)/njobs
 
-def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',sys='nominal'):
+def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='',sys='nominal'):
     '''returns a dataset created using the db'''
     if 'Embedding_tracking' in sys:
         sys = 'nominal'
-    if n_events_gen==None and xs==None and not ('Embedded' in sample_name) and not ('SUSY' in sample_name):
+    if n_events_gen==None and xs==None and not ('Embedded' in sample_name) and not ('SUSY' in sample_name) and not ('SingleMuon_Run201' in sample_name):
         sys = ''
     infos = dsdb.find('se', {'sample':sample_name,
-                        'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
+                             'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
+                             'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
     if not infos:
         if sys!='nominal':
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
-            return fetch_dataset(sample_name,n_events_gen,xs,'nominal')
+            return fetch_dataset(sample_name,n_events_gen,xs,channel=channel,prod_date=prod_date,sys='nominal')
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
-    if len(infos)> 1 and sample_name == 'Embedded2017B_tt' and sys=='TES_promptEle_1prong0pi0_down':
-        infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
+    if len(infos)> 1:
+        if sample_name == 'Embedded2017B_tt' and sys=='TES_promptEle_1prong0pi0_down':
+            infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
+        if sample_name == 'SingleMuon_Run2017C_31Mar2018':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_runC_432_nominal', 'mt_runC_490_nominal']]
+        if sample_name == 'TTHad_pow':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_TTHad_pow_218_nominal']]
+        if sample_name == 'TTSemi_pow':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_TTSemi_pow_102_nominal']]
+        if sample_name == 'ZZTo4L':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_ZZTo4L_37_nominal']]
     try:
         info = max(infos, key=lambda info: info['sub_date'])
-        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow']:
+        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow'] and channel=='tt':
             info = [info for info in infos if info['prod_date']=='190503'][0]
         basedir = info['fakes']['replicas']['lyovis10']['dir']
         if n_events_gen:
@@ -61,7 +71,9 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',sys='nomina
     except KeyError:
         info= infos[0]
         print 'sample {} version {} not fully processed!'.format(info['name'],info['sample_version'])
-        newinfos = dsdb.find('se', {'sample':sample_name, 'sample_version':{'$regex':'.*{}.*{}$'.format(channel,'nominal')}})
+        newinfos = dsdb.find('se', {'sample':sample_name,
+                                    'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
+                                    'sample_version':{'$regex':'.*{}.*{}$'.format(channel,'nominal')}})
         newinfo = newinfos[0]
         basedir = newinfo['fakes']['replicas']['lyovis10']['dir']
         if n_events_gen:
