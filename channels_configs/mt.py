@@ -53,10 +53,6 @@ basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts
 
 ## iso
 cuts_iso = Cuts(
-    l1_VTight = '1',
-    l1_Tight = '1',
-    l1_VLoose = '1',
-    l1_VVLoose = '1',
     l2_VTight = 'l2_byVTightIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
     l2_Tight = 'l2_byTightIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
     l2_VLoose = 'l2_byVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
