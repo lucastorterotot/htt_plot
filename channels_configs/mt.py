@@ -65,7 +65,7 @@ cut_embed = Cut('l1_gen_match == 4 && l2_gen_match == 5')
 
 cut_not_embed = ~cut_embed
 
-cut_fakes = Cut('l2_gen_match==6')
+cut_fakes = Cut('l2_gen_match == 6')
 
 cut_not_fakes = ~cut_fakes
 
@@ -111,7 +111,7 @@ emb_weight_tau_leg_weight = Cut('(l1_pt>25)+(l1_pt >= 21 && l1_pt<25)*((l2_pt>=2
 emb_weight_emb_tau_id = Cut('(l2_gen_match==5)*0.97+(l2_gen_match!=5)*1.0')
 emb_weight_emb_veto = Cut('(l1_gen_match==4 && l2_gen_match==5)*1.0')
 
-weights['embed'] = emb_weight_simulation_sf * emb_weight_scale_factor * emb_weight_lepton_sf * emb_weight_tau_leg_weight * emb_weight_emb_tau_id * emb_weight_emb_veto
+weights['embed'] = emb_weight_simulation_sf * emb_weight_scale_factor * emb_weight_lepton_sf * emb_weight_tau_leg_weight * emb_weight_emb_tau_id * emb_weight_emb_veto #* Cut('2.650559811')
 
 for w in ['embed_track_1prong_up', 'embed_track_1prong_down', 'embed_track_3prong_up', 'embed_track_3prong_down']:
     weights[w] = weights['embed']
