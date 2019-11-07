@@ -84,12 +84,18 @@ signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes
 signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes_not_embed
 signal_region_signalMC_cut = cut_signal
 
+from htt_plot.tools.cut import Cut
 
-l1_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
+if cfg.channel == 'tt':
+    l1_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l1_VLoose'] & ~cfg.cuts_iso['l1_Tight'] & cfg.cuts_iso['l2_Tight']
+    l2_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
+else:
+    l1_FakeFactorApplication_Region_cut = Cut('0')
+    l2_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight']
+    
 l1_FakeFactorApplication_Region_notjetfakes_cut = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet & cfg.cut_not_embed
-l1_FakeFactorApplication_Region_notjetfakes_cut_embed = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet
+l1_FakeFactorApplication_Region_notjetfakes_cut_embed = l1_FakeFactorApplication_Region_cut & ~cfg.cut_l1_fakejet & cfg.cut_embed
 
-l2_FakeFactorApplication_Region_cut = basic_cuts & cfg.cuts_iso['l2_VLoose'] & ~cfg.cuts_iso['l2_Tight'] & cfg.cuts_iso['l1_Tight']
 l2_FakeFactorApplication_Region_notjetfakes_cut = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_not_embed
 l2_FakeFactorApplication_Region_notjetfakes_cut_embed = l2_FakeFactorApplication_Region_cut & ~cfg.cut_l2_fakejet & cfg.cut_embed
 
@@ -163,13 +169,12 @@ else:
     systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']
     
 sys_dict_weights = {}
-from htt_plot.tools.cut import Cut
 
 if cfg.channel == 'tt':
     l1_fakeweight_sys_str = '0.5*l1_fakeweight_{}'
     l2_fakeweight_sys_str = '0.5*l2_fakeweight_{}'
 else:
-    l1_fakeweight_sys_str = '1'
+    l1_fakeweight_sys_str = '1.0'
     l2_fakeweight_sys_str = 'l2_fakeweight_{}'
 
 for up_down in up_downs:
@@ -596,5 +601,6 @@ if not os.path.exists('{}/{}'.format(output_dir,category)):
     os.system('mkdir -p {}/{}'.format(output_dir,category))
         
 visualize(*processes)
+#import pdb; pdb.set_trace()
 if not options.dry_run:
     compute(*processes)
