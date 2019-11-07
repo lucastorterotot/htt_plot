@@ -14,8 +14,7 @@ from htt_plot.channels_configs.htt_common import variables, datacards_variables,
 # cuts
 from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
 
-cut_l1_fakejet = Cut('1')
-cut_dy_promptfakeleptons = Cut('l2_gen_match==1 || l2_gen_match==2')
+cut_dy_promptfakeleptons = Cut('l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
 
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt >= 21',
