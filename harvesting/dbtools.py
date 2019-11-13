@@ -43,13 +43,12 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',sys='nomina
     if not infos:
         if sys!='nominal':
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
-            return fetch_dataset(sample_name,n_events_gen,xs,'nominal')
+            return fetch_dataset(sample_name,n_events_gen,xs,sys='nominal')
+        import pdb;pdb.set_trace()
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
-    if len(infos)> 1 and sample_name == 'Embedded2017B_tt' and sys=='TES_promptEle_1prong0pi0_down':
-        infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
     try:
         info = max(infos, key=lambda info: info['sub_date'])
-        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow']:
+        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow','Tau_Run2017B_31Mar2018','Tau_Run2017C_31Mar2018','Tau_Run2017D_31Mar2018','Tau_Run2017E_31Mar2018','Tau_Run2017F_31Mar2018']:
             info = [info for info in infos if info['prod_date']=='190503'][0]
         basedir = info['fakes']['replicas']['lyovis10']['dir']
         if n_events_gen:
@@ -63,7 +62,10 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',sys='nomina
         print 'sample {} version {} not fully processed!'.format(info['name'],info['sample_version'])
         newinfos = dsdb.find('se', {'sample':sample_name, 'sample_version':{'$regex':'.*{}.*{}$'.format(channel,'nominal')}})
         newinfo = newinfos[0]
-        basedir = newinfo['fakes']['replicas']['lyovis10']['dir']
+        try:
+            basedir = newinfo['fakes']['replicas']['lyovis10']['dir']
+        except KeyError:
+            import pdb;pdb.set_trace()
         if n_events_gen:
             n_events_gen = n_events_gen*efficiency(newinfo['name'])
         return Dataset('{}_{}'.format(sample_name,sys),

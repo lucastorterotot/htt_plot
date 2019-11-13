@@ -182,7 +182,7 @@ for sys in sys_dict_samples:
         TT_datasets[sys].append(fetch_dataset('TTSemi_pow',43732445,365.35,sys=sys))
 
     # EWK
-    if 'EWK' in sys_dict_samples[sys]['processes']
+    if 'EWK' in sys_dict_samples[sys]['processes']:
         EWK_datasets[sys] = []
         EWK_datasets[sys].append(fetch_dataset('WToLNu_M50_Plus2J',4358697,29.59,sys=sys))
         EWK_datasets[sys].append(fetch_dataset('WToLNu_M50_Minus2J',4385142,23.24,sys=sys))

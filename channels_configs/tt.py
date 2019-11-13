@@ -101,6 +101,8 @@ cuts_datacards = Cuts(
     Diboson_VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
     singleTop_VVT = '(l1_gen_match == 5 && l2_gen_match == 5)',
     singleTop_VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
+    EWK_VVT = '(l1_gen_match == 5 && l2_gen_match == 5)',
+    EWK_VVJ = '!(l1_gen_match == 5 && l2_gen_match == 5)',
     WJ = '1',
     jetFakes = '1',
     data = '1',
@@ -109,6 +111,7 @@ cuts_datacards = Cuts(
 cuts_datacards['TTL'] = cuts_datacards['ZL']
 cuts_datacards['Diboson_VVL'] = cuts_datacards['ZL']
 cuts_datacards['singleTop_VVL'] = cuts_datacards['ZL']
+cuts_datacards['EWK_VVL'] = cuts_datacards['ZL']
 cuts_datacards['ZLL'] = cuts_datacards['ZL'] | cuts_datacards['ZJ']
 cuts_datacards['TT'] = cuts_datacards['TTT'] | cuts_datacards['TTJ']
 cuts_datacards['VV'] = cuts_datacards['VVT'] | cuts_datacards['VVJ']

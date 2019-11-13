@@ -40,7 +40,10 @@ for mass in [80,100,110,120,130,140,180,200,250,90,350,1600,1800,2000,300,400,45
     types_dir['ggH{}'.format(mass)] = ['mc_']
     types_dir['bbH{}'.format(mass)] = ['mc_']
 
-
+#jetFakes-related systematics shift histograms must be re-normalized to the nominal integral (see https://gitlab.cern.ch/cms-htt/Jet2TauFakesFiles/tree/2017/SM2017#step-3-application-of-uncertainties) for now hardcoding the value of the integral of nominal jetFakes contributionto re-scale
+jetFakes_integral = {'nobtag': 28226.1,
+                     'btag': 679.867}
+    
 def make_datacards(output_dir, channel, variable, components_dict, category='inclusive', systematics=['nominal']):
     '''This funciton aims at producing a root file containing all
     histograms needed for datacards. To do so, provide a dict of components
@@ -67,11 +70,14 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
             if rootdir.Get(histname):
                 continue
             hist = component.histogram.Clone(histname)
-            hist.SetMinimum(0.000001)
-            hist.SetBinContent(0,0)
-            hist.SetBinContent(hist.GetNbinsX()+1,0)
+            if 'jetFakes' in histname:
+                hist.Scale(jetFakes_integral[category]/hist.Integral(0,hist.GetNbinsX()+1))
+            hist.SetMinimum(0.0)
+            # hist.SetBinContent(0,0)
+            # hist.SetBinContent(hist.GetNbinsX()+1,0)
             hist.SetTitle(key)
-            hist.Write()
+            if not ((systematic!='nominal') and ('jetFakes' in histname)):
+                hist.Write()
             if systematic in syst_split_list:
                 hist_list = []
                 for sys_type in types_dir[key]:
@@ -80,6 +86,9 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
                     elif 'Up' in histname:
                         new_histname = histname.replace('Up',sys_type+'Up')
                     hist_list.append(component.histogram.Clone(new_histname))
+                    hist_list[-1].SetMinimum(0.0)
+                    # hist_list[-1].SetBinContent(0,0)
+                    # hist_list[-1].SetBinContent(hist.GetNbinsX()+1,0)
                     hist_list[-1].SetTitle(key)
                     hist_list[-1].Write()
     rootfile.Close()

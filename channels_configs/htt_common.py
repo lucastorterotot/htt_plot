@@ -28,7 +28,7 @@ bins = {
     # 'b2_eta' : (20, -2.5, 2.5),
     # 'met'  : (60, 0., 600),
     # 'metphi'  : (30,-4,4),
-    'mt_tot' : (31, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000])),
+    'mt_tot' : (31, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000])),#,700,900
     # 'mt_tot' : (35, 0, 700),
     # 'm_vis'   : (80,0,800),
     # 'l1_mt'   : (60,0,600),
@@ -93,7 +93,7 @@ cut_btag_2 = Cut('bjet2_csv > 0')
 
 # weights
 weights = Cuts(
-    weight = 'weight',
+    weight = 'weight * weight_generator',
     MC = 'l1_weight_mutotaufake_loose * l1_weight_etotaufake_vloose * l1_weight_tauid_tight * l2_weight_mutotaufake_loose * l2_weight_etotaufake_vloose * l2_weight_tauid_tight',
     DY = 'weight_dy * weight_generator',# * '+dy_stitching_weight
     DY_pTrweigh_up = '(1+(weight_dy-1)*1.1)/(weight_dy)',

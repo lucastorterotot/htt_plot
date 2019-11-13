@@ -30,21 +30,21 @@ sys_dict_samples = {'top_pT_reweighting_up':{'processes':['TT']},
     
     'TES_HadronicTau_3prong0pi0_down': {'processes': ['all_MC','Embedded']},
     
-    'TES_HadronicTau_3prong1pi0_up': {'processes': ['all_MC','Embedded']},
+    'TES_HadronicTau_3prong1pi0_up': {'processes': ['all_MC']},
     
-    'TES_HadronicTau_3prong1pi0_down': {'processes': ['all_MC','Embedded']},
+    'TES_HadronicTau_3prong1pi0_down': {'processes': ['all_MC']},
     
-    'TES_promptMuon_1prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    'TES_promptMuon_1prong0pi0_up': {'processes': ['all_MC']},
     
-    'TES_promptMuon_1prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    'TES_promptMuon_1prong0pi0_down': {'processes': ['all_MC']},
     
-    'TES_promptEle_1prong0pi0_up': {'processes': ['all_MC','Embedded']},
+    'TES_promptEle_1prong0pi0_up': {'processes': ['all_MC']},
     
-    'TES_promptEle_1prong0pi0_down': {'processes': ['all_MC','Embedded']},
+    'TES_promptEle_1prong0pi0_down': {'processes': ['all_MC']},
     
-    'TES_promptEle_1prong1pi0_up': {'processes': ['all_MC','Embedded']},
+    'TES_promptEle_1prong1pi0_up': {'processes': ['all_MC']},
     
-    'TES_promptEle_1prong1pi0_down': {'processes': ['all_MC','Embedded']},
+    'TES_promptEle_1prong1pi0_down': {'processes': ['all_MC']},
     
     'CMS_scale_j_eta0to5_13Tev_up': {'processes': ['all_MC']},
     
@@ -81,7 +81,7 @@ sys_dict_samples = {'top_pT_reweighting_up':{'processes':['TT']},
 
 for key, item in sys_dict_samples.iteritems():
     if 'all_MC' in item['processes']:
-        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal'])
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK'])
     if 'DY' in item['processes']:
         item['processes'].extend(['ZJ','ZLL','ZTT','ZL'])
     if 'TT' in item['processes']:

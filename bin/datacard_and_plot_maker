@@ -51,6 +51,8 @@ elif category == 'nobtag':
     cut_signal = cfg.cut_signal_nobtag
     basic_cuts =  cfg.basic_cuts_nobtag
 elif category == 'btag':
+    from array import array
+    cfg.bins['mt_tot'] = (16, array('d',[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,4000]))
     cut_signal = cfg.cut_signal_btag
     basic_cuts =  cfg.basic_cuts_btag
 else:
@@ -58,7 +60,7 @@ else:
 
 # mass points
 
-mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
+mass_points = [80,90,110,120]#[80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
 
 cfg.datasets.signal_datasets = cfg.datasets.build_signals(mass_points)
 for sys, dataset_list in cfg.datasets.signal_datasets.iteritems() :
