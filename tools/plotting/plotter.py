@@ -89,6 +89,9 @@ class Plotter(object):
         Xaxis = self.plot.supportHist.GetXaxis()
         Yaxis = self.plot.supportHist.GetYaxis()
 
+        if xtitle == 'mt_tot':
+            xtitle = 'm_{T}^{tot}'
+            
         Xaxis.SetTitle(xtitle)
         Yaxis.SetTitle(ytitle)
 
@@ -107,8 +110,6 @@ class Plotter(object):
         self.lumibox.AddText("#bf{41.5 fb^{-1}}")
         self.lumibox.Draw("same")
 
-        if xtitle == 'mt_tot':
-            xtitle = 'm_{T}^{tot}'
         if xtitle == 'm_{T}^{tot}':
             Xaxis.SetRangeUser(10,4000)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
