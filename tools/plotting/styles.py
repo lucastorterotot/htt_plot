@@ -30,8 +30,8 @@ ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
 histPref = {
     'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
     'Embedded': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
-    'WJ': {'style':swj, 'layer':9, 'legend':'#Wboson+#text{jets}', 'stack': True},
-    'EWK': {'style':sEWK, 'layer':10, 'legend':'Electroweak', 'stack': True},
+    'WJ': {'style':swj, 'layer':2, 'legend':'#Wboson+#text{jets}', 'stack': True},
+    'EWK': {'style':sEWK, 'layer':1, 'legend':'Electroweak', 'stack': True},
     'TTBar': {'style':stt, 'layer':11, 'legend':'#quarkt#antiquarkt', 'stack': True},
     'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
     'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
