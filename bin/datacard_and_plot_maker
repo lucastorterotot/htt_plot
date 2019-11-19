@@ -166,7 +166,7 @@ if options.small_run:
     systs_ff_list = ['qcd_syst_{}']
 else:
     up_downs = ['up','down']
-    systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_frac_syst_{}','tt_frac_syst_{}']
+    systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}','w_syst_{}','tt_syst_{}']
     
 sys_dict_weights = {}
 
