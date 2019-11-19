@@ -7,9 +7,9 @@ from cpyroot.tools.style import *
 qcdcol = TColor.GetColor(250,202,255)
 embedcol =  TColor.GetColor(248,206,104)
 dycol = TColor.GetColor(0,150,255)
-WJcol = TColor.GetColor(144,12,63)
+WJcol = TColor.GetColor(193,68,78)
 EWKcol = TColor.GetColor(222,90,106)
-dibosoncol = TColor.GetColor(255,87,51)
+dibosoncol = TColor.GetColor(146,12,23)
 ttcol = TColor.GetColor(155,152,204)
 stcol = TColor.GetColor(85,82,204)
 zlcol = TColor.GetColor(100,182,232)
@@ -31,7 +31,7 @@ histPref = {
     'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
     'Embedded': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
     'WJ': {'style':swj, 'layer':9, 'legend':'#Wboson+#text{jets}', 'stack': True},
-    'EWK': {'style':swj, 'layer':10, 'legend':'Electroweak', 'stack': True},
+    'EWK': {'style':sEWK, 'layer':10, 'legend':'Electroweak', 'stack': True},
     'TTBar': {'style':stt, 'layer':11, 'legend':'#quarkt#antiquarkt', 'stack': True},
     'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
     'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
