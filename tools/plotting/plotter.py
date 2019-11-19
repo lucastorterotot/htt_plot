@@ -73,7 +73,7 @@ class Plotter(object):
             plot.AddHistogram(comp.name, hist)
         return plot
     
-    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None):
+    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None, channel_str=None):
         self.plot = self._prepare_plot(xtitle)
         if makecanvas:
             self.buildCanvas()
@@ -90,27 +90,36 @@ class Plotter(object):
         Yaxis = self.plot.supportHist.GetYaxis()
 
         if xtitle == 'mt_tot':
-            xtitle = 'm_{T}^{tot}'
+            xtitle = 'm_{#rm T}^{#rm tot}'
             
         Xaxis.SetTitle(xtitle)
         Yaxis.SetTitle(ytitle)
 
-        if category:
+        if category and not channel_str:
+            _string = category
+        elif category and channel_str:
+            _string = '{} # #rm {} '.format(channel_str, category)
+        elif channel_str and not category:
+            _string = channel_str
+        else:
+            _string = None
+            
+        if _string:
             self.category = TPaveText(.15,.93,.40,.98,"NDC")
             self.category.SetFillColor(0)
             self.category.SetFillStyle(0)
             self.category.SetLineColor(0)
-            self.category.AddText(category)
+            self.category.AddText(_string)
             self.category.Draw("same")
 
         self.lumibox = TPaveText(.80,.93,.95,.98,"NDC")
         self.lumibox.SetFillColor(0)
         self.lumibox.SetFillStyle(0)
         self.lumibox.SetLineColor(0)
-        self.lumibox.AddText("#bf{41.5 fb^{-1}}")
+        self.lumibox.AddText("#SI{41.5}{fb^{-1}}")
         self.lumibox.Draw("same")
 
-        if xtitle == 'm_{T}^{tot}':
+        if xtitle == 'm_{#rm T}^{#rm tot}':
             Xaxis.SetRangeUser(10,4000)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
@@ -140,7 +149,7 @@ class Plotter(object):
         Xaxis.SetLabelColor(0)
         Xaxis.SetLabelSize(0)
 
-        if xtitle == 'm_{T}^{tot}':
+        if xtitle == 'm_{#rm T}^{#rm tot}':
             ratioXaxis.SetRangeUser(10,4000)
             self.padr.SetLogx()
 
