@@ -2,8 +2,8 @@ from ROOT import TFile, TH1F, TDirectoryFile
 
 channels_names = {
     'tt' : 'tt',
-    'mt' : 'tt',
-    'et' : 'tt'
+    'mt' : 'mt',
+    'et' : 'et'
     }
 
 syst_rename_dir = {
