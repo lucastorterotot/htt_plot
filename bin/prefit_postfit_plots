@@ -1,3 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--channel", dest = "channel",
+                  default="tt",
+                  help='Name of the channel')
+parser.add_option("-o", "--output", dest = "output_dir",
+                  default="prefit_postfit_plots",
+                  help='Output directory base name, channel is added')
+parser.add_option("-C", "--category", dest = "category",
+                  default="all",
+                  help='Category to process: all or list of inclusive, btag, nobtag...')
+parser.add_option("-m", "--masses", dest = "masses",
+                  default=None,
+                  help='Masses to process: default to None, or give a list of values')
+
+(options,args) = parser.parse_args()
+
 import copy
 
 from ROOT import TFile, TPaveText, Double, TH1F
@@ -6,26 +28,42 @@ from htt_plot.tools.component import Hist_Component
 from cpyroot.tools.DataMC.Stack import Stack
 from array import array
 
-
-cat_dict = {
+cat_dict_tt = {
     'tt_btag':'htt_tt_9_13TeV',
     'tt_nobtag':'htt_tt_8_13TeV',
     #'tt_inclusive':'htt_tt_7_13TeV',
 }
 
+cat_dict = {
+    'tt' : cat_dict_tt,
+}
 
+if options.category == 'all':
+    cats_to_process = cat_dict[options.channel]
+elif channel in ['tt', 'mt', 'et']:
+    cats_to_process = {}
+    for cat in options.category:
+        cats_to_process['_'.join([options.channel, cat])] = cat_dict[options.channel]['_'.join([options.channel, cat])]
+else:
+    cats_to_process = []
 
 limits = {600:0.0341033935546875,
           800:0.037841796875,
           900:0.0146484375
 }
 
-def plot(prefit=True,bonly=True, mass=None):
-    data_file = TFile('htt_tt.inputs_datacards_mt_tot.root')
+channel_strings_for_plot = {
+    'tt' : '#tauh#tauh',
+    'mt' : '#mu#tauh',
+    'et' : '#ele#tauh',
+}
+
+def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
+    data_file = TFile('./inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(channel,channel))
     if mass:
-        shapes_file = TFile('fitDiagnosticstest_output_{}.root'.format(mass))
+        shapes_file = TFile('./inputs/{}/fitDiagnosticstest_output_{}.root'.format(channel,mass))
     else:
-        shapes_file = TFile('fitDiagnosticstest_output.root')
+        shapes_file = TFile('./inputs/{}/fitDiagnosticstest_output.root'.format(channel))
     if prefit:
         shapedir = 'shapes_prefit'
     else:
@@ -34,13 +72,12 @@ def plot(prefit=True,bonly=True, mass=None):
         else:
             shapedir = 'shapes_fit_s'
     
-    for cat in cat_dict:
+    for cat in cats_to_process:
         ### subdir retrieval
         data_shape_dir = data_file.Get(cat)
-        shapes_dir = shapes_file.Get(shapedir).Get(cat_dict[cat])
+        shapes_dir = shapes_file.Get(shapedir).Get(cats_to_process[cat])
         unc_hist = shapes_dir.Get('total_background')
 
-        
         comp_names = ['TTL','VVL','ZL','Embedded','jetFakes']
         comps = []
 
@@ -127,8 +164,12 @@ def plot(prefit=True,bonly=True, mass=None):
             uncertainties_rel.SetBinError(b+1,uncertainties.GetBinError(b+1)/uncertainties.GetBinContent(b+1))
         
         plotter = Plotter(comps,41.5)
-        cat_name = "#tau_{h}#tau_{h} " + cat[3:]
-        plotter.draw('m_{T}^{tot}','dN/dm_{T}^{tot} (1/GeV)', sys_error_hist=uncertainties, category=cat_name)
+        plotter.draw('mt_tot',
+                     '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
+                     sys_error_hist=uncertainties,
+                     category = cat[3:],
+                     channel_str = channel_strings_for_plot[channel]
+        )
         if prefit:
             outfilename = 'prefit_plots_{}'
         else:
