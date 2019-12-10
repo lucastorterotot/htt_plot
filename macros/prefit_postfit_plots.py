@@ -56,7 +56,7 @@ def plot(prefit=True,bonly=True, mass=None):
             x = Double(0)
             y = Double(0)
             data_graph.GetPoint(b,x,y)
-            data_histcomp.SetBinContent(b+1,y/(data_hist.GetBinLowEdge(b+2)-data_hist.GetBinLowEdge(b+1)))
+            data_histcomp.SetBinContent(b+1,y)
             if y==0.:
                 data_histcomp.SetBinError(b+1,1)
             else:
@@ -70,7 +70,7 @@ def plot(prefit=True,bonly=True, mass=None):
             h = copy.copy(data_hist)
             h.SetName(comp_name)
             for b in range(h.GetNbinsX()):
-                h.SetBinContent(b+1,unvar_h.GetBinContent(b+1)/(h.GetBinLowEdge(b+2)-h.GetBinLowEdge(b+1)))
+                h.SetBinContent(b+1,unvar_h.GetBinContent(b+1))
                 h.SetBinError(b+1,0)
             h.SetTitle('')
             comp = Hist_Component(h)
