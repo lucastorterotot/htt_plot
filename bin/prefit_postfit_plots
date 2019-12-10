@@ -34,6 +34,22 @@ cat_dict_tt = {
     #'tt_inclusive':'htt_tt_7_13TeV',
 }
 
+cat_dict_mt = {
+    'mt_nobtag_tight':'htt_mt_8_13TeV',
+    'mt_btag_tight':'htt_mt_9_13TeV',
+    'mt_nobtag_loosemt':'htt_mt_10_13TeV',
+    'mt_btag_loosemt':'htt_mt_11_13TeV',
+    'mt_inclusive':'htt_mt_7_13TeV',
+}
+
+cat_dict_et = {
+    'et_nobtag_tight':'htt_et_8_13TeV',
+    'et_btag_tight':'htt_et_9_13TeV',
+    'et_nobtag_loosemt':'htt_et_10_13TeV',
+    'et_btag_loosemt':'htt_et_11_13TeV',
+    'et_inclusive':'htt_et_7_13TeV',
+}
+
 cat_dict = {
     'tt' : cat_dict_tt,
 }
@@ -167,7 +183,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         plotter.draw('mt_tot',
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
-                     category = cat[3:],
+                     category = ' '.join(cat.split('_')[1:]),
                      channel_str = channel_strings_for_plot[channel]
         )
         if prefit:
