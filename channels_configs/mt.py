@@ -12,7 +12,7 @@ from htt_plot.channels_configs.htt_common import bins
 from htt_plot.channels_configs.htt_common import variables, datacards_variables, var_name_dict
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_tot, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
+from htt_plot.channels_configs.htt_common import cut_mt_lepton, cut_mt_lepton_loose, cut_mt_lepton_tight, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
 
 cut_dy_promptfakeleptons = Cut('l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
 
@@ -37,7 +37,7 @@ cuts_against_leptons = Cuts(
     l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
-cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() #& cut_mt_tot
+cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() & cut_mt_lepton
 
 ## triggers
 cuts_triggers = Cuts(
@@ -122,14 +122,14 @@ weights['l2_fake'] = Cut('l2_fakeweight')
 # datasets
 import htt_plot.datasets.lucas_mt as datasets
 
-cut_signal = cuts_iso['l2_Tight'] & basic_cuts
+cut_signal = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts
 
 
 # category
 
 basic_cuts_btag = basic_cuts & cut_btag
-cut_signal_btag = cuts_iso['l2_Tight'] & basic_cuts_btag
+cut_signal_btag = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts_btag
 
 basic_cuts_nobtag = basic_cuts & cut_nobtag
-cut_signal_nobtag = cuts_iso['l2_Tight'] & basic_cuts_nobtag
+cut_signal_nobtag = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts_nobtag
 
