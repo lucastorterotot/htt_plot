@@ -13,7 +13,7 @@ parser.add_option("-o", "--output", dest = "output_dir",
                   help='Output directory base name, channel is added')
 parser.add_option("-C", "--category", dest = "category",
                   default="inclusive",
-                  help='Category to process: inclusive, btag, nobtag.')
+                  help='Category to process: inclusive, btag, nobtag, nobtag_tight, btag_tight, nobtag_loosemt, btag_loosemt.')
 parser.add_option("-q", "--dryrun", dest = "dry_run",
                   default=False,
                   help='Disables dask computing.')
@@ -43,29 +43,34 @@ variables = set(plot_variables + datacards_variables)
 output_dir = '_'.join([options.output_dir, cfg.channel])
 
 # category
-category = options.category # 'nobtag'#'nobtag','btag','inclusive'
-if category == 'inclusive':
-    cut_signal = cfg.cut_signal
-    basic_cuts =  cfg.basic_cuts
-elif category == 'nobtag':
-    from array import array
-    cfg.bins['mt_tot'] = (33, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,600,700,800,900,4000]))
-    cut_signal = cfg.cut_signal_nobtag
-    basic_cuts =  cfg.basic_cuts_nobtag
-elif category == 'btag':
-    # from array import array
-    # cfg.bins['mt_tot'] = (16, array('d',[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,4000]))
-    cut_signal = cfg.cut_signal_btag
-    basic_cuts =  cfg.basic_cuts_btag
+valid_cats = ['inclusive', 'nobtag', 'btag', 'nobtag_tight', 'btag_tight', 'nobtag_loosemt', 'btag_loosemt']
+category = options.category # category must be inclusive, nobtag, btag, nobtag_tight, btag_tight, nobtag_loosemt or btag_loosemt
+if category not in valid_cats:
+    raise ValueError('Category ({}) must be in {}'.format(category, valid_cats))
 else:
-    raise ValueError('category must be inclusive, nobtag or btag')
+    if category == 'inclusive':
+        cut_signal = cfg.cut_signal
+        basic_cuts =  cfg.basic_cuts
+    elif 'nobtag' in category:
+        # from array import array
+        # cfg.bins['mt_tot'] = (33, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,600,700,800,900,4000]))
+        cut_signal = cfg.cut_signal_nobtag
+        basic_cuts =  cfg.basic_cuts_nobtag
+    elif 'btag' in category:
+        # from array import array
+        # cfg.bins['mt_tot'] = (16, array('d',[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,4000]))
+        cut_signal = cfg.cut_signal_btag
+        basic_cuts =  cfg.basic_cuts_btag
 
+    if '_tight' in category:
+        cut_signal = cut_signal + cfg.cut_mt_lepton_tight
+        basic_cuts = basic_cuts + cfg.cut_mt_lepton_tight
+    elif '_loosemt' in category:
+        cut_signal = cut_signal + cfg.cut_mt_lepton_loose
+        basic_cuts = basic_cuts + cfg.cut_mt_lepton_loose
+        
 # mass points
-
-if cfg.channel in ['mt', 'et']:
-    mass_points = [100,110,120,130]
-else:
-    mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
+mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
 
 cfg.datasets.signal_datasets = cfg.datasets.build_signals(mass_points)
 for sys, dataset_list in cfg.datasets.signal_datasets.iteritems() :
