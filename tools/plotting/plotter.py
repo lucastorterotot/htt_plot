@@ -73,7 +73,7 @@ class Plotter(object):
             plot.AddHistogram(comp.name, hist)
         return plot
     
-    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None, channel_str=None):
+    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None, channel_str=None, set_log_x=False):
         self.plot = self._prepare_plot(xtitle)
         if makecanvas:
             self.buildCanvas()
@@ -120,11 +120,12 @@ class Plotter(object):
         self.lumibox.Draw("same")
 
         if xtitle == 'm_{#rm T}^{#rm tot}':
-            Xaxis.SetRangeUser(20,4000)
+            #Xaxis.SetRangeUser(20,4000)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
             Yaxis.SetRangeUser(0.0001,ymax*1.3)
             # self.plot.Blind(130,4000,False)
+        if set_log_x:
             self.pad.SetLogx()
         else:
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
@@ -153,9 +154,10 @@ class Plotter(object):
         Xaxis.SetLabelColor(0)
         Xaxis.SetLabelSize(0)
 
-        if xtitle == 'm_{#rm T}^{#rm tot}':
-            # ratioXaxis.SetRangeUser(230,900)
-            ratioXaxis.SetRangeUser(20,4000)
+        # if xtitle == 'm_{#rm T}^{#rm tot}':
+        #     # ratioXaxis.SetRangeUser(230,900)
+        #     ratioXaxis.SetRangeUser(20,4000)
+        if set_log_x:
             self.padr.SetLogx()
 
         if makecanvas:
