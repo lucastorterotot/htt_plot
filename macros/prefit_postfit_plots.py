@@ -147,5 +147,6 @@ def plot(prefit=True,bonly=True, mass=None):
 
 # plot(prefit=False,bonly=False)
 # plot(prefit=False,bonly=True)
-for mass in [400,450,600,800,900,1400,1800,2000]:
-    plot(prefit=False,bonly=False,mass=mass)
+# for mass in [400,450,600,800,900,1400,1800,2000]:
+#     plot(prefit=False,bonly=False,mass=mass)
+plot(prefit=False,bonly=False,mass=None)
