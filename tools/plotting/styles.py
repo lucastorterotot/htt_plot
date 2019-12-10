@@ -23,6 +23,11 @@ sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=
 sdata = sData
 sunc = Style(fillColor=17, fillStyle=3144)
 ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
+ssig2 = Style(fillColor=0, fillStyle=0, lineColor=4)
+ssig3 = Style(fillColor=0, fillStyle=0, lineColor=5)
+ssig4 = Style(fillColor=0, fillStyle=0, lineColor=6)
+ssig5 = Style(fillColor=0, fillStyle=0, lineColor=7)
+ssig6 = Style(fillColor=0, fillStyle=0, lineColor=8)
 
 histPref = {
     'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
@@ -40,8 +45,19 @@ histPref = {
     'TTL': {'style':stt, 'layer':2, 'legend':'t#bar{t} #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
     'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow ll (l #rightarrow #tau_{h})', 'stack': True},
     'total_background': {'style':sunc, 'layer':1, 'legend':'systematic uncertainties', 'stack': False},
-    'signal_H600': {'style':ssig, 'layer':0, 'legend':'A #rightarrow #tau#tau (m_{A}= 600 GeV, tan#beta = 20)', 'stack': False},
+    'signal_H600': {'style':ssig, 'layer':0, 'legend':'#phi #rightarrow #tau#tau (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH600': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_ggH600': {'style':ssig, 'layer':0, 'legend':'gg#phi (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH800': {'style':ssig3, 'layer':0, 'legend':'bb#phi (m_{#phi}=800 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_ggH800': {'style':ssig4, 'layer':0, 'legend':'gg#phi (m_{#phi}=800 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH900': {'style':ssig5, 'layer':0, 'legend':'bb#phi (m_{#phi}=900 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_ggH900': {'style':ssig6, 'layer':0, 'legend':'gg#phi (m_{#phi}=900 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'EMB': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow embedded', 'stack': True},
+    'signal_bbH400': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=400 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH450': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=450 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH1400': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=1400 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH1800': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=1800 GeV, #sigma#timesBR=1 pb)', 'stack': False},
+    'signal_bbH2000': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=2000 GeV, #sigma#timesBR=1 pb)', 'stack': False},
 }
 
 histPref['W'] = histPref['WJ']

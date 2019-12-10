@@ -110,12 +110,17 @@ class Plotter(object):
         if xtitle == 'mt_tot':
             xtitle = 'm_{T}^{tot}'
         if xtitle == 'm_{T}^{tot}':
-            Xaxis.SetRangeUser(10,4000)
+            # Xaxis.SetRangeUser(230,900)
+            Xaxis.SetRangeUser(20,4000)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
-            Yaxis.SetRangeUser(1,ymax*2)
-            self.plot.Blind(130,4000,False)
+            Yaxis.SetRangeUser(0.0001,ymax*1.3)
+            # self.plot.Blind(130,4000,False)
             self.pad.SetLogx()
+        else:
+            ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
+                       self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
+            Yaxis.SetRangeUser(0.01,ymax*1000)
 
 
         if makecanvas:
@@ -140,7 +145,8 @@ class Plotter(object):
         Xaxis.SetLabelSize(0)
 
         if xtitle == 'm_{T}^{tot}':
-            ratioXaxis.SetRangeUser(10,4000)
+            # ratioXaxis.SetRangeUser(230,900)
+            ratioXaxis.SetRangeUser(20,4000)
             self.padr.SetLogx()
 
         if makecanvas:
