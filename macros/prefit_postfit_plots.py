@@ -7,8 +7,12 @@ from cpyroot.tools.DataMC.Stack import Stack
 from array import array
 
 
-cat_dict = { 'tt_btag':'htt_tt_9_13TeV'}#'tt_nobtag':'htt_tt_8_13TeV',
-#{'tt_inclusive':'htt_tt_7_13TeV'}
+cat_dict = {
+    'tt_btag':'htt_tt_9_13TeV',
+    'tt_nobtag':'htt_tt_8_13TeV',
+    #'tt_inclusive':'htt_tt_7_13TeV',
+}
+
 
 
 limits = {600:0.0341033935546875,
