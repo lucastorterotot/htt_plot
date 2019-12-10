@@ -59,7 +59,7 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
             infos = [info for info in infos if info['sample_version'] not in ['mt_ZZTo4L_37_nominal']]
     try:
         info = max(infos, key=lambda info: info['sub_date'])
-        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow','Tau_Run2017B_31Mar2018','Tau_Run2017C_31Mar2018','Tau_Run2017D_31Mar2018','Tau_Run2017E_31Mar2018','Tau_Run2017F_31Mar2018']:
+        if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow','Tau_Run2017B_31Mar2018','Tau_Run2017C_31Mar2018','Tau_Run2017D_31Mar2018','Tau_Run2017E_31Mar2018','Tau_Run2017F_31Mar2018'] and channel == 'tt':
             info = [info for info in infos if info['prod_date']=='190503'][0]
         basedir = info['fakes']['replicas']['lyovis10']['dir']
         if n_events_gen:
