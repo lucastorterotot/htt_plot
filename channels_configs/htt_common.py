@@ -82,7 +82,9 @@ cut_btag = ~cut_nobtag
 
 
 
-cut_mt_tot = Cut('mt_tot < 40')
+cut_mt_lepton_loose = Cut('l1_mt < 70 && l1_mt > 40')
+cut_mt_lepton_tight = Cut('l1_mt < 40')
+cut_mt_lepton = Cut('l1_mt < 70')
 
 cut_btag_1 = Cut('bjet1_csv > 0')
 
