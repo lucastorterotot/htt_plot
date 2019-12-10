@@ -68,6 +68,8 @@ histPref['W'] = histPref['WJ']
 histPref['TT'] = histPref['TTBar']
 histPref['ZLL'] = histPref['DY']
 
+histPref['data_hist'] = histPref['data_obs']
+
 def set_style(comp):
     found=False
     for key, pref in histPref.iteritems():
