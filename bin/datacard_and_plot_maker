@@ -9,7 +9,7 @@ parser.add_option("-c", "--cfg", dest = "cfg_name",
                   default="tt",
                   help='Name of the config file to use, must be in htt_plot/channels_configs/')
 parser.add_option("-o", "--output", dest = "output_dir",
-                  default="delayed_plots",
+                  default="htt_postproc",
                   help='Output directory base name, channel is added')
 parser.add_option("-C", "--category", dest = "category",
                   default="inclusive",
@@ -23,6 +23,12 @@ parser.add_option("-s", "--small", dest = "small_run",
 parser.add_option("-p", dest = "just_plot",
                   default=False, action="store_true",
                   help='Do not produce datacards to save time.')
+parser.add_option("-d", dest = "just_datacards",
+                  default=False, action="store_true",
+                  help='Do not produce plots to save time.')
+parser.add_option("-m", dest = "mass_points_to_process",
+                  default=[],
+                  help='Mass points to process for signals.')
 
 (options,args) = parser.parse_args()
 
@@ -71,6 +77,9 @@ else:
         
 # mass points
 mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
+
+mass_points_to_process = [int(m) for m in options.mass_points_to_process[1:-1].split(',')]
+mass_points = [m for m in mass_points if m in mass_points_to_process]
 
 cfg.datasets.signal_datasets = cfg.datasets.build_signals(mass_points)
 for sys, dataset_list in cfg.datasets.signal_datasets.iteritems() :
@@ -598,12 +607,13 @@ def write_plots(plotter, variable, output_dir):
     plotter.write('{}/{}/{}.root'.format(output_dir, category, varname))
     print plotter.plot
 
-for variable in plot_variables:
-    processes.append(
-        delayed(write_plots)(
-            delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
-            variable,
-            output_dir
+if not options.just_datacards:
+    for variable in plot_variables:
+        processes.append(
+            delayed(write_plots)(
+                delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
+                variable,
+                output_dir
             )
         )
 
