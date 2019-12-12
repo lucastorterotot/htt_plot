@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--cfg", dest = "cfg_name",
+                  default="tt",
+                  help='Name of the config file to use, must be in htt_plot/channels_configs/')
+parser.add_option("-o", "--output", dest = "output_dir",
+                  default="htt_postproc",
+                  help='Output directory base name, channel is added')
+parser.add_option("-s", "--split", dest = "splitting",
+                  default=4,
+                  help='Amount of mass points to use at the same time.')
+
+(options,args) = parser.parse_args()
+
+# mass points
+all_mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]
+
+# categories
+all_categories = {
+    'tt' : ['inclusive', 'btag', 'nobtag'],
+    'mt' : ['inclusive', 'nobtag_tight', 'btag_tight', 'nobtag_loosemt', 'btag_loosemt'],
+    'et' : ['inclusive', 'nobtag_tight', 'btag_tight', 'nobtag_loosemt', 'btag_loosemt'],
+    }
+
+import os
+
+total_num_of_mass_points = len(all_mass_points)
+iteration = 0
+last_index = -1
+
+while last_index < total_num_of_mass_points - 1:
+    if last_index + options.splitting < total_num_of_mass_points - 1 :
+        masses_to_process = all_mass_points[last_index + 1:last_index + options.splitting +1]
+    else:
+        masses_to_process = all_mass_points[last_index + 1:]
+    for category in all_categories[options.cfg_name]:
+        os.system(
+            "datacard_and_plot_maker -c {} -o {} -C {} -m '{}' {}".format(
+                options.cfg_name,
+                options.output_dir,
+                category,
+                masses_to_process,
+                ('-d' if iteration > 0 else ''))
+        )
+    last_index = last_index + options.splitting
+    iteration += 1
