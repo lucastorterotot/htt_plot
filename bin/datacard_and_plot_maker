@@ -98,10 +98,10 @@ setTDRStyle(square=False)
 from htt_plot.tools.datacards import make_datacards
 
 # cuts
-# signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes
-signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes & cfg.cut_not_embed
-# signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes_not_embed
-signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes
+signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes
+# signal_region_Embed_nofakes = cut_signal & cfg.cut_embed & cfg.cut_not_fakes & cfg.cut_not_embed
+signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes_not_embed
+# signal_region_MC_nojetfakes_noembed_cut = cut_signal & cfg.cut_not_fakes
 signal_region_signalMC_cut = cut_signal
 
 from htt_plot.tools.cut import Cut
@@ -376,11 +376,6 @@ for variable in variables:
                                 bins,
                                 mergedict = {'Embedded':['embed']})
 
-    #Embedding test
-    cfgs['XTT'] = merge('XTT', [cfgs['ZTT'],
-                                cfgs['TTT'],
-                                cfgs['VVT']])
-    
     # fakes
     cfgs['fakes'] = merge('fakes', [cfgs['fakes_data_obs'],
                                     cfgs['fakes_DY'],
@@ -407,8 +402,7 @@ for variable in variables:
         'VVL' : cfgs['VVL'],
         'jetFakes' : cfgs['fakes'],
         'data_obs' : cfgs['data_obs'],
-        'Embedded' : cfgs['Embedded'],
-        'XTT' : cfgs['XTT']
+        'Embedded' : cfgs['Embedded']
     }
     for mass in mass_points:
         dc_comps[variable]['nominal']['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
