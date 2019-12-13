@@ -37,8 +37,6 @@ cuts_against_leptons = Cuts(
     l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
 )
 
-cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() & cut_mt_lepton
-
 ## triggers
 cuts_triggers = Cuts(
     singlemuon_24 = 'trg_singlemuon_24',
@@ -49,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all()
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton
 
 ## iso
 cuts_iso = Cuts(
@@ -122,14 +120,13 @@ weights['l2_fake'] = Cut('l2_fakeweight')
 # datasets
 import htt_plot.datasets.lucas_mt as datasets
 
-cut_signal = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts
-
+cut_signal = cuts_iso['l2_Tight'] & basic_cuts
 
 # category
 
 basic_cuts_btag = basic_cuts & cut_btag
-cut_signal_btag = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts_btag
+cut_signal_btag = cuts_iso['l2_Tight'] & basic_cuts_btag
 
 basic_cuts_nobtag = basic_cuts & cut_nobtag
-cut_signal_nobtag = cuts_iso['l2_Tight'] & cut_mt_lepton & basic_cuts_nobtag
+cut_signal_nobtag = cuts_iso['l2_Tight'] & basic_cuts_nobtag
 
