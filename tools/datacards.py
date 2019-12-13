@@ -70,8 +70,8 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
             if rootdir.Get(histname):
                 continue
             hist = component.histogram.Clone(histname)
-            if 'jetFakes' in histname:
-                hist.Scale(jetFakes_integral[category]/hist.Integral(0,hist.GetNbinsX()+1))
+            # if 'jetFakes' in histname:
+            #     hist.Scale(jetFakes_integral[category]/hist.Integral(0,hist.GetNbinsX()+1))
             hist.SetMinimum(0.0)
             # hist.SetBinContent(0,0)
             # hist.SetBinContent(hist.GetNbinsX()+1,0)
