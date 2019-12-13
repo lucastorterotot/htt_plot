@@ -38,9 +38,14 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
         sys = 'nominal'
     if n_events_gen==None and xs==None and not ('Embedded' in sample_name) and not ('SUSY' in sample_name) and not ('SingleMuon_Run201' in sample_name):
         sys = ''
-    infos = dsdb.find('se', {'sample':sample_name,
-                             'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
-                             'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
+    if 'Embedded' in sample_name and channel == 'mt' :
+        infos = dsdb.find('se', {'sample':sample_name,
+                                 'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
+                                 'sample_version':{'$regex':'.*{}.*$'.format(sys)}})
+    else:
+        infos = dsdb.find('se', {'sample':sample_name,
+                                 'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
+                                 'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
     if not infos:
         if sys!='nominal':
             print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
