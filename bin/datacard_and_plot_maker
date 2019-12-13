@@ -27,7 +27,7 @@ parser.add_option("-d", dest = "just_datacards",
                   default=False, action="store_true",
                   help='Do not produce plots to save time.')
 parser.add_option("-m", dest = "mass_points_to_process",
-                  default=[],
+                  default='[0]',
                   help='Mass points to process for signals.')
 
 (options,args) = parser.parse_args()
