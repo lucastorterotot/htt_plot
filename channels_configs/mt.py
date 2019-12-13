@@ -41,8 +41,8 @@ cut_signal = cuts_l1.all() & cuts_l2.all() & cuts_against_leptons.all() & cut_mt
 
 ## triggers
 cuts_triggers = Cuts(
-    singlemuon_24 = 'trg_singlemuon_24_fired',
-    singlemuon_27 = 'trg_singlemuon_27_fired',
+    singlemuon_24 = 'trg_singlemuon_24',
+    singlemuon_27 = 'trg_singlemuon_27',
     crossmuon_mu24tau20 = 'trg_crossmuon_mu24tau20',
     crossmuon_mu20tau27 = 'trg_crossmuon_mu20tau27',
 )
