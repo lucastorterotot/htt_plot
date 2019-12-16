@@ -184,7 +184,10 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
                      category = ' '.join(cat.split('_')[1:]),
-                     channel_str = channel_strings_for_plot[channel]
+                     channel_str = channel_strings_for_plot[channel],
+                     blind = True,
+                     x_range = [0,700],
+                     y_range = [1e-2, 5e5]
         )
         if prefit:
             outfilename = 'prefit_plots_{}'

@@ -73,7 +73,14 @@ class Plotter(object):
             plot.AddHistogram(comp.name, hist)
         return plot
     
-    def draw(self, xtitle, ytitle, makecanvas=True, sys_error_hist=None, category=None, channel_str=None, set_log_x=False):
+    def draw(self, xtitle, ytitle,
+             makecanvas=True,
+             sys_error_hist=None,
+             category=None, channel_str=None,
+             set_log_x=False,
+             x_range = None,
+             y_range = None,
+             blind = True):
         self.plot = self._prepare_plot(xtitle)
         if makecanvas:
             self.buildCanvas()
@@ -124,11 +131,19 @@ class Plotter(object):
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
             Yaxis.SetRangeUser(0.0001,ymax*1.3)
-            self.plot.Blind(130,4000,False)
+            if blind:
+                self.plot.Blind(130,4000,False)
         else:
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
             Yaxis.SetRangeUser(0.01,ymax*1000)
+
+        if x_range is not None:
+            Xaxis.SetRangeUser(x_range[0], x_range[1])
+
+        if y_range is not None:
+            Yaxis.SetRangeUser(y_range[0], y_range[1])
+            
         if set_log_x:
             self.pad.SetLogx()
 
