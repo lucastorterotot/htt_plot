@@ -65,12 +65,12 @@ class Plotter(object):
         print hist_name
         return hist
 
-    def _prepare_plot(self, xtitle):
+    def _prepare_plot(self, xtitle, NormalizeToBinWidth = True):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
             hist = comp.histogram
             hist.SetStats(0)
-            plot.AddHistogram(comp.name, hist)
+            plot.AddHistogram(comp.name, hist, NormalizeToBinWidth = NormalizeToBinWidth)
         return plot
     
     def draw(self, xtitle, ytitle,
@@ -80,8 +80,9 @@ class Plotter(object):
              set_log_x=False,
              x_range = None,
              y_range = None,
-             blind = True):
-        self.plot = self._prepare_plot(xtitle)
+             blind = True,
+             NormalizeToBinWidth = False):
+        self.plot = self._prepare_plot(xtitle, NormalizeToBinWidth = NormalizeToBinWidth)
         if makecanvas:
             self.buildCanvas()
             self.pad.cd()

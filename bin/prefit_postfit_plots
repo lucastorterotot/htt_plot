@@ -174,7 +174,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         uncertainties.SetName('total_background')
         uncertainties_rel = copy.copy(uncertainties)
         for b in range(uncertainties.GetNbinsX()):
-            uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1)/(data_hist.GetBinLowEdge(b+2)-data_hist.GetBinLowEdge(b+1)))
+            uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
             uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1)*uncertainties.GetBinContent(b+1)/unc_hist.GetBinContent(b+1))
             uncertainties_rel.SetBinContent(b+1,1)
             uncertainties_rel.SetBinError(b+1,uncertainties.GetBinError(b+1)/uncertainties.GetBinContent(b+1))
@@ -187,7 +187,8 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      channel_str = channel_strings_for_plot[channel],
                      blind = True,
                      x_range = [0,700],
-                     y_range = [1e-2, 5e5]
+                     y_range = [1e-2, 5e5],
+                     NormalizeToBinWidth = False
         )
         if prefit:
             outfilename = 'prefit_plots_{}'
