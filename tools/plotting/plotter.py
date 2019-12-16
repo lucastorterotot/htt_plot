@@ -92,6 +92,10 @@ class Plotter(object):
             self.sys_error_hist.SetFillColor(15)
             self.sys_error_hist.SetFillStyle(3544)
             self.sys_error_hist.SetMarkerStyle(0)
+            if NormalizeToBinWidth:
+                for i in range (1,self.sys_error_hist.GetNbinsX()+1) :
+                    self.sys_error_hist.SetBinContent(i, self.sys_error_hist.GetBinContent(i) / self.sys_error_hist.GetBinWidth(i))
+                    self.sys_error_hist.SetBinError  (i, self.sys_error_hist.GetBinError(i)   / self.sys_error_hist.GetBinWidth(i))
             self.sys_error_hist.Draw('e2 same')
         
         Xaxis = self.plot.supportHist.GetXaxis()
