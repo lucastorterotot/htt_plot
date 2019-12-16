@@ -52,6 +52,8 @@ cat_dict_et = {
 
 cat_dict = {
     'tt' : cat_dict_tt,
+    'mt' : cat_dict_mt,
+    'et' : cat_dict_et,
 }
 
 if options.category == 'all':
@@ -98,9 +100,9 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         comps = []
 
         data_hist_tmp = data_shape_dir.Get('data_obs')
-        if cat == 'tt_btag':
+        if '_btag' in cat:
             data_hist = TH1F('data_obs','data_obs', 29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900]))
-        elif cat == 'tt_nobtag':
+        elif '_nobtag' in cat:
             data_hist = TH1F('data_hist','data_hist', 29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000]))
         data_hist.SetTitle('')
         data_histcomp = copy.copy(data_hist)
@@ -185,10 +187,10 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      sys_error_hist=uncertainties,
                      category = ' '.join(cat.split('_')[1:]),
                      channel_str = channel_strings_for_plot[channel],
-                     blind = True,
+                     blind = (channel not in ['tt']),
                      x_range = [0,700],
                      y_range = [1e-2, 5e5],
-                     NormalizeToBinWidth = False
+                     NormalizeToBinWidth = True
         )
         if prefit:
             outfilename = 'prefit_plots_{}'
@@ -210,4 +212,5 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
 # plot(prefit=False,bonly=True)
 # for mass in [400,450,600,800,900,1400,1800,2000]:
 #     plot(prefit=False,bonly=False,mass=mass)
+plot(prefit=True,bonly=False,mass=None)
 plot(prefit=False,bonly=False,mass=None)
