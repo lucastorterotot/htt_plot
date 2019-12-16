@@ -593,9 +593,10 @@ def write_plots(plotter, variable, output_dir):
     varname = cfg.var_name_dict[variable] if variable in cfg.var_name_dict else variable
     plotter.draw(
         varname,
-        '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
+        'N events',
         category = category,
-        channel_str = channel_strings_for_plot[cfg.channel])
+        channel_str = channel_strings_for_plot[cfg.channel],
+        NormalizeToBinWidth = False)
     plotter.write('{}/{}/{}.png'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.tex'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.root'.format(output_dir, category, varname))
