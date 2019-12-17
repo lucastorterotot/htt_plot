@@ -65,7 +65,7 @@ class Plotter(object):
         print hist_name
         return hist
 
-    def _prepare_plot(self, xtitle, NormalizeToBinWidth = True):
+    def _prepare_plot(self, xtitle, NormalizeToBinWidth = False):
         plot = DataMCPlot('CHANGEME', histPref)
         for comp in self.comps:
             hist = comp.histogram
