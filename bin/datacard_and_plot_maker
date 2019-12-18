@@ -402,7 +402,14 @@ for variable in variables:
         'VVL' : cfgs['VVL'],
         'jetFakes' : cfgs['fakes'],
         'data_obs' : cfgs['data_obs'],
-        'Embedded' : cfgs['Embedded']
+        'Embedded' : cfgs['Embedded'],
+            'ZTT' : cfgs['ZTT'],
+            'ZJ' : cfgs['ZJ'],
+            'TTT' : cfgs['TTT'],
+            'TTJ' : cfgs['TTJ'],
+            'VVT' : cfgs['VVT'],
+            'VVJ' : cfgs['VVJ'],
+            'W' : cfgs['W']
     }
     for mass in mass_points:
         dc_comps[variable]['nominal']['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
@@ -559,6 +566,8 @@ for variable in datacards_variables:
         if not ('ff_' in sys):
             for process in sys_dict[sys]['processes']:
                 if process in ['ZL','TTL','VVL','Embedded']:
+                    dc_comps[variable][sys][process] = cfgs[process]
+                elif cfg.channel in ['mt', 'et'] and process in ['ZTT', 'ZJ', 'TTT', 'TTJ', 'VVT', 'VVJ', 'W']:
                     dc_comps[variable][sys][process] = cfgs[process]
                 if process == 'signal':
                     for mass in mass_points:#,'300','400',,'700','800','900'
