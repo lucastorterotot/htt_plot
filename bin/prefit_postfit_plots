@@ -189,8 +189,9 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      channel_str = channel_strings_for_plot[channel],
                      blind = (channel not in ['tt']),
                      x_range = [0,700],
-                     y_range = [1e-2, 5e5],
-                     NormalizeToBinWidth = True
+                     y_range = [1e-2,2e4],
+                     NormalizeToBinWidth = True,
+                     set_log_x  = False
         )
         if prefit:
             outfilename = 'prefit_plots_{}'
