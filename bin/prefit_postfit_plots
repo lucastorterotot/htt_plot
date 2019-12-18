@@ -204,10 +204,12 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
             # plotter.write((outfilename+str(mass)+'.root').format(cat))
             plotter.write((outfilename+str(mass)+'.pdf').format(cat))
             plotter.write((outfilename+str(mass)+'.png').format(cat))
+            plotter.write((outfilename+str(mass)+'.tex').format(cat))
         else:
             # plotter.write((outfilename+'.root').format(cat))
             plotter.write((outfilename+'.pdf').format(cat))
             plotter.write((outfilename+'.png').format(cat))
+            plotter.write((outfilename+'.tex').format(cat))
 
 # plot(prefit=False,bonly=False)
 # plot(prefit=False,bonly=True)
