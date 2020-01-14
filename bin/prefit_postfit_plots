@@ -76,6 +76,12 @@ channel_strings_for_plot = {
     'et' : '#ele#tauh',
 }
 
+comp_names_for_channel = {
+    'tt' : ['TTL','VVL','ZL','Embedded','jetFakes'],
+    'mt' : ['W', 'ZTT', 'ZL', 'TTT', 'TTJ', 'VVJ', 'VVT', 'Embedded','jetFakes'],
+    'et' : ['W', 'ZTT', 'ZL', 'TTT', 'TTJ', 'VVJ', 'VVT', 'Embedded','jetFakes'],
+    }
+
 def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
     data_file = TFile('./inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(channel,channel))
     if mass:
@@ -96,7 +102,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         shapes_dir = shapes_file.Get(shapedir).Get(cats_to_process[cat])
         unc_hist = shapes_dir.Get('total_background')
 
-        comp_names = ['TTL','VVL','ZL','Embedded','jetFakes']
+        comp_names = comp_names_for_channel[channel]
         comps = []
 
         #data_hist_tmp = data_shape_dir.Get('data_obs')
