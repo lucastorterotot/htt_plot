@@ -4,7 +4,6 @@ from ROOT import TColor, kBlack
 
 from cpyroot.tools.style import *
 
-qcdcol = TColor.GetColor(250,202,255)
 embedcol =  TColor.GetColor(248,206,104)
 dycol = TColor.GetColor(0,150,255)
 WJcol = TColor.GetColor(193,68,78)
@@ -14,7 +13,6 @@ ttcol = TColor.GetColor(155,152,204)
 stcol = TColor.GetColor(85,82,204)
 zlcol = TColor.GetColor(100,182,232)
 
-sqcd = Style(markerColor=qcdcol, markerSize=1, lineColor=1, fillColor=qcdcol, fillStyle=1001)
 sdy = Style(markerColor=dycol, markerSize=1, lineColor=1, fillColor=dycol, fillStyle=1001)
 sembed = Style(markerColor=embedcol, markerSize=1, lineColor=1, fillColor=embedcol, fillStyle=1001)
 swj = Style(markerColor=WJcol, markerSize=1, lineColor=1, fillColor=WJcol, fillStyle=1001)
@@ -36,30 +34,30 @@ histPref = {}
 
 histPref['default'] = {
     'data_obs': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
-    'jetFakes': {'style':sfakes, 'layer':15, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
-    'Embedded': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
+    'Embedded': {'style':sembed, 'layer':90, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
+    'jetFakes': {'style':sfakes, 'layer':80, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
     
-    'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
-    'ZTT': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #tauh#tauh', 'stack': True},
-    'ZLL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow qq, #ell#ell', 'stack': True},
+    'ZL': {'style':sdy, 'layer':70, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'ZTT': {'style':sdy, 'layer':71, 'legend':'Z #rightarrow #tauh#tauh', 'stack': True},
+    'ZLL': {'style':sdy, 'layer':69, 'legend':'Z #rightarrow qq, #ell#ell', 'stack': True},
 
-    'TTL': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
-    'TTT': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow #tau#tau', 'stack': True},
-    'TTJ': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow qq, #ell#ell', 'stack': True},
+    'TTL': {'style':stt, 'layer':40, 'legend':'#quarkt#antiquarkt #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'TTT': {'style':stt, 'layer':41, 'legend':'#quarkt#antiquarkt #rightarrow #tau#tau', 'stack': True},
+    'TTJ': {'style':stt, 'layer':39, 'legend':'#quarkt#antiquarkt #rightarrow qq, #ell#ell', 'stack': True},
 
-    'VVL': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
-    'VVT': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow #tau#tau', 'stack': True},
-    'VVJ': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow qq, #ell#ell', 'stack': True},
+    'VVL': {'style':sDiboson, 'layer':60, 'legend':'Diboson-singleTop #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'VVT': {'style':sDiboson, 'layer':61, 'legend':'Diboson-singleTop #rightarrow #tau#tau', 'stack': True},
+    'VVJ': {'style':sDiboson, 'layer':59, 'legend':'Diboson-singleTop #rightarrow qq, #ell#ell', 'stack': True},
 
-    'WJ': {'style':swj, 'layer':2, 'legend':'#Wboson+#text{jets}', 'stack': True},
+    'WJ': {'style':swj, 'layer':30, 'legend':'#Wboson+#text{jets}', 'stack': True},
     
-    'DY': {'style':sdy, 'layer':12, 'legend':'DY', 'stack': True},
-    'TTBar': {'style':stt, 'layer':11, 'legend':'#quarkt#antiquarkt', 'stack': True},
-    'EWK': {'style':sEWK, 'layer':1, 'legend':'Electroweak', 'stack': True},
-    'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
-    'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
+    'DY': {'style':sdy, 'layer':70, 'legend':'DY', 'stack': True},
+    'TTBar': {'style':stt, 'layer':40, 'legend':'#quarkt#antiquarkt', 'stack': True},
+    'EWK': {'style':sEWK, 'layer':60, 'legend':'Electroweak', 'stack': True},
+    'Diboson': {'style':sDiboson, 'layer':61, 'legend':'Diboson', 'stack': True},
+    'singleTop': {'style':ssingletop, 'layer':59, 'legend':'singleTop', 'stack': True},
     
-    'VV': {'style':sDiboson, 'layer':4, 'legend':'VV', 'stack': True},
+    'VV': {'style':sDiboson, 'layer':62, 'legend':'VV', 'stack': True},
 
     'total_background': {'style':sunc, 'layer':1, 'legend':'systematic uncertainties', 'stack': False},
     'signal_H600': {'style':ssig, 'layer':0, 'legend':'#phi #rightarrow #tau#tau (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
