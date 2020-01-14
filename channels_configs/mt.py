@@ -19,7 +19,7 @@ cut_dy_promptfakeleptons = Cut('l1_gen_match==1 || l1_gen_match==2 || l2_gen_mat
 cuts_l1 = Cuts(
     l1_pt = 'l1_pt >= 21',
     l1_eta = 'abs(l1_eta) <= 2.1',
-    l1_iso = 'l1_iso < 0.3',
+    l1_iso = 'l1_iso < 0.15',
     l1_vertex = 'abs(l1_dxy) < 0.045 && abs(l1_dz) < 0.2',
 )
 
@@ -34,7 +34,7 @@ cuts_l2 = Cuts(
 
 cuts_against_leptons = Cuts(
     l2_against_e = 'l2_againstElectronVLooseMVA6 > 0.5',
-    l2_against_mu = 'l2_againstMuonLoose3 > 0.5',
+    l2_against_mu = 'l2_againstMuonTight3 > 0.5',
 )
 
 ## triggers
@@ -47,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1['l1_iso']
 
 ## iso
 cuts_iso = Cuts(
