@@ -87,4 +87,4 @@ for key, item in sys_dict_samples.iteritems():
     if 'TT' in item['processes']:
         item['processes'].extend(['TTT','TTL','TTJ'])
     if 'Diboson' in item['processes'] and 'singleTop' in item['processes']:
-        item['processes'].extend(['VV','VVL','VVT'])
+        item['processes'].extend(['VV','VVL','VVT','VVJ'])
