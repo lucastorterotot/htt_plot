@@ -35,10 +35,10 @@ cat_dict_tt = {
 }
 
 cat_dict_mt = {
-    'mt_nobtag_tight':'htt_mt_8_13TeV',
-    'mt_btag_tight':'htt_mt_9_13TeV',
-    'mt_nobtag_loosemt':'htt_mt_10_13TeV',
-    'mt_btag_loosemt':'htt_mt_11_13TeV',
+    # 'mt_nobtag_tight':'htt_mt_8_13TeV',
+    # 'mt_btag_tight':'htt_mt_9_13TeV',
+    # 'mt_nobtag_loosemt':'htt_mt_10_13TeV',
+    # 'mt_btag_loosemt':'htt_mt_11_13TeV',
     'mt_inclusive':'htt_mt_7_13TeV',
 }
 
@@ -101,7 +101,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
 
         #data_hist_tmp = data_shape_dir.Get('data_obs')
         if '_btag' in cat or 'inclusive' in cat:
-            data_hist = TH1F('data_obs','data_obs', 29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900]))
+            data_hist = TH1F('data_obs','data_obs', 29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000]))
         elif '_nobtag' in cat:
             data_hist = TH1F('data_hist','data_hist', 29, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000]))
         data_hist.SetTitle('')

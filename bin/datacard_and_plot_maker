@@ -333,8 +333,8 @@ for variable in variables:
     
     #VV
     cfgs['VVL'] = merge('VVL', [cfgs['Diboson_VVL'],cfgs['singleTop_VVL'],cfgs['EWK_VVL']])
-    cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT'],cfgs['EWK_VVL']])
-    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVJ'],cfgs['EWK_VVL']])
+    cfgs['VVT'] = merge('VVT', [cfgs['Diboson_VVT'],cfgs['singleTop_VVT'],cfgs['EWK_VVT']])
+    cfgs['VVJ'] = merge('VVJ', [cfgs['Diboson_VVJ'],cfgs['singleTop_VVJ'],cfgs['EWK_VVJ']])
     cfgs['VV'] = merge('VV', [cfgs['VVJ'],cfgs['VVT']])
     
     #W

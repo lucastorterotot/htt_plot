@@ -78,24 +78,21 @@ cuts_datacards = Cuts(
     TTJ = '!(l2_gen_match == 5)',
     VVT = '(l2_gen_match == 5)',
     VVJ = '!(l2_gen_match == 5)',
-    Diboson_VVT = '(l2_gen_match == 5)',
-    Diboson_VVJ = '!(l2_gen_match == 5)',
-    singleTop_VVT = '(l2_gen_match == 5)',
-    singleTop_VVJ = '!(l2_gen_match == 5)',
     WJ = '1',
     jetFakes = '1',
     data = '1',
     embed = 'l1_gen_match == 4 && l2_gen_match == 5',
 )
-cuts_datacards['TTL'] = cuts_datacards['ZL']
-cuts_datacards['VVL'] = cuts_datacards['ZL']
-cuts_datacards['Diboson_VVL'] = cuts_datacards['ZL']
-cuts_datacards['singleTop_VVL'] = cuts_datacards['ZL']
 cuts_datacards['ZLL'] = cuts_datacards['ZL'] | cuts_datacards['ZJ']
 cuts_datacards['TT'] = cuts_datacards['TTT'] | cuts_datacards['TTJ']
 cuts_datacards['VV'] = cuts_datacards['VVT'] | cuts_datacards['VVJ']
-for ewk_key in ['VVT', 'VVJ', 'VVL']:
-    cuts_datacards['EWK_{}'.format(ewk_key)] = cuts_datacards[ewk_key]
+
+cuts_datacards['TTL'] = cuts_datacards['ZL']
+cuts_datacards['VVL'] = cuts_datacards['ZL']
+
+for VV_key in ['VVT', 'VVJ', 'VVL']:
+    for process_type in ['Diboson', 'singleTop', 'EWK']:
+        cuts_datacards['{}_{}'.format(process_type, VV_key)] = cuts_datacards[VV_key]
 from htt_plot.channels_configs.htt_common import datacard_processes
 
 # weights
