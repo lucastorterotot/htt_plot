@@ -181,17 +181,17 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
             uncertainties_rel.SetBinContent(b+1,1)
             uncertainties_rel.SetBinError(b+1,uncertainties.GetBinError(b+1)/uncertainties.GetBinContent(b+1))
         
-        plotter = Plotter(comps,41.5)
+        plotter = Plotter(comps,41.5, channel)
         plotter.draw('mt_tot',
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
                      category = ' '.join(cat.split('_')[1:]),
                      channel_str = channel_strings_for_plot[channel],
                      blind = (channel not in ['tt']),
-                     x_range = [0,700],
-                     y_range = [1e-2,2e4],
+                     x_range = [10,700],
+                     y_range = [1,2e4],
                      NormalizeToBinWidth = True,
-                     set_log_x  = False
+                     set_log_x  = True
         )
         if prefit:
             outfilename = 'prefit_plots_{}'

@@ -32,22 +32,35 @@ ssig4 = Style(fillColor=0, fillStyle=0, lineColor=6)
 ssig5 = Style(fillColor=0, fillStyle=0, lineColor=7)
 ssig6 = Style(fillColor=0, fillStyle=0, lineColor=8)
 
-histPref = {
-    'DY': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+histPref = {}
+
+histPref['default'] = {
+    'data_obs': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
+    'jetFakes': {'style':sfakes, 'layer':15, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
     'Embedded': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
+    
+    'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'ZTT': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #tauh#tauh', 'stack': True},
+    'ZLL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow qq, #ell#ell', 'stack': True},
+
+    'TTL': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'TTT': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow #tau#tau', 'stack': True},
+    'TTJ': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow qq, #ell#ell', 'stack': True},
+
+    'VVL': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+    'VVT': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow #tau#tau', 'stack': True},
+    'VVJ': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow qq, #ell#ell', 'stack': True},
+
     'WJ': {'style':swj, 'layer':2, 'legend':'#Wboson+#text{jets}', 'stack': True},
-    'EWK': {'style':sEWK, 'layer':1, 'legend':'Electroweak', 'stack': True},
+    
+    'DY': {'style':sdy, 'layer':12, 'legend':'DY', 'stack': True},
     'TTBar': {'style':stt, 'layer':11, 'legend':'#quarkt#antiquarkt', 'stack': True},
+    'EWK': {'style':sEWK, 'layer':1, 'legend':'Electroweak', 'stack': True},
     'Diboson': {'style':sDiboson, 'layer':3, 'legend':'Diboson', 'stack': True},
     'singleTop': {'style':ssingletop, 'layer':4, 'legend':'singleTop', 'stack': True},
+    
     'VV': {'style':sDiboson, 'layer':4, 'legend':'VV', 'stack': True},
-    'EWK': {'style':sDiboson, 'layer':5, 'legend':'EWK', 'stack': True},
-    'data_obs': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
-    'fakes': {'style':sfakes, 'layer':15, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
-    'jetFakes': {'style':sfakes, 'layer':15, 'legend':'jet #rightarrow #tau_{h} fakes', 'stack': True},
-    'VVL': {'style':sDiboson, 'layer':4, 'legend':'Diboson-singleTop #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
-    'TTL': {'style':stt, 'layer':2, 'legend':'#quarkt#antiquarkt #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
-    'ZL': {'style':sdy, 'layer':12, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
+
     'total_background': {'style':sunc, 'layer':1, 'legend':'systematic uncertainties', 'stack': False},
     'signal_H600': {'style':ssig, 'layer':0, 'legend':'#phi #rightarrow #tau#tau (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'signal_bbH600': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=600 GeV, #sigma#timesBR=1 pb)', 'stack': False},
@@ -56,7 +69,6 @@ histPref = {
     'signal_ggH800': {'style':ssig4, 'layer':0, 'legend':'gg#phi (m_{#phi}=800 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'signal_bbH900': {'style':ssig5, 'layer':0, 'legend':'bb#phi (m_{#phi}=900 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'signal_ggH900': {'style':ssig6, 'layer':0, 'legend':'gg#phi (m_{#phi}=900 GeV, #sigma#timesBR=1 pb)', 'stack': False},
-    'EMB': {'style':sembed, 'layer':35, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
     'signal_bbH400': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=400 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'signal_bbH450': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=450 GeV, #sigma#timesBR=1 pb)', 'stack': False},
     'signal_bbH1400': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=1400 GeV, #sigma#timesBR=1 pb)', 'stack': False},
@@ -64,15 +76,38 @@ histPref = {
     'signal_bbH2000': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=2000 GeV, #sigma#timesBR=1 pb)', 'stack': False},
 }
 
-histPref['W'] = histPref['WJ']
-histPref['TT'] = histPref['TTBar']
-histPref['ZLL'] = histPref['DY']
+def make_histPref_copy(key, origkey='default'):
+    histPref[key] = {}
+    for subkey in histPref[origkey]:
+        histPref[key][subkey] = histPref[origkey][subkey]
 
-histPref['data_hist'] = histPref['data_obs']
+for channel in ["tt", "mt", "et"]:
+    make_histPref_copy(channel)
 
-def set_style(comp):
+histPref['tt']['ZTT']['legend'] = 'Z #rightarrow #tauh#tauh'
+histPref['mt']['ZTT']['legend'] = 'Z #rightarrow #tauh#tauh  (#tauh #rightarrow #mu)'
+histPref['et']['ZTT']['legend'] = 'Z #rightarrow #tauh#tauh  (#tauh #rightarrow #ele)'
+
+histPref['tt']['TTT']['legend'] = '#quarkt#antiquarkt #rightarrow #tauh#tauh'
+histPref['mt']['TTT']['legend'] = '#quarkt#antiquarkt #rightarrow #ell#tauh'
+histPref['et']['TTT']['legend'] = '#quarkt#antiquarkt #rightarrow #ell#tauh'
+
+histPref['tt']['VVT']['legend'] = 'Diboson-singleTop #rightarrow #tauh#tauh'
+histPref['mt']['VVT']['legend'] = 'Diboson-singleTop #rightarrow #ell#tauh'
+histPref['et']['VVT']['legend'] = 'Diboson-singleTop #rightarrow #ell#tauh'
+
+    
+for key in histPref:
+    histPref[key]['data_hist'] = histPref[key]['data_obs']
+    histPref[key]['EMB'] = histPref[key]['Embedded']
+    histPref[key]['fakes'] = histPref[key]['jetFakes']
+    histPref[key]['ZJ'] = histPref[key]['jetFakes']
+    histPref[key]['W'] = histPref[key]['WJ']
+    histPref[key]['TT'] = histPref[key]['TTBar']
+
+def set_style(comp, channel='default'):
     found=False
-    for key, pref in histPref.iteritems():
+    for key, pref in histPref[channel].iteritems():
         if fnmatch.fnmatch(comp.name, key):
             comp.style = pref['style']
             found = True

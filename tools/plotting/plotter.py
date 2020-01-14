@@ -47,13 +47,14 @@ class Plotter(object):
         pad.Draw()
         padr.Draw()
     
-    def __init__(self, comps, lumi):
+    def __init__(self, comps, lumi, channel):
         self.can = None
         self.pad = None
         self.padr = None
         self.comps = comps
+        self.channel = channel
         for comp in self.comps:
-            set_style(comp)
+            set_style(comp, self.channel)
         self.lumi = lumi
                 
     def _project(self, comp, var, cut, *bins):
@@ -65,8 +66,8 @@ class Plotter(object):
         print hist_name
         return hist
 
-    def _prepare_plot(self, xtitle, NormalizeToBinWidth = False):
-        plot = DataMCPlot('CHANGEME', histPref)
+    def _prepare_plot(self, xtitle, NormalizeToBinWidth = False, channel = 'default'):
+        plot = DataMCPlot('CHANGEME', histPref[channel])
         for comp in self.comps:
             hist = comp.histogram
             hist.SetStats(0)
@@ -82,7 +83,7 @@ class Plotter(object):
              y_range = None,
              blind = True,
              NormalizeToBinWidth = False):
-        self.plot = self._prepare_plot(xtitle, NormalizeToBinWidth = NormalizeToBinWidth)
+        self.plot = self._prepare_plot(xtitle, NormalizeToBinWidth = NormalizeToBinWidth, channel = self.channel)
         if makecanvas:
             self.buildCanvas()
             self.pad.cd()

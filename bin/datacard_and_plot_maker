@@ -615,7 +615,7 @@ if not options.just_datacards:
     for variable in plot_variables:
         processes.append(
             delayed(write_plots)(
-                delayed(Plotter)(components[variable], cfg.datasets.data_lumi),
+                delayed(Plotter)(components[variable], cfg.datasets.data_lumi, cfg.channel),
                 variable,
                 output_dir
             )
