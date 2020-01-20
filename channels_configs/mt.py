@@ -20,7 +20,7 @@ cuts_l1 = Cuts(
     l1_pt = 'l1_pt >= 21',
     l1_eta = 'abs(l1_eta) <= 2.1',
     l1_iso = 'l1_iso < 0.15',
-    l1_vertex = 'abs(l1_dxy) < 0.045 && abs(l1_dz) < 0.2',
+    l1_vertex = 'abs(l1_d0) < 0.045 && abs(l1_dz) < 0.2',
 )
 
 cuts_l2 = Cuts(
@@ -47,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1['l1_iso']
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1.all() & cuts_l2.all()
 
 ## iso
 cuts_iso = Cuts(
