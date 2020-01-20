@@ -22,7 +22,7 @@ sDiboson = Style(markerColor=dibosoncol, markerSize=1, lineColor=1, fillColor=di
 ssingletop = Style(markerColor=stcol, markerSize=1, lineColor=1, fillColor=stcol, fillStyle=1001)
 sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=1001)
 sdata = sData
-sunc = Style(fillColor=17, fillStyle=3144)
+sunc = Style(fillColor=17, fillStyle=3002)
 ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
 ssig2 = Style(fillColor=0, fillStyle=0, lineColor=4)
 ssig3 = Style(fillColor=0, fillStyle=0, lineColor=5)
@@ -37,6 +37,7 @@ histPref['default'] = {
     'Embedded': {'style':sembed, 'layer':90, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
     'jetFakes': {'style':sfakes, 'layer':80, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
     
+    'Zll': {'style':sdy, 'layer':70, 'legend':'Z #rightarrow #ell#ell', 'stack': True},
     'ZL': {'style':sdy, 'layer':70, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},
     'ZTT': {'style':sdy, 'layer':71, 'legend':'Z #rightarrow #tauh#tauh', 'stack': True},
     'ZLL': {'style':sdy, 'layer':69, 'legend':'Z #rightarrow qq, #ell#ell', 'stack': True},
@@ -49,7 +50,7 @@ histPref['default'] = {
     'VVT': {'style':sDiboson, 'layer':61, 'legend':'Diboson-singleTop #rightarrow #tau#tau', 'stack': True},
     'VVJ': {'style':sDiboson, 'layer':59, 'legend':'Diboson-singleTop #rightarrow qq, #ell#ell', 'stack': True},
 
-    'WJ': {'style':swj, 'layer':30, 'legend':'#Wboson+#text{jets}', 'stack': True},
+    'WJ': {'style':swj, 'layer':58, 'legend':'#Wboson+#text{jets}', 'stack': True},
     
     'DY': {'style':sdy, 'layer':70, 'legend':'DY', 'stack': True},
     'TTBar': {'style':stt, 'layer':40, 'legend':'#quarkt#antiquarkt', 'stack': True},
@@ -74,10 +75,9 @@ histPref['default'] = {
     'signal_bbH2000': {'style':ssig2, 'layer':0, 'legend':'bb#phi (m_{#phi}=2000 GeV, #sigma#timesBR=1 pb)', 'stack': False},
 }
 
+import copy
 def make_histPref_copy(key, origkey='default'):
-    histPref[key] = {}
-    for subkey in histPref[origkey]:
-        histPref[key][subkey] = histPref[origkey][subkey]
+    histPref[key] = copy.deepcopy(histPref[origkey])
 
 for channel in ["tt", "mt", "et"]:
     make_histPref_copy(channel)
