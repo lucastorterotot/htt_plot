@@ -125,8 +125,26 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         comp = Hist_Component(data_histcomp)
         comp.var = 'mt_tot'
         comps.append(comp)
+        
+        merged_comps = {}
+        Zll_comps = ['ZTT', 'ZL']
+        EWK_comps = ['W', 'VVJ', 'VVT']
+        TTBar_comps = ['TTT', 'TTJ']
+        for comp_name in ['EWK', 'TTBar', 'Zll']:
+            h = copy.copy(data_hist)
+            h.SetName(comp_name)
+            for b in range(h.GetNbinsX()):
+                h.SetBinContent(b+1,0)
+                h.SetBinError(b+1,0)
+            h.SetTitle('')
+            comp = Hist_Component(h)
+            comp.var = 'mt_tot'
+            comps.append(comp)
+            merged_comps[comp_name] = comp
     
         for comp_name in comp_names:
+            if comp_name == 'TTT':
+                continue # TTT tmp bugfix, see with combine
             unvar_h = shapes_dir.Get(comp_name)
             h = copy.copy(data_hist)
             h.SetName(comp_name)
@@ -134,10 +152,23 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                 h.SetBinContent(b+1,unvar_h.GetBinContent(b+1))
                 h.SetBinError(b+1,0)
             h.SetTitle('')
-            comp = Hist_Component(h)
-            comp.var = 'mt_tot'
-            comps.append(comp)
+            if comp_name in EWK_comps:
+                merged_comps['EWK'].histogram.Add(h)
+            elif comp_name in TTBar_comps:
+                merged_comps['TTBar'].histogram.Add(h)
+            elif comp_name in Zll_comps:
+                merged_comps['Zll'].histogram.Add(h)
+            else:
+                comp = Hist_Component(h)
+                comp.var = 'mt_tot'
+                comps.append(comp)
 
+        _comps = []
+        for comp in comps:
+            if comp.histogram.Integral() > 0:
+                _comps.append(comp)
+        comps = _comps
+            
         if mass:
             unvar_sig_bb = shapes_dir.Get('bbH')
             sig_hist = copy.copy(data_hist)
