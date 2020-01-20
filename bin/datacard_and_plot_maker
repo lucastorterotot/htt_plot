@@ -180,6 +180,11 @@ if options.small_run:
 else:
     up_downs = ['up','down']
     systs_ff_list = ['qcd_syst_{}','qcd_dm0_njet0_stat_{}','qcd_dm0_njet1_stat_{}','w_syst_{}','tt_syst_{}']
+    if cfg.channel in ['et', 'mt']:
+        systs_ff_list += ['w_dm0_njet0_stat_{}', 'w_dm0_njet1_stat_{}', 'tt_dm0_njet0_stat_{}', 'tt_dm0_njet1_stat_{}']
+    if cfg.channel in ['tt']:
+        systs_ff_list += ['w_frac_syst_{}', 'tt_frac_syst_{}']
+        
     
 sys_dict_weights = {}
 
@@ -229,7 +234,13 @@ for up_down in up_downs:
 
 for key, item in sys_dict_weights.iteritems():
     if 'all_MC' in item['processes']:
-        item['processes'].extend(['DY','TT','Diboson','singleTop','W','EWK'])
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK'])
+    if 'DY' in item['processes']:
+        item['processes'].extend(['ZJ','ZLL','ZTT','ZL'])
+    if 'TT' in item['processes']:
+        item['processes'].extend(['TTT','TTL','TTJ'])
+    if 'Diboson' in item['processes'] and 'singleTop' in item['processes']:
+        item['processes'].extend(['VV','VVL','VVT','VVJ'])
         
 sys_dict = sys_dict_samples.copy()
 sys_dict.update(sys_dict_weights)
