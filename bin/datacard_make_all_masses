@@ -45,7 +45,7 @@ while last_index < total_num_of_mass_points - 1:
                 options.output_dir,
                 category,
                 masses_to_process,
-                ('-d' if iteration > 0 else ''))
+                ('-d -S' if iteration > 0 else ''))
         )
     last_index = last_index + options.splitting
     iteration += 1
