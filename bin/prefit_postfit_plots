@@ -143,8 +143,6 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
             merged_comps[comp_name] = comp
     
         for comp_name in comp_names:
-            if comp_name == 'TTT':
-                continue # TTT tmp bugfix, see with combine
             unvar_h = shapes_dir.Get(comp_name)
             h = copy.copy(data_hist)
             h.SetName(comp_name)
