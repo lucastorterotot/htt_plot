@@ -29,8 +29,14 @@ parser.add_option("-d", dest = "just_datacards",
 parser.add_option("-m", dest = "mass_points_to_process",
                   default='[0]',
                   help='Mass points to process for signals.')
+parser.add_option("-S", dest = "signals_only",
+                  default=False, action="store_true",
+                  help='Process only signals  in datacards')
 
 (options,args) = parser.parse_args()
+
+if options.signals_only:
+    options.just_datacards = True
 
 cfg = __import__("htt_plot.channels_configs.{}".format(options.cfg_name), fromlist=[''])
 
@@ -614,6 +620,13 @@ def write_plots(plotter, variable, output_dir):
     plotter.write('{}/{}/{}.tex'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.root'.format(output_dir, category, varname))
     print plotter.plot
+
+if options.signals_only:
+    for variable in dc_comp:
+        for sys in dc_comps[variable]:
+            for cfg_process in dc_comps[variable][sys]:
+                if cfg_process[:3] not in ['ggH', 'bbH']:
+                    dc_comps[variable][sys].pop(cfg_process)
 
 if not options.just_datacards:
     for variable in plot_variables:
