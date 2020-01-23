@@ -29,10 +29,6 @@ all_categories = {
 
 import os
 
-# tmp trick
-all_categories['mt'] = ['nobtag_tight', 'btag_tight', 'nobtag_loosemt', 'btag_loosemt']
-all_categories['mt'] = ['inclusive']
-
 total_num_of_mass_points = len(all_mass_points)
 iteration = 0
 last_index = -1
