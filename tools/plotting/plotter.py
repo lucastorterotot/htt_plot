@@ -189,6 +189,7 @@ class Plotter(object):
         if '.tex' in fname:
             import os
             os.system("sed -i 's|mark=|mark=*|g' "+fname)
+            os.system("sed -i 's|pattern=dots|pattern=crosshatch dots|g' "+fname)
     
     def print_info(self, detector, xmin=None, ymin=None):
         lumitext = ''
