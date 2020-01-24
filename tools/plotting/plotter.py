@@ -91,7 +91,7 @@ class Plotter(object):
         if sys_error_hist:
             self.sys_error_hist = sys_error_hist
             self.sys_error_hist.SetFillColor(15)
-            self.sys_error_hist.SetFillStyle(3544)
+            self.sys_error_hist.SetFillStyle(3002)
             self.sys_error_hist.SetMarkerStyle(0)
             if NormalizeToBinWidth:
                 for i in range (1,self.sys_error_hist.GetNbinsX()+1) :
