@@ -211,7 +211,9 @@ for up_down in up_downs:
         cfg.datasets.singleTop_datasets[sys_name] = cfg.datasets.singleTop_datasets['nominal']
         cfg.datasets.WJ_datasets[sys_name] = cfg.datasets.WJ_datasets['nominal']
         cfg.datasets.Embedded_datasets[sys_name] = cfg.datasets.Embedded_datasets['nominal']
+        cfg.datasets.signal_datasets[sys_name] = cfg.datasets.signal_datasets['nominal']
         sys_dict_weights[sys_name] = {'processes': ['all_MC','Embedded','data'],
+                                      'signal_cut': signal_region_signalMC,
                                       'DY_cut': signal_region_MC_nofakes_noembed,
                                       'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
                                       'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
