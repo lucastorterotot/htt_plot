@@ -149,10 +149,6 @@ class Plotter(object):
 
         if y_range is not None:
             Yaxis.SetRangeUser(y_range[0], y_range[1])
-            
-        if set_log_x:
-            self.pad.SetLogx()
-
 
         if makecanvas:
             self.padr.cd()
@@ -168,17 +164,18 @@ class Plotter(object):
         ratioXaxis = self.ratioplot.dataOverMCHist.GetXaxis()
         ratioYaxis = self.ratioplot.dataOverMCHist.GetYaxis()
         ratioXaxis.SetTitleSize(0.12)
-        ratioYaxis.SetTitleSize(0.12)
-        ratioYaxis.SetTitleOffset(0.55)
-        ratioXaxis.SetLabelSize(0.1)
-        ratioYaxis.SetLabelSize(0.1)
+        ratioYaxis.SetTitleSize(0.08)
+        ratioYaxis.SetTitleOffset(0.5)
+        ratioXaxis.SetLabelSize(0.08)
+        ratioYaxis.SetLabelSize(0.08)
         Xaxis.SetLabelColor(0)
         Xaxis.SetLabelSize(0)
 
-        # if xtitle == 'm_{#rm T}^{#rm tot}':
-        #     # ratioXaxis.SetRangeUser(230,900)
-        #     ratioXaxis.SetRangeUser(20,4000)
+        ratioXaxis.SetMoreLogLabels()
+        ratioXaxis.SetNoExponent()
+        
         if set_log_x:
+            self.pad.SetLogx()
             self.padr.SetLogx()
 
         if makecanvas:
