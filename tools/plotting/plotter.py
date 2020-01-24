@@ -103,7 +103,7 @@ class Plotter(object):
         Yaxis = self.plot.supportHist.GetYaxis()
 
         if xtitle == 'mt_tot':
-            xtitle = 'm_{#rm T}^{#rm tot} #text{(GeV)}'
+            xtitle = 'm_{#rm T}^{#rm tot} #text{ (GeV)}'
             
         Xaxis.SetTitle(xtitle)
         Yaxis.SetTitle(ytitle)
@@ -132,7 +132,7 @@ class Plotter(object):
         self.lumibox.AddText("#SI{41.5}{fb^{-1}}")
         self.lumibox.Draw("same")
 
-        if xtitle == 'm_{#rm T}^{#rm tot} #text{(GeV)}':
+        if xtitle == 'm_{#rm T}^{#rm tot} #text{ (GeV)}':
             Xaxis.SetRangeUser(0,900)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
