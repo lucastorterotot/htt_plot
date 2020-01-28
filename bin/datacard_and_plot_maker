@@ -619,16 +619,20 @@ def write_plots(plotter, variable, output_dir):
         channel_str = channel_strings_for_plot[cfg.channel],
         NormalizeToBinWidth = False)
     plotter.write('{}/{}/{}.png'.format(output_dir, category, varname))
+    plotter.write('{}/{}/{}.pdf'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.tex'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.root'.format(output_dir, category, varname))
     print plotter.plot
 
 if options.signals_only:
-    for variable in dc_comp:
+    for variable in dc_comps:
         for sys in dc_comps[variable]:
+            to_pop = []
             for cfg_process in dc_comps[variable][sys]:
                 if cfg_process[:3] not in ['ggH', 'bbH']:
-                    dc_comps[variable][sys].pop(cfg_process)
+                    to_pop.append(cfg_process)
+            for cfg_process in to_pop:
+                dc_comps[variable][sys].pop(cfg_process)
 
 if not options.just_datacards:
     for variable in plot_variables:
