@@ -77,14 +77,14 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
             if rootdir.Get(histname):
                 continue
             hist = component.histogram.Clone(histname)
-            # if 'jetFakes' in histname:
-            #     hist.Scale(jetFakes_integral[category]/hist.Integral(0,hist.GetNbinsX()+1))
+            if 'jetFakes' in histname and systematic is not 'nominal':
+                hist.Scale(components_dict['nominal']['jetFakes'].histogram.Integral(0,hist.GetNbinsX()+1)/hist.Integral(0,hist.GetNbinsX()+1))
             hist.SetMinimum(0.0)
-            # hist.SetBinContent(0,0)
-            # hist.SetBinContent(hist.GetNbinsX()+1,0)
+            hist.SetBinContent(0,0)
+            hist.SetBinContent(hist.GetNbinsX()+1,0)
             hist.SetTitle(key)
-            if not ((systematic!='nominal') and ('jetFakes' in histname)):
-                hist.Write()
+            #if not ((systematic!='nominal') and ('jetFakes' in histname)):
+            hist.Write()
             if systematic in syst_split_list:
                 hist_list = []
                 for sys_type in types_dir[key]:
@@ -94,8 +94,8 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
                         new_histname = histname.replace('Up',sys_type+'Up')
                     hist_list.append(component.histogram.Clone(new_histname))
                     hist_list[-1].SetMinimum(0.0)
-                    # hist_list[-1].SetBinContent(0,0)
-                    # hist_list[-1].SetBinContent(hist.GetNbinsX()+1,0)
+                    hist_list[-1].SetBinContent(0,0)
+                    hist_list[-1].SetBinContent(hist.GetNbinsX()+1,0)
                     hist_list[-1].SetTitle(key)
                     hist_list[-1].Write()
     rootfile.Close()
