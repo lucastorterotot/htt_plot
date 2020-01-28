@@ -575,7 +575,7 @@ for variable in datacards_variables:
 
 
         dc_comps[variable][sys] = {'jetFakes' : cfgs['fakes']}
-        if not ('ff_' in sys):
+        if not ('ff_' in sys) or True:
             for process in sys_dict[sys]['processes']:
                 if process in ['ZL','TTL','VVL','Embedded']:
                     dc_comps[variable][sys][process] = cfgs[process]
