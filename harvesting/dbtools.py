@@ -56,6 +56,8 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
             infos = [info for info in infos if info['sample_version'] == 'tt_embed_TES_promptEle_1prong0pi0_down']
         if sample_name == 'SingleMuon_Run2017C_31Mar2018':
             infos = [info for info in infos if info['sample_version'] not in ['mt_runC_432_nominal', 'mt_runC_490_nominal']]
+        if sample_name == 'SingleMuon_Run2017D_31Mar2018':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_runD_471_nominal', 'mt_runD_585_nominal', 'mt_runD_589_nominal', 'mt_runD_594_nominal']]
         if sample_name == 'TTHad_pow':
             infos = [info for info in infos if info['sample_version'] not in ['mt_TTHad_pow_218_nominal']]
         if sample_name == 'TTSemi_pow':
