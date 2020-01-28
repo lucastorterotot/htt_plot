@@ -69,8 +69,8 @@ else:
         cut_signal = cfg.cut_signal_nobtag
         basic_cuts =  cfg.basic_cuts_nobtag
     elif 'btag' in category:
-        from array import array
-        cfg.bins['mt_tot'] = (18, array('d',[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,600,4000]))
+        #from array import array
+        #cfg.bins['mt_tot'] = (18, array('d',[0,20,40,60,80,100,120,140,160,180,200,250,300,350,400,500,600,4000]))
         cut_signal = cfg.cut_signal_btag
         basic_cuts =  cfg.basic_cuts_btag
 
@@ -135,8 +135,8 @@ l2_FakeFactorApplication_Region_data = l2_FakeFactorApplication_Region_cut * cfg
 l1_FakeFactorApplication_Region_notjetfakes_Embedded = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * cfg.weights['l1_fake']
 l2_FakeFactorApplication_Region_notjetfakes_Embedded = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * cfg.weights['l2_fake']
 
-l1_FakeFactorApplication_Region_notjetfakes_MC = l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l1_fake'] * cfg.weights['MC']
-l2_FakeFactorApplication_Region_notjetfakes_MC = l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l2_fake'] * cfg.weights['MC']
+l1_FakeFactorApplication_Region_notjetfakes_MC = l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l1_fake']
+l2_FakeFactorApplication_Region_notjetfakes_MC = l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['l2_fake']
 
 from htt_plot.systematics import sys_dict_samples
 if options.small_run:
@@ -215,14 +215,14 @@ for up_down in up_downs:
         sys_dict_weights[sys_name] = {'processes': ['all_MC','Embedded','data'],
                                       'signal_cut': signal_region_signalMC,
                                       'DY_cut': signal_region_MC_nofakes_noembed,
-                                      'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
-                                      'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
                                       'TT_cut': signal_region_MC_nofakes_noembed,
-                                      'TT_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
-                                      'TT_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'TT_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'TT_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
                                       'bkg_cut': signal_region_MC_nofakes_noembed,
-                                      'bkg_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
-                                      'bkg_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * cfg.weights['MC'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'bkg_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'bkg_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
                                       'Embedded_cut': signal_region_Embedded_nofakes,
                                       'Embedded_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
                                       'Embedded_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
