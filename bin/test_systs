@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--channel", dest = "channel",
+                  default="tt",
+                  help='Name of the channel')
+parser.add_option("-o", "--output", dest = "output_dir",
+                  default="prefit_postfit_plots",
+                  help='Output directory base name, channel is added')
+parser.add_option("-C", "--category", dest = "category",
+                  default="inclusive",
+                  help='Category to process: inclusive, btag, nobtag...')
+parser.add_option("-m", "--masses", dest = "masses",
+                  default=None,
+                  help='Masses to process: default to None, or give a list of values')
+parser.add_option("-p", "--process", dest = "process",
+                  default=None,
+                  help='Process to check')
+
+(options,args) = parser.parse_args()
+
+import ROOT
+
+data_file = ROOT.TFile('./inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(options.channel,options.channel))
+
+#shapes_file = ROOT.TFile('./inputs/{}/fitDiagnosticstest_output.root'.format(options.channel))
+
+histdir = data_file.Get("{}_{}".format(options.channel, options.category))
+
+hist_dict = {}
+for typ in [options.process]:
+
+    hist_name_list = [key.GetName() for key in histdir.GetListOfKeys() if (typ in key.GetName())]
+
+    for name in hist_name_list:
+        val = (histdir.Get(name).Integral()/histdir.Get(typ).Integral()) - 1
+        if abs(val)>0.1:
+            print val, name
+        hist_dict[name] = val
+
+ordered_name = sorted([name for name in hist_dict], key=lambda x: abs(hist_dict[x]), reverse=True)
+
+# for name in ordered_name:
+#     print hist_dict[name], name

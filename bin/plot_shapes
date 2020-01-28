@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--channel", dest = "channel",
+                  default="tt",
+                  help='Name of the channel')
+parser.add_option("-C", "--category", dest = "category",
+                  default='inclusive',
+                  help='Category to process: inclusive, btag, nobtag...')
+
+(options,args) = parser.parse_args()
+
+root_file = './inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(options.channel,options.channel)
+opening_mode = 'READ'
+
+import ROOT
+
+data_file = ROOT.TFile(root_file, opening_mode)
+
+histdir = data_file.Get("{}_{}".format(options.channel, options.category))
+
+hist_names = [key.GetName() for key in histdir.GetListOfKeys()]
+for hist_name in hist_names:
+    print hist_name
+    hist = histdir.Get(hist_name)
+    Xaxis = hist.GetXaxis()
+    Yaxis = hist.GetYaxis()
+    can = ROOT.TCanvas('{}_{}_{}'.format(options.channel, options.category, hist_name))
+    pad = can.GetPad(0)
+    can.cd()
+    import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    can.Draw()
+    pad.Draw()
+    pad.cd()
+    hist.Draw("same")
+    ymax = hist.GetBinContent(hist.GetMaximumBin())
+    Yaxis.SetRangeUser(0.1,ymax*1.3)
+    Xaxis.SetRangeUser(10,4000)
+    pad.SetLogy()
+    pad.SetLogx()
+    Xaxis.SetMoreLogLabels()
+    Xaxis.SetNoExponent()
+    can.SaveAs("shapes_{}_{}_{}.png".format(options.channel, options.category, hist_name))
+    can.Close()
+
+data_file.Close()

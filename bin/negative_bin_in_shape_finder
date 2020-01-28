@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--channel", dest = "channel",
+                  default="tt",
+                  help='Name of the channel')
+parser.add_option("-C", "--category", dest = "category",
+                  default='inclusive',
+                  help='Category to process: inclusive, btag, nobtag...')
+parser.add_option("-p", "--process", dest = "process",
+                  default=None,
+                  help='Process to check')
+parser.add_option("-s", "--solve", dest = "solve",
+                  default=False, action='store_true',
+                  help='Whether to set bins at 0 or not')
+
+(options,args) = parser.parse_args()
+
+root_file = './inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(options.channel,options.channel)
+opening_mode = 'READ'
+
+import ROOT
+if options.solve:
+    import os
+    os.system("cp {} {}.bak".format(root_file, root_file))
+    opening_mode = 'UPDATE'
+    
+
+data_file = ROOT.TFile(root_file, opening_mode)
+
+histdir = data_file.Get("{}_{}".format(options.channel, options.category))
+
+hist_dict = {}
+for typ in [options.process]:
+
+    hist_name_list = [key.GetName() for key in histdir.GetListOfKeys() if (typ in key.GetName())]
+
+    for name in hist_name_list:
+        h = histdir.Get(name)
+        for b in range(h.GetNbinsX()):
+            if h.GetBinContent(b+1) < 0 :
+                print('Process {} has negative bin at position {} (value is {}).'.format(name, b+1, h.GetBinContent(b+1)))
+                if options.solve:
+                    h.SetBinContent(b+1, 0.0)
+
+if options.solve:
+    data_file.Write()
+
+data_file.Close()
