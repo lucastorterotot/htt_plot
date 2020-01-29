@@ -159,7 +159,10 @@ class Plotter(object):
             self.sys_error_hist_rel = copy.copy(self.sys_error_hist)
             for b in range(self.sys_error_hist.GetNbinsX()):
                 self.sys_error_hist_rel.SetBinContent(b+1,1)
-                rel_bin_error = self.sys_error_hist.GetBinError(b+1)/self.sys_error_hist.GetBinContent(b+1)
+                if self.sys_error_hist.GetBinContent(b+1) == 0:
+                    rel_bin_error = 1 # really?
+                else:
+                    rel_bin_error = self.sys_error_hist.GetBinError(b+1)/self.sys_error_hist.GetBinContent(b+1)
                 self.sys_error_hist_rel.SetBinError(b+1,rel_bin_error)
             self.sys_error_hist_rel.Draw('e2 same')
         ratioXaxis = self.ratioplot.dataOverMCHist.GetXaxis()
