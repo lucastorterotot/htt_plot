@@ -149,13 +149,22 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
             comp.var = 'mt_tot'
             comps.append(comp)
             merged_comps[comp_name] = comp
-    
+
+        available_comps = [k.GetName() for k in shapes_dir.GetListOfKeys()]
         for comp_name in comp_names:
-            unvar_h = shapes_dir.Get(comp_name)
+            if comp_name not in available_comps:
+                print("Component {} not present!".format(comp_name))
+                unvar_h = copy.copy(shapes_dir.Get('total_background'))
+                unvar_h.Reset()
+            else:
+                unvar_h = shapes_dir.Get(comp_name)
             h = copy.copy(data_hist)
             h.SetName(comp_name)
             for b in range(h.GetNbinsX()):
-                h.SetBinContent(b+1,unvar_h.GetBinContent(b+1))
+                try:
+                    h.SetBinContent(b+1,unvar_h.GetBinContent(b+1))
+                except(AttributeError):
+                    import pdb; pdb.set_trace()
                 h.SetBinError(b+1,0)
             h.SetTitle('')
             if comp_name in EWK_comps:
