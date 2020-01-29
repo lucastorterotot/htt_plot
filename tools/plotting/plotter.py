@@ -133,7 +133,8 @@ class Plotter(object):
         self.lumibox.Draw("same")
 
         if xtitle == 'm_{#rm T}^{#rm tot} #text{ (GeV)}':
-            Xaxis.SetRangeUser(0,900)
+            if x_range is None:
+                Xaxis.SetRangeUser(0,900)
             ymax = max(self.plot.supportHist.weighted.GetBinContent(self.plot.supportHist.weighted.GetMaximumBin()),
                        self.plot.BGHist().weighted.GetBinContent(self.plot.BGHist().weighted.GetMaximumBin()))
             Yaxis.SetRangeUser(0.0001,ymax*1.3)
