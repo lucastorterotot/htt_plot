@@ -24,6 +24,12 @@ data_file = ROOT.TFile(root_file, opening_mode)
 histdir = data_file.Get("{}_{}".format(options.channel, options.category))
 
 hist_names = [key.GetName() for key in histdir.GetListOfKeys()]
+
+removes = ['_mc_Down', '_mc_Up', '_bbH', '_ggH']
+
+hist_names = [hn for hn in hist_names if not any(r in hn for r in removes)]
+
+
 for hist_name in hist_names:
     print hist_name
     hist = histdir.Get(hist_name)
