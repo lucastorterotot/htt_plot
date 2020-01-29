@@ -26,31 +26,136 @@ histdir = data_file.Get("{}_{}".format(options.channel, options.category))
 hist_names = [key.GetName() for key in histdir.GetListOfKeys()]
 
 removes = ['_mc_Down', '_mc_Up', '_bbH', '_ggH']
-
+if options.channel in ['et', 'mt']:
+    removes += ['ZJ']
 hist_names = [hn for hn in hist_names if not any(r in hn for r in removes)]
 
+updo = ['_Up', '_Down']
+hist_names_nomi = [hn for hn in hist_names if not any(r in hn for r in updo)]
 
-for hist_name in hist_names:
-    print hist_name
-    hist = histdir.Get(hist_name)
-    Xaxis = hist.GetXaxis()
-    Yaxis = hist.GetYaxis()
-    can = ROOT.TCanvas('{}_{}_{}'.format(options.channel, options.category, hist_name))
-    pad = can.GetPad(0)
+shapes = {}
+for process in hist_names_nomi:
+    shapes[process] = {}
+    for hn in hist_names:
+        if process in hn and not process == hn:
+            if 'Up' in hn:
+                syst = hn.replace(process,'').replace('_Up','')[1:]
+            elif 'Down' in hn:
+                syst = hn.replace(process,'').replace('_Down','')[1:]
+            if syst not in shapes[process]:
+                shapes[process][syst] = {}
+            shapes[process][syst][hn.replace(process,'').replace('_{}_'.format(syst),'')] = hn
+
+from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
+import htt_plot.tools.plotting.styles as styles
+import copy
+
+def buildCanvas(name, syst='nominal'):
+    can = ROOT.TCanvas('can'+name+syst, '', 800, 800)
+    can.Divide(1, 2, 0.0, 0.0)
+    
+    pad = can.GetPad(1)
+    padr = can.GetPad(2)
+    
+    # Set Pad sizes
+    pad.SetPad(0.0, 0.32, 1., 1.0)
+    padr.SetPad(0.0, 0.00, 1., 0.34)
+    
+    pad.SetTopMargin(0.08)
+    pad.SetLeftMargin(0.16)
+    pad.SetBottomMargin(0.03)
+    pad.SetRightMargin(0.05)
+    
+    padr.SetBottomMargin(0.35)
+    padr.SetLeftMargin(0.16)
+    padr.SetRightMargin(0.05)
+        
     can.cd()
     import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     can.Draw()
     pad.Draw()
-    pad.cd()
-    hist.Draw("same")
-    ymax = hist.GetBinContent(hist.GetMaximumBin())
-    Yaxis.SetRangeUser(0.1,ymax*1.3)
-    Xaxis.SetRangeUser(10,4000)
-    pad.SetLogy()
-    pad.SetLogx()
-    Xaxis.SetMoreLogLabels()
-    Xaxis.SetNoExponent()
-    can.SaveAs("shapes_{}_{}_{}.png".format(options.channel, options.category, hist_name))
-    can.Close()
+    padr.Draw()
 
+    return can, pad, padr
+
+
+import os
+os.system("mkdir -p ./shapes_ctrl_plots/{}/{}/".format(options.channel, options.category))
+
+for process in shapes:
+    print process
+    for syst in shapes[process]:
+        histo_nomi = histdir.Get(process)
+        histo_up = histdir.Get(shapes[process][syst]['Up'])
+        histo_down = histdir.Get(shapes[process][syst]['Down'])
+
+        histo_nomi.SetMarkerStyle(2)
+        histo_up.SetMarkerStyle(26)
+        histo_down.SetMarkerStyle(24)
+        histo_up.SetMarkerColor(styles.EWKcol)
+        histo_up.SetLineColor(styles.EWKcol)
+        histo_down.SetMarkerColor(styles.dycol)
+        histo_down.SetLineColor(styles.dycol)
+        
+        can, pad, padr = buildCanvas(process, syst=syst)
+        pad.cd()
+
+        histo_nomi.SetTitle('{} {}'.format(process, syst))
+        histo_nomi.SetStats(0)
+        histo_nomi.Draw()
+        histo_up.SetTitle('')
+        histo_down.SetTitle('')
+        histo_up.Draw("same")
+        histo_down.Draw("same")
+        histo_nomi.Draw("same")
+
+        Xaxis = histo_nomi.GetXaxis()
+        if 'btag' in options.category and not 'nobtag' in options.category:
+            Xaxis.SetRangeUser(20,4000)
+        else:
+            Xaxis.SetRangeUser(10,4000)
+            
+        pad.Update()
+
+        pave = ROOT.TPaveText(.75, .66, .9, .9, 'ndc')
+        pave.AddText("int Up: {}".format(round(histo_up.Integral(),2)))
+        pave.AddText("int Nom: {}".format(round(histo_nomi.Integral(),2)))
+        pave.AddText("int Down: {}".format(round(histo_down.Integral(),2)))
+        pave.AddText("ent Up: {}".format(histo_up.GetEntries()))
+        pave.AddText("ent Nom: {}".format(histo_nomi.GetEntries()))
+        pave.AddText("ent Down: {}".format(histo_down.GetEntries()))
+        pave.SetTextSizePixels(15)
+        pave.SetTextAlign(11)
+        pave.SetBorderSize(0)
+        pave.SetFillColor(0)
+        pave.SetFillStyle(0)
+        pave.Draw()
+        
+        padr.cd()
+
+        rhisto_down = copy.copy(histo_down)
+        rhisto_up = copy.copy(histo_up)
+        rhisto_down.Divide(histo_nomi)
+        rhisto_up.Divide(histo_nomi)
+
+        rhisto_down.SetStats(0)
+        rhisto_down.Draw()
+        rhisto_up.Draw("same")
+
+        ratioXaxis = rhisto_down.GetXaxis()
+        ratioYaxis = rhisto_down.GetYaxis()
+        if 'btag' in options.category and not 'nobtag' in options.category:
+            ratioXaxis.SetRangeUser(20,4000)
+        else:
+            ratioXaxis.SetRangeUser(10,4000)
+        ratioYaxis.SetRangeUser(.5,1.5)
+        ratioXaxis.SetMoreLogLabels()
+        ratioXaxis.SetNoExponent()
+
+        pad.SetLogx()
+        padr.SetLogx()
+        padr.Update()
+
+        can.SaveAs("./shapes_ctrl_plots/{}/{}/{}_{}.png".format(options.channel, options.category, process, syst))
+        
 data_file.Close()
