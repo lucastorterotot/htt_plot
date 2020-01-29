@@ -83,10 +83,10 @@ comp_names_for_channel = {
     }
 
 y_ranges = {
-    'mt_inclusive' : [1,2e4],
-    'mt_nobtag_tight' : [1,2e4],
+    'mt_inclusive' : [1,1e4],
+    'mt_nobtag_tight' : [1,4500],
     'mt_btag_tight' : [1,2e3],
-    'mt_nobtag_loosemt' : [1,2e4],
+    'mt_nobtag_loosemt' : [1,4500],
     'mt_btag_loosemt' : [1,2e3]
     }
 
@@ -226,17 +226,24 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         ### prep unc hist
         uncertainties = copy.copy(data_hist)
         uncertainties.SetName('total_background')
-        uncertainties_rel = copy.copy(uncertainties)
         for b in range(uncertainties.GetNbinsX()):
-            uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
-            uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1)*uncertainties.GetBinContent(b+1)/unc_hist.GetBinContent(b+1))
-            uncertainties_rel.SetBinContent(b+1,1)
-            uncertainties_rel.SetBinError(b+1,uncertainties.GetBinError(b+1)/uncertainties.GetBinContent(b+1))
+            if unc_hist.GetBinContent(b+1) == 0:
+                uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
+                uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1))
+            else:
+                uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
+                uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1)*uncertainties.GetBinContent(b+1)/unc_hist.GetBinContent(b+1))
         
         plotter = Plotter(comps,41.5, channel)
         x_range = [10,4000]
         if 'btag' in cat and not 'nobtag' in cat :
             x_range = [20,4000]
+
+        set_log_y = True
+        y_range = y_ranges[cat]
+        if set_log_y:
+            y_range[-1]*=1.5
+        
         plotter.draw('mt_tot',
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
@@ -244,9 +251,9 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      channel_str = channel_strings_for_plot[channel],
                      blind = (channel not in ['tt']),
                      x_range = x_range,
-                     y_range = y_ranges[cat],
+                     y_range = y_range,
                      NormalizeToBinWidth = True,
-                     set_log_y  = False,
+                     set_log_y  = set_log_y,
                      set_log_x  = True
         )
         if prefit:
