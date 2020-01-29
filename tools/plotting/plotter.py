@@ -26,7 +26,8 @@ class Plotter(object):
             padr = self.padr = can.GetPad(2) if not padr else padr
 
 	    #Set Y axes Log scale
-	    pad.SetLogy()
+            if self.set_log_y:
+	        pad.SetLogy()
 
             # Set Pad sizes
             pad.SetPad(0.0, 0.32, 1., 1.0)
@@ -79,11 +80,13 @@ class Plotter(object):
              sys_error_hist=None,
              category=None, channel_str=None,
              set_log_x=False,
+             set_log_y=True,
              x_range = None,
              y_range = None,
              blind = True,
              NormalizeToBinWidth = False):
         self.plot = self._prepare_plot(xtitle, NormalizeToBinWidth = NormalizeToBinWidth, channel = self.channel)
+        self.set_log_y = set_log_y
         if makecanvas:
             self.buildCanvas()
             self.pad.cd()
