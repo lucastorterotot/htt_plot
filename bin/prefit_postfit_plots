@@ -231,19 +231,15 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         uncertainties = copy.copy(data_hist)
         uncertainties.SetName('total_background')
         for b in range(uncertainties.GetNbinsX()):
-            if unc_hist.GetBinContent(b+1) == 0:
-                uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
-                uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1))
-            else:
-                uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
-                uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1)*uncertainties.GetBinContent(b+1)/unc_hist.GetBinContent(b+1))
+            uncertainties.SetBinContent(b+1,unc_hist.GetBinContent(b+1))
+            uncertainties.SetBinError(b+1,unc_hist.GetBinError(b+1))
         
         plotter = Plotter(comps,41.5, channel)
         x_range = [10,4000]
         if 'btag' in cat and not 'nobtag' in cat :
             x_range = [20,4000]
 
-        set_log_y = True
+        set_log_y = False
         y_range = y_ranges[cat]
         if set_log_y:
             y_range[-1]*=1.5
