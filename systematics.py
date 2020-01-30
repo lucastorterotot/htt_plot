@@ -1,10 +1,12 @@
-sys_dict_samples = {'top_pT_reweighting_up':{'processes':['TT']},
+sys_dict_samples = {
+
+    # 'top_pT_reweighting_up':{'processes':['TT']},
     
-    'top_pT_reweighting_down': {'processes': ['TT']},
+    # 'top_pT_reweighting_down': {'processes': ['TT']},
     
-    'DY_pT_reweighting_up': {'processes': ['DY']},
+    # 'DY_pT_reweighting_up': {'processes': ['DY']},
     
-    'DY_pT_reweighting_down': {'processes': ['DY']},
+    # 'DY_pT_reweighting_down': {'processes': ['DY']},
     
     'METrecoil_response_up': {'processes': ['DY','signal','W']},
     
