@@ -278,5 +278,15 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
 # plot(prefit=False,bonly=True)
 # for mass in [400,450,600,800,900,1400,1800,2000]:
 #     plot(prefit=False,bonly=False,mass=mass)
-plot(prefit=True,bonly=False,mass=None)
+plot(prefit=True,mass=None)
 plot(prefit=False,bonly=False,mass=None)
+plot(prefit=False,bonly=True,mass=None)
+
+# nuisances_file = TFile('./inputs/{}/nuisances_plots.root'.format(options.channel))
+# nuisances_plot = nuisances_file.Get('nuisances')
+# # from ROOT import TCanvas
+# # can = TCanvas('nuisances', '', 3000, 600)
+# # can.cd()
+# # can.Draw()
+# nuisances_plot.Draw()
+# import pdb; pdb.set_trace()
