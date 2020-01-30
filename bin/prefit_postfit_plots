@@ -35,10 +35,10 @@ cat_dict_tt = {
 }
 
 cat_dict_mt = {
-    # 'mt_nobtag_tight':'htt_mt_8_13TeV',
-    # 'mt_btag_tight':'htt_mt_9_13TeV',
-    # 'mt_nobtag_loosemt':'htt_mt_10_13TeV',
-    # 'mt_btag_loosemt':'htt_mt_11_13TeV',
+    'mt_nobtag_tight':'htt_mt_8_13TeV',
+    'mt_btag_tight':'htt_mt_9_13TeV',
+    'mt_nobtag_loosemt':'htt_mt_10_13TeV',
+    'mt_btag_loosemt':'htt_mt_11_13TeV',
     'mt_inclusive':'htt_mt_7_13TeV',
 }
 
@@ -105,8 +105,12 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
             shapedir = 'shapes_fit_s'
     
     for cat in cats_to_process:
+        print(cat)
         ### subdir retrieval
         data_shape_dir = data_file.Get(cat)
+        if cats_to_process[cat] not in [key.GetName() for key in shapes_file.Get(shapedir).GetListOfKeys()]:
+            print("Category {} not found".format(cat))
+            continue
         shapes_dir = shapes_file.Get(shapedir).Get(cats_to_process[cat])
         unc_hist = shapes_dir.Get('total_background')
 
