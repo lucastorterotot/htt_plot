@@ -58,7 +58,7 @@ cat_dict = {
 
 if options.category == 'all':
     cats_to_process = cat_dict[options.channel]
-elif channel in ['tt', 'mt', 'et']:
+elif options.channel in ['tt', 'mt', 'et']:
     cats_to_process = {}
     for cat in options.category:
         cats_to_process['_'.join([options.channel, cat])] = cat_dict[options.channel]['_'.join([options.channel, cat])]
