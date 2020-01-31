@@ -194,7 +194,8 @@ for process in shapes:
         pad.SetLogx()
         padr.SetLogx()
         padr.Update()
-
+        
+        syst = syst.replace('CMS_htt_{}_{}_{}_13TeV__'.format(options.channel, options.channel, options.category),'')
         can.SaveAs("./shapes_ctrl_plots/{}/{}/{}_{}.png".format(options.channel, options.category, process, syst))
 
 from ROOT import TH1F
