@@ -14,14 +14,22 @@ parser.add_option("-C", "--category", dest = "category",
 
 (options,args) = parser.parse_args()
 
-root_file = './inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(options.channel,options.channel)
+root_file = './inputs/{}/htt_input_2017.root'.format(options.channel,options.channel)
 opening_mode = 'READ'
 
 import ROOT
 
 data_file = ROOT.TFile(root_file, opening_mode)
 
-histdir = data_file.Get("{}_{}".format(options.channel, options.category))
+cat_dict_mt = {
+    'mt_nobtag_tight':'htt_mt_8_13TeV',
+    'mt_btag_tight':'htt_mt_9_13TeV',
+    'mt_nobtag_loosemt':'htt_mt_10_13TeV',
+    'mt_btag_loosemt':'htt_mt_11_13TeV',
+    'mt_inclusive':'htt_mt_7_13TeV',
+}
+
+histdir = data_file.Get(cat_dict_mt["{}_{}".format(options.channel, options.category)])
 
 hist_names = [key.GetName() for key in histdir.GetListOfKeys()]
 
@@ -44,11 +52,12 @@ for process in hist_names_nomi:
                 syst = hn.replace(process,'').replace('Down','')[1:]
             if syst[-1] == '_':
                 syst = syst[:-1]
+            name = hn.replace(process,'').replace('_{}'.format(syst),'').replace('{}'.format(syst),'')
+            syst = syst.replace('CMS_htt_{}_{}_13TeV__'.format(options.channel, options.category),'')
             if syst not in shapes[process]:
                 shapes[process][syst] = {}
-            name = hn.replace(process,'').replace('_{}'.format(syst),'')
-            if name[-1] == '_':
-                name = name[:-1]
+            if name[0] == '_':
+                name = name[1:]
             shapes[process][syst][name] = hn
 
 from cpyroot.tools.DataMC.DataMCPlot import DataMCPlot
