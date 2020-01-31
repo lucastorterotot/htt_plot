@@ -96,12 +96,30 @@ def buildCanvas(name, syst='nominal'):
 import os
 os.system("mkdir -p ./shapes_ctrl_plots/{}/{}/".format(options.channel, options.category))
 
+integrals_infos = {}
+Nb_events_infos = {}
+Nb_bins_for_infos = 0
+
 for process in shapes:
     print process
+    integrals_infos[process] = {}
+    Nb_events_infos[process] = {}
     for syst in shapes[process]:
+        integrals_infos[process][syst] = {}
+        Nb_events_infos[process][syst] = {}
+        Nb_bins_for_infos += 1
         histo_nomi = histdir.Get(process)
-        histo_up = histdir.Get(shapes[process][syst]['Up'])
-        histo_down = histdir.Get(shapes[process][syst]['Down'])
+        try:
+            histo_up = histdir.Get(shapes[process][syst]['Up'])
+        except(KeyError):
+            print "No Up for {} {}".format(process, syst)
+            histo_up = copy.copy(histo_nomi)
+            import pdb; pdb.set_trace()
+        try:
+            histo_down = histdir.Get(shapes[process][syst]['Down'])
+        except(KeyError):
+            print "No Down for {} {}".format(process, syst)
+            histo_down = copy.copy(histo_nomi)
 
         histo_nomi.SetMarkerStyle(2)
         histo_up.SetMarkerStyle(26)
@@ -130,14 +148,21 @@ for process in shapes:
             Xaxis.SetRangeUser(10,4000)
             
         pad.Update()
+        
+        integrals_infos[process][syst]['Up'] = round(histo_up.Integral(),2)
+        Nb_events_infos[process][syst]['Up'] = histo_up.GetEntries()
+        
+        integrals_infos[process][syst]['Down'] = round(histo_down.Integral(),2)
+        Nb_events_infos[process][syst]['Down'] = histo_down.GetEntries()
+        
+        integrals_infos[process][syst]['Nomi'] = round(histo_nomi.Integral(),2)
+        Nb_events_infos[process][syst]['Nomi'] = histo_nomi.GetEntries()
 
         pave = ROOT.TPaveText(.75, .66, .9, .9, 'ndc')
-        pave.AddText("int Up: {}".format(round(histo_up.Integral(),2)))
-        pave.AddText("int Nom: {}".format(round(histo_nomi.Integral(),2)))
-        pave.AddText("int Down: {}".format(round(histo_down.Integral(),2)))
-        pave.AddText("ent Up: {}".format(histo_up.GetEntries()))
-        pave.AddText("ent Nom: {}".format(histo_nomi.GetEntries()))
-        pave.AddText("ent Down: {}".format(histo_down.GetEntries()))
+        for typ in ['Up', 'Nomi', 'Down']:
+            pave.AddText("int {}: {}".format(typ, integrals_infos[process][syst][typ]))
+        for typ in ['Up', 'Nomi', 'Down']:
+            pave.AddText("ent {}: {}".format(typ, Nb_events_infos[process][syst][typ]))
         pave.SetTextSizePixels(15)
         pave.SetTextAlign(11)
         pave.SetBorderSize(0)
@@ -171,5 +196,52 @@ for process in shapes:
         padr.Update()
 
         can.SaveAs("./shapes_ctrl_plots/{}/{}/{}_{}.png".format(options.channel, options.category, process, syst))
+
+from ROOT import TH1F
+ratios = {'int':integrals_infos,'ent':Nb_events_infos}
+for infos in ratios:
+    can = ROOT.TCanvas('canratios_{}'.format(infos), '', 2000, 1500)
+    pad = can.GetPad(0)
+    
+    # Set Pad sizes
+    pad.SetPad(0.0, 0.32, 1., 1.0)
+    
+    pad.SetLeftMargin(.05)
+    pad.SetBottomMargin(.5)
+    pad.SetRightMargin(.01)
+        
+    can.cd()
+    import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    can.Draw()
+    pad.Draw('same')
+    
+    pad.cd()
+    
+    binning = Nb_bins_for_infos
+    histo_up = TH1F('up_{}'.format(infos), 'ratios_{}'.format(infos), *(binning,0,binning))
+    histo_down = TH1F('do_{}'.format(infos), 'ratios_{}'.format(infos), *(binning,0,binning))
+    
+    histo_up.SetMarkerStyle(26)
+    histo_down.SetMarkerStyle(24)
+    histo_up.SetMarkerColor(styles.EWKcol)
+    histo_up.SetLineColor(styles.EWKcol)
+    histo_down.SetMarkerColor(styles.dycol)
+    histo_down.SetLineColor(styles.dycol)
+    
+    bin = 0
+    for process in ratios[infos]:
+        for syst in ratios[infos][process]:
+            bin += 1
+            proc_syst = ratios[infos][process][syst]
+            histo_up.SetBinContent(bin, proc_syst['Up']/proc_syst['Nomi'])
+            histo_up.SetBinError(bin, proc_syst['Up']**(.5)/proc_syst['Nomi'])
+            histo_up.GetXaxis().SetBinLabel(bin,'{} {}'.format(syst, process))
+            histo_down.SetBinContent(bin, proc_syst['Down']/proc_syst['Nomi'])
+            histo_down.SetBinError(bin, proc_syst['Down']**(.5)/proc_syst['Nomi'])
+    histo_up.GetXaxis().SetLabelSize(0.025)
+    histo_up.SetStats(0)
+    histo_up.Draw()
+    histo_down.Draw('same')
+    can.SaveAs("./shapes_ctrl_plots/{}/{}/ratios_{}.png".format(options.channel, options.category, infos))
         
 data_file.Close()
