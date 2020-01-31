@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# options for script
+from optparse import OptionParser
+usage = "usage: %prog [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("-c", "--cfg", dest = "cfg_name",
+                  default="tt",
+                  help='Name of the config file to use, must be in htt_plot/channels_configs/')
+
+(options,args) = parser.parse_args()
+
+cfg = __import__("htt_plot.channels_configs.{}".format(options.cfg_name), fromlist=[''])
+
+datasets_entries = {}
+for dataset_type in ['DY', 'Diboson', 'EWK', 'Embedded', 'TT', 'WJ', 'singleTop']:
+    print("Checking {} datasets...".format(dataset_type))
+    datasets = getattr(cfg.datasets, "{}_datasets".format(dataset_type), {})
+    for key in datasets:
+        for file in datasets[key]:
+            d_name = file.name.replace('_{}'.format(key),'').replace('_nominal','')
+            if not d_name in datasets_entries:
+                datasets_entries[d_name] = {}
+            datasets_entries[d_name][key] = file.tree.GetEntries()
+
+
+datasets_ratios = {}
+for d in datasets_entries:
+    datasets_ratios[d] = {}
+    for syst in [k for k in datasets_entries[d] if not k == 'nominal']:
+        datasets_ratios[d][syst] = 1.*datasets_entries[d][syst]/datasets_entries[d]['nominal'] - 1
+        if abs(datasets_ratios[d][syst]) > .1:
+            print(
+                "Dataset {}, syst {}, {} % wrt nominal.".format(
+                    d, syst, datasets_ratios[d][syst]*100
+                )
+            )
