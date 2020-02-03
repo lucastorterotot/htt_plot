@@ -65,7 +65,7 @@ else:
         basic_cuts =  cfg.basic_cuts
     elif 'nobtag' in category:
         # from array import array
-        # cfg.bins['mt_tot'] = (32, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,800,4000]))
+        # cfg.bins['mt_tot'] = (32, array('d',[0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,225,250,275,300,325,350,400,500,700,900,4000]))
         cut_signal = cfg.cut_signal_nobtag
         basic_cuts =  cfg.basic_cuts_nobtag
     elif 'btag' in category:
