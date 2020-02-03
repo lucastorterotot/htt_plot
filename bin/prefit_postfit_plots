@@ -239,11 +239,13 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         if 'btag' in cat and not 'nobtag' in cat :
             x_range = [20,4000]
 
-        set_log_y = False
+        set_log_y = True
         y_range = y_ranges[cat]
+        y_min = y_range[0]
+        y_max = y_range[-1]
         if set_log_y:
-            y_range[-1]*=1.5
-        
+            y_max*=1.5
+        y_min=1
         plotter.draw('mt_tot',
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
@@ -251,7 +253,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      channel_str = channel_strings_for_plot[channel],
                      blind = (channel not in ['tt']),
                      x_range = x_range,
-                     y_range = y_range,
+                     y_range = [y_min, y_max],
                      NormalizeToBinWidth = True,
                      set_log_y  = set_log_y,
                      set_log_x  = True
