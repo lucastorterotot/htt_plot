@@ -98,15 +98,27 @@ os.system("mkdir -p ./shapes_ctrl_plots/{}/{}/".format(options.channel, options.
 
 integrals_infos = {}
 Nb_events_infos = {}
+integrals_max_ratios = {}
+integrals_min_ratios = {}
+integrals_max_ratios_err = {}
+integrals_min_ratios_err = {}
 Nb_bins_for_infos = 0
 
 for process in shapes:
     print process
     integrals_infos[process] = {}
     Nb_events_infos[process] = {}
+    integrals_max_ratios[process] = {}
+    integrals_min_ratios[process] = {}
+    integrals_max_ratios_err[process] = {}
+    integrals_min_ratios_err[process] = {}
     for syst in shapes[process]:
         integrals_infos[process][syst] = {}
         Nb_events_infos[process][syst] = {}
+        integrals_max_ratios[process][syst] = 1
+        integrals_min_ratios[process][syst] = 1
+        integrals_max_ratios_err[process][syst] = 0
+        integrals_min_ratios_err[process][syst] = 0
         Nb_bins_for_infos += 1
         histo_nomi = histdir.Get(process)
         try:
@@ -162,7 +174,7 @@ for process in shapes:
         
         integrals_infos[process][syst]['Nomi'] = round(histo_nomi.Integral(),2)
         Nb_events_infos[process][syst]['Nomi'] = histo_nomi.GetEntries()
-
+        
         pave = ROOT.TPaveText(.75, .4, .925, .65, 'ndc')
         for typ in ['Up', 'Nomi', 'Down']:
             pave.AddText("int {}: {}".format(typ, integrals_infos[process][syst][typ]))
@@ -187,6 +199,22 @@ for process in shapes:
         rhisto_up = copy.copy(histo_up)
         rhisto_down.Divide(histo_nomi)
         rhisto_up.Divide(histo_nomi)
+
+        for b in range(histo_nomi.GetNbinsX()):
+            rvalue_up = rhisto_up.GetBinContent(b+1)
+            rvalue_down = rhisto_down.GetBinContent(b+1)
+            if rvalue_up > integrals_max_ratios[process][syst]:
+                integrals_max_ratios[process][syst] = rvalue_up
+                integrals_max_ratios_err[process][syst] = rhisto_up.GetBinError(b+1)
+            if rvalue_down > integrals_max_ratios[process][syst]:
+                integrals_max_ratios[process][syst] = rvalue_down
+                integrals_max_ratios_err[process][syst] = rhisto_down.GetBinError(b+1)
+            if rvalue_up < integrals_min_ratios[process][syst] and rvalue_up > 0:
+                integrals_min_ratios[process][syst] = rvalue_up
+                integrals_min_ratios_err[process][syst] = rhisto_up.GetBinError(b+1)
+            if rvalue_down < integrals_min_ratios[process][syst] and rvalue_down > 0:
+                integrals_min_ratios[process][syst] = rvalue_down
+                integrals_min_ratios_err[process][syst] = rhisto_down.GetBinError(b+1)
 
         rhisto_down.SetStats(0)
         rhisto_down.Draw()
@@ -273,5 +301,50 @@ for infos in ratios:
     legend.Draw()
     
     can.SaveAs("./shapes_ctrl_plots/{}/{}/ratios_{}.png".format(options.channel, options.category, infos))
+
+    
+can = ROOT.TCanvas('canratios', '', 2000, 1500)
+pad = can.GetPad(0)
+    
+# Set Pad sizes
+pad.SetPad(0.0, 0.32, 1., 1.0)
+
+pad.SetLeftMargin(.05)
+pad.SetBottomMargin(.5)
+pad.SetRightMargin(.01)
         
+can.cd()
+import locale; locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+can.Draw()
+pad.Draw('same')
+
+pad.cd()
+
+binning = Nb_bins_for_infos
+histo_max = ROOT.TH1F('max_vars'.format(infos), 'Relative variations', *(binning,0,binning))
+histo_min = ROOT.TH1F('min_vars'.format(infos), '', *(binning,0,binning))
+
+bin = 0
+for process in integrals_max_ratios:
+    for syst in integrals_max_ratios[process]:
+        bin += 1
+        histo_max.SetBinContent(bin, integrals_max_ratios[process][syst])
+        histo_max.SetBinError(bin, integrals_max_ratios_err[process][syst])
+        histo_min.SetBinContent(bin, integrals_min_ratios[process][syst])
+        histo_min.SetBinError(bin, integrals_min_ratios_err[process][syst])
+        histo_max.GetXaxis().SetBinLabel(bin,'{} {}'.format(syst, process))
+    histo_max.GetXaxis().SetLabelSize(0.025)
+    histo_max.GetYaxis().SetRangeUser(.5,1.5)
+    histo_max.SetStats(0)
+    histo_max.Draw()
+    histo_min.Draw('same')
+
+# legend = ROOT.TLegend(.75,.9,1,1)
+# legend.AddEntry('up_{}'.format(infos), 'Up/Nominal')
+# legend.AddEntry('do_{}'.format(infos), 'Down/Nominal')
+# legend.Draw()
+
+can.SaveAs("./shapes_ctrl_plots/{}/{}/relative_variations.png".format(options.channel, options.category))
+
+    
 data_file.Close()
