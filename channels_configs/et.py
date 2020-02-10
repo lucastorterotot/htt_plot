@@ -9,10 +9,10 @@ channel = 'et'
 from htt_plot.channels_configs.htt_common import bins
 
 # variables
-from htt_plot.channels_configs.htt_common import variables, datacards_variables
+from htt_plot.channels_configs.htt_common import variables, datacards_variables, var_name_dict
 
 # cuts
-from htt_plot.channels_configs.htt_common import cut_mt_lepton, cut_mt_lepton_loose, cut_mt_lepton_tight, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_dy_promptfakeleptons, cut_TT_nogenuine, cut_btag_1, cut_btag_2
+from htt_plot.channels_configs.htt_common import cut_mt_lepton, cut_mt_lepton_loose, cut_mt_lepton_tight, cuts_flags, cuts_vetoes, cut_l1_fakejet, cut_l2_fakejet, cut_os, cut_ss, cut_btag_1, cut_btag_2, cut_btag, cut_nobtag
 
 cut_dy_promptfakeleptons = Cut('l1_gen_match==1 || l1_gen_match==2 || l2_gen_match==1 || l2_gen_match==2')
 
@@ -47,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1['l1_iso']
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1.all() & cuts_l2.all()
 
 ## iso
 cuts_iso = Cuts(
