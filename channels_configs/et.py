@@ -56,11 +56,10 @@ cuts_iso = Cuts(
     l2_VLoose = 'l2_byVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
     l2_VVLoose = 'l2_byVVLooseIsolationMVArun2017v2DBoldDMwLT2017 > 0.5',
 )
-)
 
 ## cut embedding + no fakes (for MC)
 
-cut_embed = Cut('l1_gen_match == 2 && l2_gen_match == 5')
+cut_embed = Cut('l1_gen_match == 3 && l2_gen_match == 5')
 
 cut_not_embed = ~cut_embed
 
@@ -82,7 +81,7 @@ cuts_datacards = Cuts(
     WJ = '1',
     jetFakes = '1',
     data = '1',
-    embed = 'l1_gen_match == 2 && l2_gen_match == 5',
+    embed = 'l1_gen_match == 3 && l2_gen_match == 5',
 )
 cuts_datacards['ZLL'] = cuts_datacards['ZL'] | cuts_datacards['ZJ']
 cuts_datacards['TT'] = cuts_datacards['TTT'] | cuts_datacards['TTJ']
