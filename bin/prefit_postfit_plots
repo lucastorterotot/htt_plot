@@ -97,8 +97,10 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
     else:
         shapes_file = TFile('./inputs/{}/fitDiagnosticstest_output.root'.format(channel))
     if prefit:
+        ratio_range_var = .6
         shapedir = 'shapes_prefit'
     else:
+        ratio_range_var = .11
         if bonly:
             shapedir = 'shapes_fit_b'
         else:
@@ -256,7 +258,8 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                      y_range = [y_min, y_max],
                      NormalizeToBinWidth = True,
                      set_log_y  = set_log_y,
-                     set_log_x  = True
+                     set_log_x  = True,
+                     ratio_range_var = ratio_range_var
         )
         if prefit:
             outfilename = 'prefit_plots_{}'
