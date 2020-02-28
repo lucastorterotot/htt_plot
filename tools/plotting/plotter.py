@@ -84,7 +84,8 @@ class Plotter(object):
              x_range = None,
              y_range = None,
              blind = True,
-             NormalizeToBinWidth = False):
+             NormalizeToBinWidth = False,
+             ratio_range_var = .6):
         self.plot = self._prepare_plot(xtitle, NormalizeToBinWidth = NormalizeToBinWidth, channel = self.channel)
         self.set_log_y = set_log_y
         if makecanvas:
@@ -157,7 +158,7 @@ class Plotter(object):
         if makecanvas:
             self.padr.cd()
         self.ratioplot = copy.deepcopy(self.plot)
-        self.ratioplot.DrawDataOverMCMinus1(-0.6,0.6)
+        self.ratioplot.DrawDataOverMCMinus1(-ratio_range_var,ratio_range_var)
         if sys_error_hist:
             self.sys_error_hist_rel = copy.copy(self.sys_error_hist)
             for b in range(self.sys_error_hist.GetNbinsX()):
