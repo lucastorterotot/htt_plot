@@ -17,6 +17,17 @@ data_datasets.append(fetch_dataset('SingleMuon_Run2017F_31Mar2018', channel=chan
 
 ##### MC
 
+## H125
+
+H125_datasets = {'nominal':[]}
+# H125_datasets['nominal'].append(fetch_dataset('HiggsVBF125', 2975404. 3.782*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsGGH125', 2892030., 48.58*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsGGH125_ext', 9259000., 48.58*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsTTH125', 21713806., 0.5071*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsWplusH125', 4000000., 0.840*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsWminusH125', 3860872, 0.533*0.06272, channel=channel, prod_date=prod_date))
+# H125_datasets['nominal'].append(fetch_dataset('HiggsZH125', 4940230., 0.8839*0.06272, channel=channel, prod_date=prod_date))
+
 ## DY
 
 n_ev_dy_incl = 48675378. + 49125561.
@@ -41,10 +52,10 @@ def renorm_nevts(dataset_list):
         dataset.nevts = ntot
 
 DY_datasets = {'nominal':[]}
-DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50',48675378.,dy_xsec_incl, channel=channel, prod_date=prod_date))
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50_ext',49125561.,dy_xsec_incl, channel=channel, prod_date=prod_date))
 renorm_nevts(DY_datasets['nominal'])
+DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
 
 
 # DY1JetsToLL_M50 = Dataset(
@@ -166,13 +177,24 @@ from htt_plot.systematics import sys_dict_samples # TODO put sys_dicts in their 
 
 for sys in sys_dict_samples:
     
+    ## H125
+    if 'H125' in sys_dict_samples[sys]['processes']:
+        H125_datasets[sys] = []
+    #     H125_datasets[sys].append(fetch_dataset('HiggsVBF125', 2975404. 3.782*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsGGH125', 2892030., 48.58*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsGGH125_ext', 9259000., 48.58*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsTTH125', 21713806., 0.5071*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsWplusH125', 4000000., 0.840*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsWminusH125', 3860872, 0.533*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    #     H125_datasets[sys].append(fetch_dataset('HiggsZH125', 4940230., 0.8839*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+    
     ## DY
     if 'DY' in sys_dict_samples[sys]['processes']:
         DY_datasets[sys] = []
-        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50',48675378,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50_ext',49125561,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
         renorm_nevts(DY_datasets[sys])
+        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, sys=sys, channel=channel, prod_date=prod_date))
 
     # W+Jets
     if 'W' in sys_dict_samples[sys]['processes']:
@@ -338,7 +360,7 @@ def build_signals(mass_points):
 
 ## lumi weighting
 
-for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets]:
+for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets, H125_datasets]:
     for sys, dataset_list in ds_type.iteritems() :
         for dataset in dataset_list:
             dataset.compute_weight(data_lumi)
