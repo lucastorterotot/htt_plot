@@ -83,11 +83,11 @@ comp_names_for_channel = {
     }
 
 y_ranges = {
-    'mt_inclusive' : [1e-3,1e4],
-    'mt_nobtag_tight' : [1e-3,4500],
-    'mt_btag_tight' : [1e-3,225],
-    'mt_nobtag_loosemt' : [1e-3,4500],
-    'mt_btag_loosemt' : [1e-3,225]
+    'mt_inclusive' : [1e-6,1e4],
+    'mt_nobtag_tight' : [1e-6,4500],
+    'mt_btag_tight' : [1e-6,225],
+    'mt_nobtag_loosemt' : [1e-6,4500],
+    'mt_btag_loosemt' : [1e-6,225]
     }
 
 def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
@@ -247,7 +247,6 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         y_max = y_range[-1]
         if set_log_y:
             y_max*=1.5
-        y_min=1
         plotter.draw('mt_tot',
                      '{#rm d}N/{#rm d}m_{#rm T}^{#rm tot}(1/#SI{}{GeV})',
                      sys_error_hist=uncertainties,
