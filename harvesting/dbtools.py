@@ -64,6 +64,10 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
             infos = [info for info in infos if info['sample_version'] not in ['mt_TTSemi_pow_102_nominal']]
         if sample_name == 'ZZTo4L':
             infos = [info for info in infos if info['sample_version'] not in ['mt_ZZTo4L_37_nominal']]
+        if sample_name == 'WZTo3LNu':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_WZTo3LNu_59_nominal']]
+        if sample_name == 'WWToLNuQQ_ext':
+            infos = [info for info in infos if info['sample_version'] not in ['mt_WWToLNuQQ_ext_34_nominal']]
     try:
         info = max(infos, key=lambda info: info['sub_date'])
         if sample_name in ['TTHad_pow','TTLep_pow','TTSemi_pow','Tau_Run2017B_31Mar2018','Tau_Run2017C_31Mar2018','Tau_Run2017D_31Mar2018','Tau_Run2017E_31Mar2018','Tau_Run2017F_31Mar2018'] and channel == 'tt':
