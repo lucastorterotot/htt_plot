@@ -75,9 +75,9 @@ xsecs_DY_exclusive = {
 }
     
 for njets in xsecs_DY_exclusive:
-    DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
+    DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
     if '{}ext'.format(njets) in Nevts_DY_exclusive:
-        DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
+        DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
         renorm_nevts(DY_datasets['nominal'][-2:])
 
 # DY1JetsToLL_M50 = Dataset(
@@ -219,9 +219,9 @@ for sys in sys_dict_samples:
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, sys=sys, channel=channel, prod_date=prod_date))
         
         for njets in xsecs_DY_exclusive:
-            DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
+            DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
             if '{}ext'.format(njets) in Nevts_DY_exclusive:
-                DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
+                DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
                 renorm_nevts(DY_datasets['nominal'][-2:])
 
     # W+Jets
