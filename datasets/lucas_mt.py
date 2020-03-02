@@ -177,14 +177,14 @@ singleTop_datasets['nominal'].append(fetch_dataset('T_tWch',7794186,35.85, chann
 ##### DiBoson inclusive
 
 # using inclusive WW and WZ datasets for now
-Diboson_datasets = {'nominal':[]}
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',6967853,1.325, channel=channel, prod_date=prod_date))
-renorm_nevts(Diboson_datasets['nominal'])
-Diboson_datasets['nominal'].append(fetch_dataset('WW',7791498,75.88, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('WZ',3928630,27.57, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
+# Diboson_datasets = {'nominal':[]}
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',6967853,1.325, channel=channel, prod_date=prod_date))
+# renorm_nevts(Diboson_datasets['nominal'])
+# Diboson_datasets['nominal'].append(fetch_dataset('WW',7791498,75.88, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('WZ',3928630,27.57, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
 
 # ZZ failed computing, going to exclusive datasets
 # ZZ = Dataset(
@@ -193,6 +193,30 @@ Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, chan
 #     1949768, 12.14,
 #     treename = treename
 # )
+
+##### DiBoson exclusive
+
+Diboson_datasets = {'nominal':[]}
+
+## WW
+Diboson_datasets['nominal'].append(fetch_dataset('WWTo2L2Nu',2000000,11.08, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWTo4Q',2000000,47.73, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWToLNuQQ',8782525,45.99, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWToLNuQQ_ext',9994191,45.99, channel=channel, prod_date=prod_date))
+renorm_nevts(Diboson_datasets['nominal'][-2:])
+
+## WZ
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo2L2Q',27582164,6.331, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo1L3Nu',4994395,3.293, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo3LNu',10987679,5.052, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo1L1Nu2Q',19086373,11.66, channel=channel, prod_date=prod_date))
+
+## ZZ
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',98091559,1.325, channel=channel, prod_date=prod_date))
+renorm_nevts(Diboson_datasets['nominal'][-2:])
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
 
 ##### EWK
 
@@ -267,16 +291,23 @@ for sys in sys_dict_samples:
         singleTop_datasets[sys].append(fetch_dataset('T_tch',5982064,136.02,sys=sys, channel=channel, prod_date=prod_date))
         singleTop_datasets[sys].append(fetch_dataset('T_tWch',7794186,35.85,sys=sys, channel=channel, prod_date=prod_date))
     
-    ##### DiBoson inclusive
+    ##### DiBoson exclusive
     if 'Diboson' in sys_dict_samples[sys]['processes']:
         Diboson_datasets[sys] = []
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L',6964071,1.325,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L_ext',6967853,1.325,sys=sys, channel=channel, prod_date=prod_date))
-        renorm_nevts(Diboson_datasets[sys])
-        Diboson_datasets[sys].append(fetch_dataset('WW',7791498,75.88,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('WZ',3928630,27.57,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Q',27840918,3.688,sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWTo2L2Nu',2000000,11.08, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWTo4Q',2000000,47.73, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWToLNuQQ',8782525,45.99, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWToLNuQQ_ext',9994191,45.99, sys=sys, channel=channel, prod_date=prod_date))
+        renorm_nevts(Diboson_datasets[sys][-2:])
+        Diboson_datasets[sys].append(fetch_dataset('WZTo2L2Q',27582164,6.331, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo1L3Nu',4994395,3.293, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo3LNu',10987679,5.052, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo1L1Nu2Q',19086373,11.66, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L',6964071,1.325, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L_ext',98091559,1.325, sys=sys, channel=channel, prod_date=prod_date))
+        renorm_nevts(Diboson_datasets[sys][-2:])
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, sys=sys, channel=channel, prod_date=prod_date))
     
     ##### Embedded
     if 'Embedded' in sys_dict_samples[sys]['processes']:
