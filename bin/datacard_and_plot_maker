@@ -224,8 +224,8 @@ for up_down in up_downs:
                                       'bkg_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
                                       'bkg_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
                                       'Embedded_cut': signal_region_Embedded_nofakes,
-                                      'Embedded_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
-                                      'Embedded_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_Embedded * cfg.weights['embed'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'Embedded_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
+                                      'Embedded_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
                                       'l1fakecut': l1_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
                                       'l2fakecut': l2_FakeFactorApplication_Region_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down)))}
     sys_dict_weights['top_pt_reweighting_{}'.format(up_down)] = {'processes':['TT'],
