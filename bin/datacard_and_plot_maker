@@ -164,24 +164,24 @@ for key, item in sys_dict_samples.iteritems():
         item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_Embedded
         if key=='Embedding_tracking_1prong_up':
             item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_1prong_up']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_up'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_1prong_down':
             item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_1prong_down']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_1prong_down'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_3prong_up':
             item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_3prong_up']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_up'] * cfg.weights['l2_fake']
         if key=='Embedding_tracking_3prong_down':
             item['Embedded_cut'] = signal_region_Embed_nofakes * cfg.weights['embed_track_3prong_down']
-            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down']
-            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down']
+            item['Embedded_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down'] * cfg.weights['l1_fake']
+            item['Embedded_l2fakecut'] = l2_FakeFactorApplication_Region_notjetfakes_cut_embed * cfg.weights['embed_track_3prong_down'] * cfg.weights['l2_fake']
 
 
 if options.small_run:
-    up_downs = ['up']
+    up_downs = ['up','down']
     systs_ff_list = ['qcd_syst_{}']
 else:
     up_downs = ['up','down']
