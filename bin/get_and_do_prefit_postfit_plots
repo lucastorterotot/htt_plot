@@ -23,6 +23,14 @@ plot_shapes -c ${channel} -C nobtag_loosemt &
 plot_shapes -c ${channel} -C btag_tight &
 plot_shapes -c ${channel} -C nobtag_tight &
 
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C inclusive &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C btag &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C nobtag &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C btag_loosemt &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C nobtag_loosemt &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C btag_tight &
+plot_shapes_from_datacards -i ./inputs/${channel}/htt_${channel}.inputs_datacards_mt_tot.root -c ${channel} -C nobtag_tight &
+
 wait
 
 mv p* ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}/
