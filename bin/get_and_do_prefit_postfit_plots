@@ -1,0 +1,33 @@
+#!/bin/bash
+
+channel=$1
+output=$2
+
+mkdir -p ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}
+
+mkdir -p ~/htt_plot/postfit_plots/inputs/${channel}/
+cd ~/htt_plot/postfit_plots/
+rm -rf shapes_ctrl_plots/
+
+scp torterotot@lyoserv.in2p3.fr:/home/cms/torterotot/CMSSW_Combine/CMSSW_10_2_13/src/CombineHarvester/HTTMSSM2017/output/HTT_MSSM_2017_${channel}/{*.root,${channel}/htt_input_2017.root} ./inputs/${channel}/
+scp torterotot@lyoserv.in2p3.fr:/home/cms/torterotot/CMSSW_Combine/CMSSW_10_2_13/src/CombineHarvester/HTTMSSM2017/shapes/Lyon_${channel}/htt_${channel}.inputs_datacards_mt_tot.root ./inputs/${channel}/
+scp torterotot@lyoserv.in2p3.fr:/home/cms/torterotot/CMSSW_Combine/CMSSW_10_2_13/src/CombineHarvester/HTTMSSM2017/output/HTT_MSSM_2017_${channel}/mssm_${channel}_* .
+
+prefit_postfit_plots -c ${channel}
+
+plot_shapes -c ${channel} -C inclusive &
+plot_shapes -c ${channel} -C btag &
+plot_shapes -c ${channel} -C nobtag &
+plot_shapes -c ${channel} -C btag_loosemt &
+plot_shapes -c ${channel} -C nobtag_loosemt &
+plot_shapes -c ${channel} -C btag_tight &
+plot_shapes -c ${channel} -C nobtag_tight &
+
+wait
+
+mv p* ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}/
+mv mssm_${channel}_* ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}/
+mv shapes_ctrl_plots ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}
+
+mkdir -p ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}/inputs/${channel}
+cp -r ./inputs/${channel}/* ~/Dropbox/PhD/HTT_analysis/htt_plots_lyovis10/2017/${channel}/190819/${output}/inputs/${channel}/
