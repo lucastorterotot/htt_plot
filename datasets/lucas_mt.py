@@ -18,15 +18,33 @@ data_datasets.append(fetch_dataset('SingleMuon_Run2017F_31Mar2018', channel=chan
 ##### MC
 
 ## H125
+H125_Nevts = {
+    'HiggsVBF125' : 2975404,
+    'HiggsGGH125' : 2892030,
+    #'HiggsGGH125_ext' : 9259000,
+    'HiggsTTH125' : 21713806,
+    'HiggsWplusH125' : 4000000,
+    'HiggsWminusH125' : 3860872,
+    'HiggsZH125' : 4940230,
+    }
+H125_xsecs = {
+    'HiggsVBF125' : 3.782*0.06272,
+    'HiggsGGH125' : 48.58*0.06272,
+    'HiggsTTH125' : 0.5071*0.06272,
+    'HiggsWplusH125' : 0.840*0.06272,
+    'HiggsWminusH125' : 0.533*0.06272,
+    'HiggsZH125' : 0.8839*0.06272,
+    }
 
-H125_datasets = {'nominal':[]}
-# H125_datasets['nominal'].append(fetch_dataset('HiggsVBF125', 2975404. 3.782*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsGGH125', 2892030., 48.58*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsGGH125_ext', 9259000., 48.58*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsTTH125', 21713806., 0.5071*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsWplusH125', 4000000., 0.840*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsWminusH125', 3860872, 0.533*0.06272, channel=channel, prod_date=prod_date))
-# H125_datasets['nominal'].append(fetch_dataset('HiggsZH125', 4940230., 0.8839*0.06272, channel=channel, prod_date=prod_date))
+for _H125 in H125_Nevts:
+    if _H125[-4:] == '_ext':
+        H125_Nevts[_H125] += H125_Nevts[_H125[:-4]]
+        H125_Nevts[_H125[:-4]] = H125_Nevts[_H125]
+        H125_xsecs[_H125] = H125_xsecs[_H125[:-4]]
+
+H125_datasets = {'nominal':{}}
+for _H125 in H125_Nevts:
+    H125_datasets['nominal'][_H125] = fetch_dataset(_H125, H125_Nevts[_H125], H125_xsecs[_H125], channel=channel, prod_date=prod_date)
 
 ## DY
 
@@ -179,14 +197,9 @@ for sys in sys_dict_samples:
     
     ## H125
     if 'H125' in sys_dict_samples[sys]['processes']:
-        H125_datasets[sys] = []
-    #     H125_datasets[sys].append(fetch_dataset('HiggsVBF125', 2975404. 3.782*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsGGH125', 2892030., 48.58*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsGGH125_ext', 9259000., 48.58*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsTTH125', 21713806., 0.5071*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsWplusH125', 4000000., 0.840*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsWminusH125', 3860872, 0.533*0.06272, sys=sys, channel=channel, prod_date=prod_date))
-    #     H125_datasets[sys].append(fetch_dataset('HiggsZH125', 4940230., 0.8839*0.06272, sys=sys, channel=channel, prod_date=prod_date))
+        H125_datasets[sys] = {}
+        for _H125 in H125_Nevts:
+            H125_datasets[sys][_H125] = fetch_dataset(_H125, H125_Nevts[_H125], H125_xsecs[_H125], sys=sys, channel=channel, prod_date=prod_date)
     
     ## DY
     if 'DY' in sys_dict_samples[sys]['processes']:
@@ -360,9 +373,13 @@ def build_signals(mass_points):
 
 ## lumi weighting
 
-for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets, H125_datasets]:
+for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets]:
     for sys, dataset_list in ds_type.iteritems() :
         for dataset in dataset_list:
+            dataset.compute_weight(data_lumi)
+for ds_type in [H125_datasets]:
+    for sys, dataset_list in ds_type.iteritems() :
+        for n, dataset in dataset_list.iteritems():
             dataset.compute_weight(data_lumi)
 
 # for ds_type in [signal_datasets]:

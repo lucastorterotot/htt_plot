@@ -146,6 +146,8 @@ if options.small_run:
 for key, item in sys_dict_samples.iteritems():
     if 'signal' in item['processes']:
         item['signal_cut'] = signal_region_signalMC
+    if 'H125' in item['processes']:
+        item['H125_cut'] = signal_region_signalMC
     if 'DY' in item['processes']:
         item['DY_cut'] = signal_region_MC_nofakes_noembed
         item['DY_l1fakecut'] = l1_FakeFactorApplication_Region_notjetfakes_MC
@@ -212,8 +214,10 @@ for up_down in up_downs:
         cfg.datasets.WJ_datasets[sys_name] = cfg.datasets.WJ_datasets['nominal']
         cfg.datasets.Embedded_datasets[sys_name] = cfg.datasets.Embedded_datasets['nominal']
         cfg.datasets.signal_datasets[sys_name] = cfg.datasets.signal_datasets['nominal']
+        cfg.datasets.H125_datasets[sys_name] = cfg.datasets.H125_datasets['nominal']
         sys_dict_weights[sys_name] = {'processes': ['all_MC','Embedded','data'],
                                       'signal_cut': signal_region_signalMC,
+                                      'H125_cut': signal_region_signalMC,
                                       'DY_cut': signal_region_MC_nofakes_noembed,
                                       'DY_l1fakecut': l1_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l1_fakeweight_sys_str.format(syst.format(up_down))),
                                       'DY_l2fakecut': l2_FakeFactorApplication_Region_notjetfakes_cut * cfg.weights['weight'] * Cut(l2_fakeweight_sys_str.format(syst.format(up_down))),
@@ -241,8 +245,10 @@ for up_down in up_downs:
     
 
 for key, item in sys_dict_weights.iteritems():
+    if 'signal' in item['processes']:
+        item['processes'].extend(['H125'])
     if 'all_MC' in item['processes']:
-        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK'])
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK','H125'])
     if 'DY' in item['processes']:
         item['processes'].extend(['ZJ','ZLL','ZTT','ZL'])
     if 'TT' in item['processes']:
@@ -276,6 +282,12 @@ for variable in variables:
     for mass in mass_points:#,'300','400',,'700','800','900'
         add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['ggH{}'.format(mass)],variable,signal_region_signalMC,bins)
         add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets['nominal']['bbH{}'.format(mass)],variable,signal_region_signalMC,bins)
+
+    for H125proc in cfg.datasets.H125_datasets['nominal']:
+        add_simple_process(cfgs,H125proc,cfg.datasets.H125_datasets['nominal'][H125proc],variable,signal_region_signalMC,bins)
+    if 'HiggsGGH125_ext' in cfg.datasets.H125_datasets['nominal']:
+        cfgs['HiggsGGH125'] = merge('HiggsGGH125',[cfgs['HiggsGGH125'],cfgs['HiggsGGH125_ext']])
+        cfgs.pop('HiggsGGH125_ext')
     
     #DY
     add_processes_per_component(cfgs,
@@ -423,6 +435,9 @@ for variable in variables:
             'VVJ' : cfgs['VVJ'],
             'W' : cfgs['W']
     }
+    for _H125 in cfg.datasets.H125_Nevts:
+        if _H125[-4:] != '_ext':
+            dc_comps[variable]['nominal'][_H125] = cfgs[_H125]
     for mass in mass_points:
         dc_comps[variable]['nominal']['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
         dc_comps[variable]['nominal']['bbH{}'.format(mass)] = cfgs['bbH{}'.format(mass)]
@@ -443,6 +458,13 @@ for variable in datacards_variables:
                 add_simple_process(cfgs,'ggH{}'.format(mass),cfg.datasets.signal_datasets[sys]['ggH{}'.format(mass)],variable,sys_dict[sys]['signal_cut'],bins)
                 add_simple_process(cfgs,'bbH{}'.format(mass),cfg.datasets.signal_datasets[sys]['bbH{}'.format(mass)],variable,sys_dict[sys]['signal_cut'],bins)
 
+        if 'H125' in sys_dict[sys]['processes']:
+            for H125proc in cfg.datasets.H125_datasets[sys]:
+                add_simple_process(cfgs,H125proc,cfg.datasets.H125_datasets[sys][H125proc],variable,signal_region_signalMC,bins)
+            if 'HiggsGGH125_ext' in cfg.datasets.H125_datasets['nominal']:
+                cfgs['HiggsGGH125'] = merge('HiggsGGH125',[cfgs['HiggsGGH125'],cfgs['HiggsGGH125_ext']])
+                cfgs.pop('HiggsGGH125_ext')
+    
         #DY
         if 'DY' in sys_dict[sys]['processes']:
             add_processes_per_component(cfgs,
@@ -577,6 +599,10 @@ for variable in datacards_variables:
         dc_comps[variable][sys] = {'jetFakes' : cfgs['fakes']}
         if not ('ff_' in sys) or True:
             for process in sys_dict[sys]['processes']:
+                if process == 'H125':
+                    for _H125 in cfg.datasets.H125_Nevts:
+                        if _H125[-4:] != '_ext':
+                            dc_comps[variable][sys][_H125] = cfgs[_H125]
                 if process in ['ZL','TTL','VVL','Embedded']:
                     dc_comps[variable][sys][process] = cfgs[process]
                 elif cfg.channel in ['mt', 'et'] and process in ['ZTT', 'ZJ', 'TTT', 'TTJ', 'VVT', 'VVJ', 'W']:
