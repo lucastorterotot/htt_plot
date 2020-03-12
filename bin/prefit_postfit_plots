@@ -84,7 +84,7 @@ comp_names_for_channel = {
 
 H125_comps =['HiggsVBF125', 'HiggsGGH125', 'HiggsTTH125', 'HiggsWplusH125', 'HiggsWminusH125', 'HiggsZH125']
 for channel in comp_names_for_channel:
-    comp_names_for_channel += H125_comps
+    comp_names_for_channel[channel] += H125_comps
 
 y_ranges = {
     'mt_inclusive' : [1e-6,1e4],
