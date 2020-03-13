@@ -45,11 +45,13 @@ shapes = {}
 for process in hist_names_nomi:
     shapes[process] = {}
     for hn in hist_names:
-        if process in hn and not process == hn:
+        if process == hn[:len(process)] and not process == hn:
             if 'Up' in hn:
                 syst = hn.replace(process,'').replace('Up','')[1:]
             elif 'Down' in hn:
                 syst = hn.replace(process,'').replace('Down','')[1:]
+            else:
+                import pdb; pdb.set_trace()
             if syst[-1] == '_':
                 syst = syst[:-1]
             name = hn.replace(process,'').replace('_{}'.format(syst),'').replace('{}'.format(syst),'')
