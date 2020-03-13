@@ -43,6 +43,9 @@ types_dir = {
     'W' : ['mc_']
     }
 
+for _H125 in ['HiggsVBF125', 'HiggsGGH125', 'HiggsGGH125_ext', 'HiggsTTH125', 'HiggsWplusH125', 'HiggsWminusH125', 'HiggsZH125']:
+    types_dir[_H125] = ['mc_']
+
 for mass in [80,100,110,120,130,140,180,200,250,90,350,1600,1800,2000,300,400,450,600,700,800,900,1200,1400,1500,2300,2600,2900,3200]:
     types_dir['ggH{}'.format(mass)] = ['mc_']
     types_dir['bbH{}'.format(mass)] = ['mc_']
@@ -77,7 +80,7 @@ def make_datacards(output_dir, channel, variable, components_dict, category='inc
             if rootdir.Get(histname):
                 continue
             hist = component.histogram.Clone(histname)
-            if 'jetFakes' in histname and systematic is not 'nominal':
+            if 'jetFakes' in histname and 'ff_' in systematic :
                 hist.Scale(components_dict['nominal']['jetFakes'].histogram.Integral(0,hist.GetNbinsX()+1)/hist.Integral(0,hist.GetNbinsX()+1))
             hist.SetMinimum(0.0)
             hist.SetBinContent(0,0)

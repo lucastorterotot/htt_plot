@@ -82,8 +82,10 @@ sys_dict_samples = {
 }
 
 for key, item in sys_dict_samples.iteritems():
+    if 'signal' in item['processes']:
+        item['processes'].extend(['H125'])
     if 'all_MC' in item['processes']:
-        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK'])
+        item['processes'].extend(['DY','TT','Diboson','singleTop','W','signal','EWK','H125'])
     if 'DY' in item['processes']:
         item['processes'].extend(['ZJ','ZLL','ZTT','ZL'])
     if 'TT' in item['processes']:

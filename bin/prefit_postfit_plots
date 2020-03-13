@@ -82,15 +82,19 @@ comp_names_for_channel = {
     'et' : ['W', 'ZTT', 'ZL', 'TTT', 'TTJ', 'VVJ', 'VVT', 'Embedded','jetFakes'],
     }
 
+H125_comps =['HiggsVBF125', 'HiggsGGH125', 'HiggsTTH125', 'HiggsWplusH125', 'HiggsWminusH125', 'HiggsZH125']
+for channel in comp_names_for_channel:
+    comp_names_for_channel[channel] += H125_comps
+
 y_ranges = {
     'mt_inclusive' : [1e-6,1e4],
     'mt_nobtag_tight' : [1e-6,4500],
-    'mt_btag_tight' : [1e-6,225],
-    'mt_nobtag_loosemt' : [1e-6,4500],
+    'mt_btag_tight' : [1e-6,200],
+    'mt_nobtag_loosemt' : [1e-6,3500],
     'mt_btag_loosemt' : [1e-6,225]
     }
 
-def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
+def plot(prefit=True,bonly=True, mass=None, channel=options.channel, set_log_y=False):
     data_file = TFile('./inputs/{}/htt_{}.inputs_datacards_mt_tot.root'.format(channel,channel))
     if mass:
         shapes_file = TFile('./inputs/{}/fitDiagnosticstest_output_{}.root'.format(channel,mass))
@@ -144,7 +148,7 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         Zll_comps = ['ZTT', 'ZL']
         EWK_comps = ['W', 'VVJ', 'VVT']
         TTBar_comps = ['TTT', 'TTJ']
-        for comp_name in ['EWK', 'TTBar', 'Zll']:
+        for comp_name in ['EWK', 'TTBar', 'Zll', 'H125']:
             h = copy.copy(data_hist)
             h.SetName(comp_name)
             for b in range(h.GetNbinsX()):
@@ -179,6 +183,8 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                 merged_comps['TTBar'].histogram.Add(h)
             elif comp_name in Zll_comps:
                 merged_comps['Zll'].histogram.Add(h)
+            elif comp_name in H125_comps:
+                merged_comps['H125'].histogram.Add(h)
             else:
                 comp = Hist_Component(h)
                 comp.var = 'mt_tot'
@@ -241,7 +247,6 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
         if 'btag' in cat and not 'nobtag' in cat :
             x_range = [20,4000]
 
-        set_log_y = True
         y_range = y_ranges[cat]
         y_min = y_range[0]
         y_max = y_range[-1]
@@ -267,6 +272,8 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
                 outfilename = 'postfit_b_plots_{}'
             else:
                 outfilename = 'postfit_s_plots_{}'
+        if not set_log_y:
+            outfilename += "_lin"
         if mass:
             # plotter.write((outfilename+str(mass)+'.root').format(cat))
             plotter.write((outfilename+str(mass)+'.pdf').format(cat))
@@ -282,9 +289,25 @@ def plot(prefit=True,bonly=True, mass=None, channel=options.channel):
 # plot(prefit=False,bonly=True)
 # for mass in [400,450,600,800,900,1400,1800,2000]:
 #     plot(prefit=False,bonly=False,mass=mass)
-plot(prefit=True,mass=None)
-plot(prefit=False,bonly=False,mass=None)
-plot(prefit=False,bonly=True,mass=None)
+
+def tryplot(prefit=True, bonly=True, mass=None, set_log_y=True):
+    try:
+        plot(prefit=prefit, bonly=bonly, mass=mass, set_log_y=set_log_y)
+    except(AttributeError):
+        print("Impossible to plot {} {} for {}{}!".format(
+            "prefit" if prefit else "postfit",
+            "with{} signal".format("out" if bonly else ""),
+            options.channel,
+            " at mass {}".format(mass) if mass else ""
+        ))
+
+
+tryplot(prefit=True,mass=None, set_log_y=False)
+tryplot(prefit=True,mass=None)
+tryplot(prefit=False,bonly=True,mass=None, set_log_y=False)
+tryplot(prefit=False,bonly=True,mass=None)
+tryplot(prefit=False,bonly=False,mass=None, set_log_y=False)
+tryplot(prefit=False,bonly=False,mass=None)
 
 # nuisances_file = TFile('./inputs/{}/nuisances_plots.root'.format(options.channel))
 # nuisances_plot = nuisances_file.Get('nuisances')

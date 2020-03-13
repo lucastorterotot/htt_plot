@@ -11,25 +11,20 @@ parser.add_option("-c", "--channel", dest = "channel",
 parser.add_option("-C", "--category", dest = "category",
                   default='inclusive',
                   help='Category to process: inclusive, btag, nobtag...')
+parser.add_option("-i", "--input", dest = "input_file",
+                  default='./htt_tt.inputs_datacards_mt_tot.root',
+                  help='Prefix of the input directory')
 
 (options,args) = parser.parse_args()
 
-root_file = './inputs/{}/htt_input_2017.root'.format(options.channel,options.channel)
+root_file = options.input_file
 opening_mode = 'READ'
 
 import ROOT
 
 data_file = ROOT.TFile(root_file, opening_mode)
 
-cat_dict_mt = {
-    'mt_nobtag_tight':'htt_mt_8_13TeV',
-    'mt_btag_tight':'htt_mt_9_13TeV',
-    'mt_nobtag_loosemt':'htt_mt_10_13TeV',
-    'mt_btag_loosemt':'htt_mt_11_13TeV',
-    'mt_inclusive':'htt_mt_7_13TeV',
-}
-
-histdir = data_file.Get(cat_dict_mt["{}_{}".format(options.channel, options.category)])
+histdir = data_file.Get("{}_{}".format(options.channel, options.category))
 
 hist_names = [key.GetName() for key in histdir.GetListOfKeys()]
 
@@ -45,17 +40,20 @@ shapes = {}
 for process in hist_names_nomi:
     shapes[process] = {}
     for hn in hist_names:
-        if process == hn[:len(process)] and not process == hn:
+        if process in hn and not process == hn:
             if 'Up' in hn:
                 syst = hn.replace(process,'').replace('Up','')[1:]
             elif 'Down' in hn:
                 syst = hn.replace(process,'').replace('Down','')[1:]
-            else:
-                import pdb; pdb.set_trace()
+            if 'up' in hn:
+                syst = hn.replace(process,'').replace('up','')[1:]
+            elif 'down' in hn:
+                syst = hn.replace(process,'').replace('down','')[1:]
             if syst[-1] == '_':
                 syst = syst[:-1]
             name = hn.replace(process,'').replace('_{}'.format(syst),'').replace('{}'.format(syst),'')
             syst = syst.replace('CMS_htt_{}_{}_13TeV__'.format(options.channel, options.category),'')
+            syst = syst.replace('__','_')
             if syst not in shapes[process]:
                 shapes[process][syst] = {}
             if name[0] == '_':
@@ -96,7 +94,7 @@ def buildCanvas(name, syst='nominal'):
 
 
 import os
-os.system("mkdir -p ./shapes_ctrl_plots/{}/{}/".format(options.channel, options.category))
+os.system("mkdir -p ./shapes_ctrl_plots_from_datacards/{}/{}/".format(options.channel, options.category))
 
 integrals_infos = {}
 Nb_events_infos = {}
@@ -250,7 +248,7 @@ for process in shapes:
         # legend.Draw()
         
         syst = syst.replace('CMS_htt_{}_{}_{}_13TeV__'.format(options.channel, options.channel, options.category),'')
-        can.SaveAs("./shapes_ctrl_plots/{}/{}/{}_{}.png".format(options.channel, options.category, process, syst))
+        can.SaveAs("./shapes_ctrl_plots_from_datacards/{}/{}/{}_{}.png".format(options.channel, options.category, process, syst))
 
 ratios = {'integrals':integrals_infos,'entries':Nb_events_infos}
 for infos in ratios:
@@ -287,11 +285,18 @@ for infos in ratios:
         for syst in ratios[infos][process]:
             bin += 1
             proc_syst = ratios[infos][process][syst]
-            histo_up.SetBinContent(bin, proc_syst['Up']/proc_syst['Nomi'])
-            histo_up.SetBinError(bin, proc_syst['Up']**(.5)/proc_syst['Nomi'])
-            histo_up.GetXaxis().SetBinLabel(bin,'{} {}'.format(syst, process))
-            histo_down.SetBinContent(bin, proc_syst['Down']/proc_syst['Nomi'])
-            histo_down.SetBinError(bin, proc_syst['Down']**(.5)/proc_syst['Nomi'])
+            if proc_syst['Nomi'] > 0:
+                histo_up.SetBinContent(bin, proc_syst['Up']/proc_syst['Nomi'])
+                histo_up.SetBinError(bin, proc_syst['Up']**(.5)/proc_syst['Nomi'])
+                histo_up.GetXaxis().SetBinLabel(bin,'{} {}'.format(syst, process))
+                histo_down.SetBinContent(bin, proc_syst['Down']/proc_syst['Nomi'])
+                histo_down.SetBinError(bin, proc_syst['Down']**(.5)/proc_syst['Nomi'])
+            else:
+                histo_up.SetBinContent(bin, 1)
+                histo_up.SetBinError(bin, 1)
+                histo_up.GetXaxis().SetBinLabel(bin,'{} {}'.format(syst, process))
+                histo_down.SetBinContent(bin, 1)
+                histo_down.SetBinError(bin, 1)
     histo_up.GetXaxis().SetLabelSize(0.025)
     histo_up.SetStats(0)
     histo_up.Draw()
@@ -302,7 +307,7 @@ for infos in ratios:
     legend.AddEntry('do_{}'.format(infos), 'Down/Nominal')
     legend.Draw()
     
-    can.SaveAs("./shapes_ctrl_plots/{}/{}/ratios_{}.png".format(options.channel, options.category, infos))
+    can.SaveAs("./shapes_ctrl_plots_from_datacards/{}/{}/ratios_{}.png".format(options.channel, options.category, infos))
 
     
 can = ROOT.TCanvas('canratios', '', 2000, 1500)
@@ -346,7 +351,7 @@ for process in integrals_max_ratios:
 # legend.AddEntry('do_{}'.format(infos), 'Down/Nominal')
 # legend.Draw()
 
-can.SaveAs("./shapes_ctrl_plots/{}/{}/relative_variations.png".format(options.channel, options.category))
+can.SaveAs("./shapes_ctrl_plots_from_datacards/{}/{}/relative_variations.png".format(options.channel, options.category))
 
     
 data_file.Close()

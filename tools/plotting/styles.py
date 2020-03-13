@@ -12,6 +12,7 @@ dibosoncol = TColor.GetColor(146,12,23)
 ttcol = TColor.GetColor(155,152,204)
 stcol = TColor.GetColor(85,82,204)
 zlcol = TColor.GetColor(100,182,232)
+H125col = TColor.GetColor(100,100,100)
 
 sdy = Style(markerColor=dycol, markerSize=1, lineColor=1, fillColor=dycol, fillStyle=1001)
 sembed = Style(markerColor=embedcol, markerSize=1, lineColor=1, fillColor=embedcol, fillStyle=1001)
@@ -21,6 +22,7 @@ stt = Style(markerColor=ttcol, markerSize=1, lineColor=1, fillColor=ttcol, fillS
 sDiboson = Style(markerColor=dibosoncol, markerSize=1, lineColor=1, fillColor=dibosoncol, fillStyle=1001)
 ssingletop = Style(markerColor=stcol, markerSize=1, lineColor=1, fillColor=stcol, fillStyle=1001)
 sfakes = Style(markerColor=5, markerSize=1, lineColor=1, fillColor=8, fillStyle=1001)
+sH125 = Style(markerColor=H125col, markerSize=1, lineColor=1, fillColor=H125col, fillStyle=1001)
 sdata = sData
 sunc = Style(fillColor=17, fillStyle=3002)
 ssig = Style(fillColor=0, fillStyle=0, lineColor=2)
@@ -36,6 +38,7 @@ histPref['default'] = {
     'data_obs': {'style':sdata, 'layer':0, 'legend':'data', 'stack': False},
     'Embedded': {'style':sembed, 'layer':90, 'legend':'#mu #rightarrow #text{embedded}', 'stack': True},
     'jetFakes': {'style':sfakes, 'layer':80, 'legend':'#text{jet} #rightarrow #tauh #text{ fakes}', 'stack': True},
+    'H125': {'style':sH125, 'layer':1, 'legend':'#higgs #text{ (#SI{125}{#GeV})}', 'stack': True},
     
     'Zll': {'style':sdy, 'layer':70, 'legend':'Z #rightarrow #ell#ell', 'stack': True},
     'ZL': {'style':sdy, 'layer':70, 'legend':'Z #rightarrow #ell#ell (#ell #rightarrow #tauh)', 'stack': True},

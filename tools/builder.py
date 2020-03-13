@@ -2,7 +2,7 @@ from htt_plot.tools.cut import Cuts
 from htt_plot.tools.component import Component, Component_cfg
 from dask import delayed
 import copy
-from ROOT import TH1F
+from ROOT import TH1F, TFile
 
 def build_cfg(name, dataset, variable, cut, bins):
     '''Allows to pass non-str cuts'''
@@ -60,8 +60,11 @@ def merge(name, objs):
 def project(comp):
     ''' fills a component histogram following its configuration file '''
     dataset = comp.cfg['dataset']
+    dataset_file = TFile(dataset.rootfname, "READ")
+    dataset_tree = dataset_file.Get(dataset.treename)
     var = comp.var
     histo = TH1F(comp.name+dataset.name, comp.name+dataset.name, *comp.cfg['bins'])
-    dataset.tree.Project(comp.name+dataset.name, var, comp.cfg['cut'])
+    dataset_tree.Project(comp.name+dataset.name, var, comp.cfg['cut'])
     histo.Scale(dataset.weight * comp.cfg['scale'])
     comp.histogram.Add(histo)
+    dataset_file.Close()
