@@ -24,8 +24,8 @@ class Dataset(object):
             raise ValueError('provide both xsection and nevts, or neither')
         else:
             self.is_data = True
-        self.tfile = TFile(rootfname)
-        self.tree = self.tfile.Get(treename)
+        self.file = rootfname
+        self.treename = treename
         
     def lumi_eq(self):
         return float(self.nevts) / self.xsection * self.norm_factor
