@@ -78,7 +78,7 @@ class Cut(object):
 class Cuts(dict):
     ''' A dict of Cuts. '''
     def __init__(self, **kwargs):
-        for key, string in kwargs.iteritems():
+        for key, string in kwargs.items():
             kwargs[key] = Cut(string)
         super(Cuts, self).__init__(kwargs)
 
@@ -86,14 +86,14 @@ class Cuts(dict):
         ''' Using a Cut allows for operator uses, see the
         corresponding class above. The returned cut is:
         any of all self cuts '''
-        cuts = [str(cut) for cut in sorted(self.values())]
+        cuts = [str(cut) for cut in self.values()]
         return Cut('(({}))'.format(') || ('.join(cuts)))
 
     def all(self):
         ''' Using a Cut allows for operator uses, see the
         corresponding class above. The returned cut is:
         all of self cuts '''
-        cuts = [str(cut) for cut in sorted(self.values())]
+        cuts = [str(cut) for cut in self.values()]
         return Cut('(({}))'.format(') && ('.join(cuts)))
 
     def __str__(self):

@@ -656,7 +656,7 @@ def write_plots(plotter, variable, output_dir):
     plotter.write('{}/{}/{}.pdf'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.tex'.format(output_dir, category, varname))
     plotter.write('{}/{}/{}.root'.format(output_dir, category, varname))
-    print plotter.plot
+    print(plotter.plot)
 
 if options.signals_only:
     for variable in dc_comps:

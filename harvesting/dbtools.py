@@ -48,7 +48,7 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
                                  'sample_version':{'$regex':'.*{}.*{}$'.format(channel,sys)}})
     if not infos:
         if sys!='nominal':
-            print 'version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name)
+            print('version {} not found in the database for sample {}, looking for nominal'.format(sys,sample_name))
             return fetch_dataset(sample_name,n_events_gen,xs,channel=channel,prod_date=prod_date,sys='nominal')
         raise ValueError('version {} not found in the database for sample {}'.format(sys,sample_name))
     if len(infos)> 1:
@@ -81,7 +81,7 @@ def fetch_dataset(sample_name,n_events_gen=None,xs=None,channel='tt',prod_date='
                        treename='events')
     except KeyError:
         info= infos[0]
-        print 'sample {} version {} not fully processed!'.format(info['name'],info['sample_version'])
+        print('sample {} version {} not fully processed!'.format(info['name'],info['sample_version']))
         newinfos = dsdb.find('se', {'sample':sample_name,
                                     'prod_date':{'$regex':'.*{}.*$'.format(prod_date)},
                                     'sample_version':{'$regex':'.*{}.*{}$'.format(channel,'nominal')}})

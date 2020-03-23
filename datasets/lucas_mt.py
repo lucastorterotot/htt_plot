@@ -414,7 +414,7 @@ def build_signals(mass_points):
     signal_datasets = {'nominal':{}}
 
     for mass in mass_points:
-        print mass
+        print(mass)
         signal_datasets['nominal']['ggH{}'.format(mass)] = fetch_dataset('HiggsSUSYGG{}'.format(mass),nevents_dict['ggH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
         signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
         # signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
