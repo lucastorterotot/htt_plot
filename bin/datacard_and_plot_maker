@@ -302,15 +302,18 @@ from htt_plot.tools.utils import add_processes_per_component, add_simple_process
 
 cfg_dict = {}
 dc_comps = {}
+ff_fracs_comps = {}
 components = {}
 for variable in variables:
     bins = cfg.bins[variable]
     cfg_dict[variable] = {}
     dc_comps[variable] = {}
+    ff_fracs_comps[variable] = {}
     components[variable] = {}
     for category in categories_to_process:
         cfg_dict[variable][category] = {}
         dc_comps[variable][category] = {}
+        ff_fracs_comps[variable][category] = {}
         cfg_dict[variable][category]['nominal'] = {}
         cfgs = cfg_dict[variable][category]['nominal'] # for lighter syntax
 
@@ -482,6 +485,12 @@ for variable in variables:
             dc_comps[variable][category]['nominal']['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
             dc_comps[variable][category]['nominal']['bbH{}'.format(mass)] = cfgs['bbH{}'.format(mass)]
 
+        ff_fracs_comps[variable][category]['nominal'] = {}
+        for comp_name in dc_comps[variable][category]['nominal']:
+            ff_fracs_comps[variable][category]['nominal'][comp_name] = dc_comps[variable][category]['nominal'][comp_name]
+            if "fakes_{}".format(comp_name) in cfgs.keys():
+                ff_fracs_comps[variable][category]['nominal']["fakes_{}".format(comp_name)] = cfgs["fakes_{}".format(comp_name)]
+
 # systematics
 for variable in datacards_variables:
     bins = cfg.bins[variable]
@@ -650,25 +659,31 @@ for variable in datacards_variables:
                             dc_comps[variable][category][sys]['ggH{}'.format(mass)] = cfgs['ggH{}'.format(mass)]
                             dc_comps[variable][category][sys]['bbH{}'.format(mass)] = cfgs['bbH{}'.format(mass)]
                 
-        # dc_comps[variable][sys] = {
-        #     'ZTT' : cfgs['ZTT'],
-        #     'ZL' : cfgs['ZL'],
-        #     'ZJ' : cfgs['ZJ'],
-        #     'ZLL' : cfgs['ZLL'],
-        #     'TTT' : cfgs['TTT'],
-        #     'TTJ' : cfgs['TTJ'],
-        #     'TT' : cfgs['TT'],
-        #     'VVT' : cfgs['VVT'],
-        #     'VVJ' : cfgs['VVJ'],
-        #     'VV' : cfgs['VV'],
-        #     'W' : cfgs['W'],
-        #     'Embedded' : cfgs['Embedded'],
-        #     'ggH200' : cfgs['ggH200']
-        # }
+            # dc_comps[variable][sys] = {
+            #     'ZTT' : cfgs['ZTT'],
+            #     'ZL' : cfgs['ZL'],
+            #     'ZJ' : cfgs['ZJ'],
+            #     'ZLL' : cfgs['ZLL'],
+            #     'TTT' : cfgs['TTT'],
+            #     'TTJ' : cfgs['TTJ'],
+            #     'TT' : cfgs['TT'],
+            #     'VVT' : cfgs['VVT'],
+            #     'VVJ' : cfgs['VVJ'],
+            #     'VV' : cfgs['VV'],
+            #     'W' : cfgs['W'],
+            #     'Embedded' : cfgs['Embedded'],
+            #     'ggH200' : cfgs['ggH200']
+            # }
+
+            ff_fracs_comps[variable][category][sys] = {}
+            for comp_name in dc_comps[variable][category][sys]:
+                ff_fracs_comps[variable][category][sys][comp_name] = dc_comps[variable][category][sys][comp_name]
+                if "fakes_{}".format(comp_name) in cfgs.keys():
+                    ff_fracs_comps[variable][category][sys]["fakes_{}".format(comp_name)] = cfgs["fakes_{}".format(comp_name)]
 
 #### merging categories
 for category in categories_to_merge:
-    # dc_comp and components
+    # dc_comp, ff_fracs_comps and components
     to_merge = cfg.merging_categories[category]
     for variable in datacards_variables:
         dc_comps[variable][category] = {}
@@ -676,6 +691,12 @@ for category in categories_to_merge:
             dc_comps[variable][category][sys] = {}
             for comp in dc_comps[variable][to_merge[0]][sys]:
                 dc_comps[variable][category][sys][comp] = merge(comp, [dc_comps[variable][c][sys][comp] for c in to_merge])
+    for variable in ff_fracs_comps.keys():
+        ff_fracs_comps[variable][category] = {}
+        for sys in ff_fracs_comps[variable][to_merge[0]]:
+            ff_fracs_comps[variable][category][sys] = {}
+            for comp in ff_fracs_comps[variable][to_merge[0]][sys]:
+                ff_fracs_comps[variable][category][sys][comp] = merge(comp, [ff_fracs_comps[variable][c][sys][comp] for c in to_merge])
     for variable in plot_variables:
         components[variable][category] = {}
         for comp in components[variable][to_merge[0]]:
@@ -762,6 +783,15 @@ if not options.just_plot:
                 systematics = ['nominal']+sys_dict.keys()
             )
         )
+    from htt_plot.tools.ff_fractions import make_fractions
+    processes.append(
+        delayed(make_fractions)(
+            output_dir,
+            cfg.channel,
+            ff_fracs_comps
+            )
+        )
+            
 
 import os
 for category in categories_to_process+categories_to_merge:
