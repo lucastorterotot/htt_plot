@@ -47,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1.all() & cuts_l2.all()
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cuts_l1.all() & cuts_l2.all()
 
 ## iso
 cuts_iso = Cuts(
@@ -119,7 +119,26 @@ import htt_plot.datasets.lucas_mt as datasets
 
 cut_signal = cuts_iso['l2_Tight'] & basic_cuts
 
-# category
+# categories
+
+categories = {
+    'nobtag_tight' : cut_nobtag & cut_mt_lepton_tight,
+    'btag_tight' : cut_btag & cut_mt_lepton_tight,
+    'nobtag_loosemt' : cut_nobtag & cut_mt_lepton_loose,
+    'btag_loosemt' : cut_btag & cut_mt_lepton_loose,
+    'nobtag_Vloosemt' : cut_nobtag & ~cut_mt_lepton,
+    'btag_Vloosemt' : cut_btag & ~cut_mt_lepton,
+    }
+
+merging_categories = {
+    'nobtag' : ['nobtag_tight', 'nobtag_loosemt'],
+    'btag' : ['btag_tight', 'btag_loosemt'],
+    'tight' : ['nobtag_tight', 'btag_tight'],
+    'loosemt' : ['nobtag_loosemt', 'btag_loosemt'],
+    'Vloosemt' : ['nobtag_Vloosemt', 'btag_Vloosemt'],
+    }
+merging_categories['inclusive'] = merging_categories['btag']+merging_categories['nobtag']
+merging_categories['allmt'] = merging_categories['inclusive']+merging_categories['Vloosemt']
 
 basic_cuts_btag = basic_cuts & cut_btag
 cut_signal_btag = cuts_iso['l2_Tight'] & basic_cuts_btag

@@ -54,7 +54,11 @@ for mass in [80,100,110,120,130,140,180,200,250,90,350,1600,1800,2000,300,400,45
 jetFakes_integral = {'nobtag': 28226.1,
                      'btag': 679.867}
     
-def make_datacards(output_dir, channel, variable, components_dict, category='inclusive', systematics=['nominal']):
+def make_datacards(output_dir, channel, variable, components_dict_with_categories, systematics=['nominal']):
+    for category in components_dict_with_categories.keys():
+        make_datacards_singlecat(output_dir, channel, variable, components_dict_with_categories[category], category=category, systematics=systematics)
+
+def make_datacards_singlecat(output_dir, channel, variable, components_dict, category='inclusive', systematics=['nominal']):
     '''This funciton aims at producing a root file containing all
     histograms needed for datacards. To do so, provide a dict of components
     (class Component) that have the ROOT histograms to be used.
