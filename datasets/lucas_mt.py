@@ -70,9 +70,9 @@ def renorm_nevts(dataset_list):
         dataset.nevts = ntot
 
 DY_datasets = {'nominal':[]}
-# DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50',48675378.,dy_xsec_incl, channel=channel, prod_date=prod_date))
-# DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50_ext',49125561.,dy_xsec_incl, channel=channel, prod_date=prod_date))
-# renorm_nevts(DY_datasets['nominal'])
+DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50',48675378.,dy_xsec_incl, channel=channel, prod_date=prod_date))
+DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50_ext',49125561.,dy_xsec_incl, channel=channel, prod_date=prod_date))
+renorm_nevts(DY_datasets['nominal'])
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
 
 Nevts_DY_exclusive = {
@@ -91,7 +91,7 @@ xsecs_DY_exclusive = {
     '3' : 111.5,
     '4' : 44.03,
 }
-    
+xsecs_DY_exclusive = {}    
 for njets in xsecs_DY_exclusive:
     DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
     if '{}ext'.format(njets) in Nevts_DY_exclusive:
@@ -250,9 +250,9 @@ for sys in sys_dict_samples:
     ## DY
     if 'DY' in sys_dict_samples[sys]['processes']:
         DY_datasets[sys] = []
-        # DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50',48675378,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
-        # DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50_ext',49125561,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
-        # renorm_nevts(DY_datasets[sys])
+        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50',48675378,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
+        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50_ext',49125561,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
+        renorm_nevts(DY_datasets[sys])
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, sys=sys, channel=channel, prod_date=prod_date))
         
         for njets in xsecs_DY_exclusive:
