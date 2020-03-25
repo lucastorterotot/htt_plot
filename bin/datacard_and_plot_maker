@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
+times = []
+times.append(["start", time.time()])
+
 # options for script
 from optparse import OptionParser
 usage = "usage: %prog [options]"
@@ -44,7 +48,7 @@ if options.signals_only:
     options.just_datacards = True
 
 cfg = __import__("htt_plot.channels_configs.{}".format(options.cfg_name), fromlist=[''])
-
+times.append(["cfg loaded", time.time()])
 # variables
 
 if options.small_run:
@@ -268,7 +272,7 @@ sys_dict.update(sys_dict_weights)
 #########
 # Cfgs and components
 #########
-
+times.append(["start construct components", time.time()])
 from htt_plot.tools.builder import build_cfgs, merge
 from htt_plot.tools.builder import  merge_components as merge_comps
 from htt_plot.tools.utils import add_processes_per_component, add_simple_process
@@ -632,7 +636,7 @@ for variable in datacards_variables:
         #     'Embedded' : cfgs['Embedded'],
         #     'ggH200' : cfgs['ggH200']
         # }
-    
+times.append(["finished contructing components", time.time()])
 processes = []
 
 channel_strings_for_plot = {
@@ -705,5 +709,12 @@ if not os.path.exists('{}/{}'.format(output_dir,category)):
         
 #visualize(*processes)
 #import pdb; pdb.set_trace()
+times.append(["start compute", time.time()])
 if not options.dry_run:
     compute(*processes, num_workers=options.workers, scheduler='processes')
+times.append(["end compute", time.time()])
+
+file = open('{}/times.out'.format(output_dir), 'w')
+for t in times:
+    file.write('{}\t {}\n'.format(t[0], t[1]))
+file.close()
