@@ -2,7 +2,7 @@ from htt_plot.harvesting.dbtools import fetch_dataset
 
 channel = 'et'
 
-prod_date = '200204'
+prod_date = '200206'
 
 data_lumi = 41529
 
@@ -16,6 +16,35 @@ data_datasets.append(fetch_dataset('SingleElectron_Run2017E_31Mar2018', channel=
 data_datasets.append(fetch_dataset('SingleElectron_Run2017F_31Mar2018', channel=channel, prod_date=prod_date))
 
 ##### MC
+
+## H125
+H125_Nevts = {
+    'HiggsVBF125' : 2975404,
+    'HiggsGGH125' : 2892030,
+    #'HiggsGGH125_ext' : 9259000,
+    'HiggsTTH125' : 21713806,
+    'HiggsWplusH125' : 4000000,
+    'HiggsWminusH125' : 3860872,
+    'HiggsZH125' : 4940230,
+    }
+H125_xsecs = {
+    'HiggsVBF125' : 3.782*0.06272,
+    'HiggsGGH125' : 48.58*0.06272,
+    'HiggsTTH125' : 0.5071*0.06272,
+    'HiggsWplusH125' : 0.840*0.06272,
+    'HiggsWminusH125' : 0.533*0.06272,
+    'HiggsZH125' : 0.8839*0.06272,
+    }
+
+for _H125 in H125_Nevts:
+    if _H125[-4:] == '_ext':
+        H125_Nevts[_H125] += H125_Nevts[_H125[:-4]]
+        H125_Nevts[_H125[:-4]] = H125_Nevts[_H125]
+        H125_xsecs[_H125] = H125_xsecs[_H125[:-4]]
+
+H125_datasets = {'nominal':{}}
+for _H125 in H125_Nevts:
+    H125_datasets['nominal'][_H125] = fetch_dataset(_H125, H125_Nevts[_H125], H125_xsecs[_H125], channel=channel, prod_date=prod_date)
 
 ## DY
 
@@ -41,11 +70,33 @@ def renorm_nevts(dataset_list):
         dataset.nevts = ntot
 
 DY_datasets = {'nominal':[]}
-DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50',48675378.,dy_xsec_incl, channel=channel, prod_date=prod_date))
 DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M50_ext',49125561.,dy_xsec_incl, channel=channel, prod_date=prod_date))
 renorm_nevts(DY_datasets['nominal'])
+DY_datasets['nominal'].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
 
+Nevts_DY_exclusive = {
+    '1' : 42331295,
+    '1ext' : 33669127,
+    '2' : 88895,
+    '2ext' : 9701595,
+    '3' : 5748466,
+    '3ext' : 1149467,
+    '4' : 4328648,
+}
+
+xsecs_DY_exclusive = {
+    '1' : 877.8,
+    '2' : 304.4,
+    '3' : 111.5,
+    '4' : 44.03,
+}
+xsecs_DY_exclusive = {}    
+for njets in xsecs_DY_exclusive:
+    DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
+    if '{}ext'.format(njets) in Nevts_DY_exclusive:
+        DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], channel=channel, prod_date=prod_date))
+        renorm_nevts(DY_datasets['nominal'][-2:])
 
 # DY1JetsToLL_M50 = Dataset(
 #     'DYJetsToLL_M50',
@@ -126,14 +177,14 @@ singleTop_datasets['nominal'].append(fetch_dataset('T_tWch',7794186,35.85, chann
 ##### DiBoson inclusive
 
 # using inclusive WW and WZ datasets for now
-Diboson_datasets = {'nominal':[]}
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',6967853,1.325, channel=channel, prod_date=prod_date))
-renorm_nevts(Diboson_datasets['nominal'])
-Diboson_datasets['nominal'].append(fetch_dataset('WW',7791498,75.88, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('WZ',3928630,27.57, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
-Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
+# Diboson_datasets = {'nominal':[]}
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',6967853,1.325, channel=channel, prod_date=prod_date))
+# renorm_nevts(Diboson_datasets['nominal'])
+# Diboson_datasets['nominal'].append(fetch_dataset('WW',7791498,75.88, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('WZ',3928630,27.57, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
+# Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
 
 # ZZ failed computing, going to exclusive datasets
 # ZZ = Dataset(
@@ -142,6 +193,30 @@ Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, chan
 #     1949768, 12.14,
 #     treename = treename
 # )
+
+##### DiBoson exclusive
+
+Diboson_datasets = {'nominal':[]}
+
+## WW
+Diboson_datasets['nominal'].append(fetch_dataset('WWTo2L2Nu',2000000,11.08, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWTo4Q',2000000,47.73, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWToLNuQQ',8782525,45.99, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WWToLNuQQ_ext',9994191,45.99, channel=channel, prod_date=prod_date))
+renorm_nevts(Diboson_datasets['nominal'][-2:])
+
+## WZ
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo2L2Q',27582164,6.331, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo1L3Nu',4994395,3.293, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo3LNu',10987679,5.052, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('WZTo1L1Nu2Q',19086373,11.66, channel=channel, prod_date=prod_date))
+
+## ZZ
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L',6964071,1.325, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo4L_ext',98091559,1.325, channel=channel, prod_date=prod_date))
+renorm_nevts(Diboson_datasets['nominal'][-2:])
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, channel=channel, prod_date=prod_date))
+Diboson_datasets['nominal'].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, channel=channel, prod_date=prod_date))
 
 ##### EWK
 
@@ -166,13 +241,25 @@ from htt_plot.systematics import sys_dict_samples # TODO put sys_dicts in their 
 
 for sys in sys_dict_samples:
     
+    ## H125
+    if 'H125' in sys_dict_samples[sys]['processes']:
+        H125_datasets[sys] = {}
+        for _H125 in H125_Nevts:
+            H125_datasets[sys][_H125] = fetch_dataset(_H125, H125_Nevts[_H125], H125_xsecs[_H125], sys=sys, channel=channel, prod_date=prod_date)
+    
     ## DY
     if 'DY' in sys_dict_samples[sys]['processes']:
         DY_datasets[sys] = []
-        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, channel=channel, prod_date=prod_date))
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50',48675378,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
         DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M50_ext',49125561,dy_xsec_incl,sys=sys, channel=channel, prod_date=prod_date))
         renorm_nevts(DY_datasets[sys])
+        DY_datasets[sys].append(fetch_dataset('DYJetsToLL_M10to50_LO',39521230.,dy_lowmass_xsec_incl, sys=sys, channel=channel, prod_date=prod_date))
+        
+        for njets in xsecs_DY_exclusive:
+            DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO'.format(njets),Nevts_DY_exclusive[njets],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
+            if '{}ext'.format(njets) in Nevts_DY_exclusive:
+                DY_datasets['nominal'].append(fetch_dataset('DY{}JetsToLL_M50_LO_ext'.format(njets),Nevts_DY_exclusive['{}ext'.format(njets)],xsecs_DY_exclusive[njets], sys=sys, channel=channel, prod_date=prod_date))
+                renorm_nevts(DY_datasets['nominal'][-2:])
 
     # W+Jets
     if 'W' in sys_dict_samples[sys]['processes']:
@@ -204,16 +291,23 @@ for sys in sys_dict_samples:
         singleTop_datasets[sys].append(fetch_dataset('T_tch',5982064,136.02,sys=sys, channel=channel, prod_date=prod_date))
         singleTop_datasets[sys].append(fetch_dataset('T_tWch',7794186,35.85,sys=sys, channel=channel, prod_date=prod_date))
     
-    ##### DiBoson inclusive
+    ##### DiBoson exclusive
     if 'Diboson' in sys_dict_samples[sys]['processes']:
         Diboson_datasets[sys] = []
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L',6964071,1.325,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L_ext',6967853,1.325,sys=sys, channel=channel, prod_date=prod_date))
-        renorm_nevts(Diboson_datasets[sys])
-        Diboson_datasets[sys].append(fetch_dataset('WW',7791498,75.88,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('WZ',3928630,27.57,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008,sys=sys, channel=channel, prod_date=prod_date))
-        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Q',27840918,3.688,sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWTo2L2Nu',2000000,11.08, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWTo4Q',2000000,47.73, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWToLNuQQ',8782525,45.99, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WWToLNuQQ_ext',9994191,45.99, sys=sys, channel=channel, prod_date=prod_date))
+        renorm_nevts(Diboson_datasets[sys][-2:])
+        Diboson_datasets[sys].append(fetch_dataset('WZTo2L2Q',27582164,6.331, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo1L3Nu',4994395,3.293, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo3LNu',10987679,5.052, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('WZTo1L1Nu2Q',19086373,11.66, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L',6964071,1.325, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo4L_ext',98091559,1.325, sys=sys, channel=channel, prod_date=prod_date))
+        renorm_nevts(Diboson_datasets[sys][-2:])
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Nu',8744768,0.6008, sys=sys, channel=channel, prod_date=prod_date))
+        Diboson_datasets[sys].append(fetch_dataset('ZZTo2L2Q',27840918,3.688, sys=sys, channel=channel, prod_date=prod_date))
     
     ##### Embedded
     if 'Embedded' in sys_dict_samples[sys]['processes']:
@@ -320,10 +414,10 @@ def build_signals(mass_points):
     signal_datasets = {'nominal':{}}
 
     for mass in mass_points:
-        print mass
+        print(mass)
         signal_datasets['nominal']['ggH{}'.format(mass)] = fetch_dataset('HiggsSUSYGG{}'.format(mass),nevents_dict['ggH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
-        signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
-        # signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
+        #signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
+        signal_datasets['nominal']['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1., channel=channel, prod_date=prod_date)
 
         
     for sys in sys_dict_samples:
@@ -331,8 +425,8 @@ def build_signals(mass_points):
         for mass in mass_points:
             if 'signal' in sys_dict_samples[sys]['processes']:
                 signal_datasets[sys]['ggH{}'.format(mass)] = fetch_dataset('HiggsSUSYGG{}'.format(mass),nevents_dict['ggH{}'.format(mass)],1.,sys=sys, channel=channel, prod_date=prod_date)
-                signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1.,sys=sys, channel=channel, prod_date=prod_date)
-                # signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1.,sys=sys, channel=channel, prod_date=prod_date)
+                #signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}'.format(mass),nevents_dict['bbH{}'.format(mass)],1.,sys=sys, channel=channel, prod_date=prod_date)
+                signal_datasets[sys]['bbH{}'.format(mass)] = fetch_dataset('HiggsSUSYBB{}_amcatnlo'.format(mass),nevents_dict_amcatnlobbH['bbH{}'.format(mass)],1.,sys=sys, channel=channel, prod_date=prod_date)
 
     return signal_datasets
 
@@ -341,6 +435,10 @@ def build_signals(mass_points):
 for ds_type in [singleTop_datasets, WJ_datasets, Diboson_datasets, TT_datasets, DY_datasets, EWK_datasets]:
     for sys, dataset_list in ds_type.iteritems() :
         for dataset in dataset_list:
+            dataset.compute_weight(data_lumi)
+for ds_type in [H125_datasets]:
+    for sys, dataset_list in ds_type.iteritems() :
+        for n, dataset in dataset_list.iteritems():
             dataset.compute_weight(data_lumi)
 
 # for ds_type in [signal_datasets]:
