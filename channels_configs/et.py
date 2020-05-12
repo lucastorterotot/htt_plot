@@ -47,7 +47,7 @@ cuts_triggers = Cuts(
 
 cut_triggers = cuts_triggers.any()
 
-basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cut_mt_lepton & cuts_l1.all() & cuts_l2.all()
+basic_cuts = cuts_flags.all() & cuts_vetoes.all() & cut_triggers & cut_os & cuts_against_leptons.all() & cuts_l1.all() & cuts_l2.all()
 
 ## iso
 cuts_iso = Cuts(
