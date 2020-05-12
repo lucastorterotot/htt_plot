@@ -20,7 +20,7 @@ cuts_l1 = Cuts(
     l1_pt = 'l1_pt >= 25',
     l1_eta = 'abs(l1_eta) <= 2.1',
     l1_iso = 'l1_iso < 0.15',
-    l1_vertex = 'abs(l1_dxy) < 0.045 && abs(l1_dz) < 0.2',
+    l1_vertex = 'abs(l1_d0) < 0.045 && abs(l1_dz) < 0.2',
 )
 
 cuts_l2 = Cuts(
@@ -39,10 +39,10 @@ cuts_against_leptons = Cuts(
 
 ## triggers
 cuts_triggers = Cuts(
-    singleelectron_27 = 'trg_singleelectron_27',
-    singleelectron_32 = 'trg_singleelectron_32',
-    singleelectron_35 = 'trg_singleelectron_35',
-    crossele_ele24tau30 = 'trg_crossele_ele24tau30',
+    singleelectron_27 = 'trg_singleelectron_27 && l1_pt > 28',
+    singleelectron_32 = 'trg_singleelectron_32 && l1_pt > 28',
+    singleelectron_35 = 'trg_singleelectron_35 && l1_pt > 28',
+    crossele_ele24tau30 = 'trg_crossele_ele24tau30 && l1_pt <= 28 && l1_pt > 25',
 )
 
 cut_triggers = cuts_triggers.any()
@@ -98,15 +98,31 @@ from htt_plot.channels_configs.htt_common import datacard_processes
 # weights
 from htt_plot.channels_configs.htt_common import weights
 weights['MC'] = weights['l2_MC']
+#weights['weight'] = weights['weight'] * Cut("(l2_gen_match==1 || l2_gen_match==3)*(((abs(l1_eta) < 1.46) * 0.88) + ((abs(l1_eta) > 1.5588) * 0.51))+!(l2_gen_match==1 || l2_gen_match==3)") #eletauFakeRateWeightFix
 
 emb_weight_simulation_sf = Cut('weight_generator')
 emb_weight_scale_factor = Cut('weight_embed_DoubleMuonHLT_eff * weight_embed_muonID_eff_l1 * weight_embed_muonID_eff_l2')
-emb_weight_lepton_sf = Cut('l1_weight_idiso*((l1_pt>28)*(l1_weight_trig_et*(abs(eta_1) < 1.5) + l1_weight_trig_et*(abs(eta_1)>=1.5))+(l1_pt<28))')
+
+#Weight("(idWeight_1*((l1_pt>28)*(trigger_27_32_35_Weight_1*(abs(l1_eta) < 1.5||l1_pt>=40) + singleTriggerDataEfficiencyWeightKIT_1*(abs(l1_eta)>=1.5)*(l1_pt<40))+(l1_pt<28))*isoWeight_1)<10.0", "lepton_cut"),
+
+emb_weight_lepton_trg = Cut('(l1_pt>=28)+(l1_pt<28)*((abs(l1_eta)>=1.5)*l1_weight_trig_et+(abs(l1_eta)<1.5)*l1_weight_trig_et*(1/((l1_pt<28)*(abs(l1_eta)<1.5)+(l1_pt>=28)+(abs(l1_eta)>=1.5))))') # < 10 ?
+
+emb_weight_low_crossele_nonclosure = Cut("(l1_pt<28)*((abs(l1_eta)<=1.5)*0.852469262576+(abs(l1_eta)>1.5)*0.689309270861)+(l1_pt>=28)")
+
+emb_weight_singleelectron_nonclosure = Cut("(l1_pt>=28)*(l1_pt<40)*((abs(l1_eta)<=1.5)*0.950127109065+(abs(l1_eta)>1.5)*0.870372483259)+(l1_pt<28)+(l1_pt>=40)")
+
+emb_weight_lepton_sf = Cut('l1_weight_idiso*((l1_pt>28)*(l1_weight_trig_e*(abs(l1_eta) < 1.5 || l1_pt >= 40) + 1.0*(abs(l1_eta)>=1.5 && l1_pt < 40))+(l1_pt<28))')
+
 emb_weight_tau_leg_weight = Cut('(l2_pt<=20)*1.0+(l2_pt>20&&l2_pt<=25)*1.08+(l2_pt>25&&l2_pt<=30)*1.05+(l2_pt>30&&l2_pt<=35)*1.11+(l2_pt>35&&l2_pt<=40)*1.09+(l2_pt>40)*1.10')
 emb_weight_emb_tau_id = Cut('(l2_gen_match==5)*0.97+(l2_gen_match!=5)*1.0')
 emb_weight_emb_veto = Cut('(l1_gen_match==3 && l2_gen_match==5)*1.0')
 
 weights['embed'] = emb_weight_simulation_sf * emb_weight_scale_factor * emb_weight_lepton_sf * emb_weight_tau_leg_weight * emb_weight_emb_tau_id * emb_weight_emb_veto
+
+#emb_weight_lepton_trg = Cut('1.0')
+#emb_weight_lepton_sf = Cut('1.0')
+emb_weight_tau_leg_weight = Cut('1.0')
+weights['embed'] = emb_weight_simulation_sf * emb_weight_scale_factor * emb_weight_lepton_trg * emb_weight_low_crossele_nonclosure * emb_weight_singleelectron_nonclosure * emb_weight_lepton_sf * emb_weight_tau_leg_weight * emb_weight_emb_tau_id * emb_weight_emb_veto
 
 for w in ['embed_track_1prong_up', 'embed_track_1prong_down', 'embed_track_3prong_up', 'embed_track_3prong_down']:
     weights[w] = weights['embed']
