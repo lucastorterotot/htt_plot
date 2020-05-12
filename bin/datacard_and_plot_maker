@@ -84,7 +84,7 @@ for category in categories_to_process:
     basic_cuts[category] = cfg.basic_cuts & cfg.categories[category]
 
 # mass points
-mass_points = [80,90,110,120,130,140,180,200,250,300,350,400,450,500,600,700,800,900,1200,1400,1600,1800,2000,2300,2600,2900,3200]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
+mass_points = [80,90,110,120,130,180,250,300,400,450,600,800,900,1200,1400,1600,1800,2000,2300,2600,2900]#<=new working amcatnlo bbh mass points [80,100,110,120,130]#[80,100,110,120,130]#[140,180,200,250]#[300,400,450,600,700]#[800,900,1200,1400,1500]#[2300,2600,2900,3200]#90,350,1600,1800,2000#,,,
 
 mass_points_to_process = [int(m) for m in options.mass_points_to_process[1:-1].split(',')]
 mass_points = [m for m in mass_points if m in mass_points_to_process]
